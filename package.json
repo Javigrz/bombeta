@@ -6,7 +6,10 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "npm run build && npm run start",
+    "deploy:vercel": "vercel --prod",
+    "deploy:build": "npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
