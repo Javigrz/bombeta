@@ -4,7 +4,7 @@ import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 
 export default function HomePage() {
-  const [currentTime, setCurrentTime] = useState(new Date())
+  const [currentTime, setCurrentTime] = useState<Date | null>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [showSignup, setShowSignup] = useState(false)
   const [signupAnimating, setSignupAnimating] = useState(false)
@@ -26,11 +26,54 @@ export default function HomePage() {
     language: "en",
   })
   
+  // Estados para la animación de inicio
+  const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
+  const [introTextComplete, setIntroTextComplete] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+  
   const containerRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
   const textElementsRef = useRef<(HTMLDivElement | null)[]>([])
 
   const fullText = "It started with one bold email between founders; today it's the newsletter powering those who build the future."
+
+  // Detectar si estamos en el cliente
+  useEffect(() => {
+    setIsClient(true)
+    // Pequeña pausa antes de iniciar la animación
+    setTimeout(() => {
+      setIntroTextComplete(true)
+    }, 100)
+  }, [])
+
+  // Estado inicial para evitar hidratación
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Animación de inicio con logo en posición final
+  useEffect(() => {
+    if (!mounted) return
+
+    // Pausa inicial después de que el cliente esté listo
+    setTimeout(() => {
+      // Pausa después de mostrar el logo
+      setTimeout(() => {
+        setIntroStage(1) // Cambiar a naranja
+        setTimeout(() => {
+          setIntroStage(2) // Animación de muelle
+          setTimeout(() => {
+            setIntroStage(3) // Cambio de fondo
+            setTimeout(() => {
+              setShowMainContent(true) // Terminar animación y mostrar contenido principal
+            }, 1500) // Más tiempo para que el cambio de fondo se complete
+          }, 800)
+        }, 1000)
+      }, 1000)
+    }, 600) // Un poco más de tiempo para asegurar que el cliente esté completamente listo
+  }, [isClient])
 
   // Advanced cursor tracking with momentum
   useEffect(() => {
@@ -55,49 +98,17 @@ export default function HomePage() {
   }, [])
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    // Solo inicializar en el cliente
+    if (mounted) {
       setCurrentTime(new Date())
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
-
-  // Advanced typing animation with stagger
-  useEffect(() => {
-    let currentIndex = 0
-    const words = fullText.split(" ")
-    let wordIndex = 0
-
-    const typeWords = () => {
-      if (wordIndex < words.length) {
-        const currentWord = words[wordIndex]
-        const wordsToShow = words.slice(0, wordIndex + 1).join(" ")
-        setTypedText(wordsToShow)
-        wordIndex++
-        
-        // Pausa dramática después del punto y coma
-        if (currentWord.includes(";")) {
-          setTimeout(typeWords, 2000) // Pausa de 2 segundos
-        } else {
-          setTimeout(typeWords, 120 + Math.random() * 80) // Variable timing for natural feel
-        }
-      } else {
-        setIsTypingComplete(true)
-        // Pausa después de terminar de escribir
-        setTimeout(() => {
-          setShowOrangeText(true) // Activar texto naranja
-          setTimeout(() => {
-            setShowHighlights(true)
-            setTimeout(() => {
-              setShowMainContent(true)
-            }, 1500)
-          }, 2000) // Mostrar highlights después de 2 segundos
-        }, 1000) // Pausa de 1 segundo después de terminar
-      }
+      const timer = setInterval(() => {
+        setCurrentTime(new Date())
+      }, 1000)
+      return () => clearInterval(timer)
     }
+  }, [mounted])
 
-    const startTyping = setTimeout(typeWords, 1000)
-    return () => clearTimeout(startTyping)
-  }, [])
+
 
   // Simple hover effects without magnetism
   const handleSimpleHover = useCallback((text: string = "", color: string = "bg-orange-400") => {
@@ -164,7 +175,7 @@ export default function HomePage() {
           {parts.map((part, index) => (
             <span key={index}>
               {part === '11' || part === '11,' ? (
-                <span style={{ color: '#FAF5EB' }}>{part}</span>
+                <span style={{ color: '#4B0A23' }}>{part}</span>
               ) : (
                 part
               )}
@@ -190,7 +201,7 @@ export default function HomePage() {
 
     return words.map((word, index) => {
       const cleanWord = word.replace(/[;,.]/g, "")
-      const punctuation = word.match(/[;,.]/) ? word.match(/[;,.]/)[0] : ""
+      const punctuation = word.match(/[;,.]/)?.[0] || ""
 
       // Si showOrangeText está activo, todo el texto se pone naranja
       if (showOrangeText) {
@@ -229,115 +240,66 @@ export default function HomePage() {
     })
   }
 
-  // Typing screen
-  if (!showMainContent) {
-    return (
-      <div className="h-screen w-full relative overflow-hidden bg-black cursor-none flex items-center justify-center">
-        {/* Advanced Custom Cursor */}
-        <div
-          ref={cursorRef}
-          className="fixed pointer-events-none z-50 transition-all duration-300 ease-out"
-          style={{
-            left: mousePosition.x - 16,
-            top: mousePosition.y - 16,
-            transform: `scale(${cursorScale})`,
-          }}
-        >
-          <div className="w-8 h-8 relative">
-            <div className="absolute inset-0 bg-orange-600 rounded-full mix-blend-difference animate-pulse-smooth" />
-            <div className="absolute inset-0 bg-orange-400 rounded-full mix-blend-difference animate-ping-slow opacity-30" />
-          </div>
-        </div>
-
-        {/* Breathing background effect */}
-        <div 
-          className="absolute inset-0 opacity-5"
-          style={{
-            background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 87, 51, 0.1) 0%, transparent 50%)`,
-            transition: "background 0.3s ease-out"
-          }}
-        />
-
-        {/* Typing Animation */}
-        <div className="max-w-4xl mx-auto px-8 text-center">
-          <div className="font-inter text-2xl md:text-3xl leading-loose" style={{ color: '#FE4629' }}>
-            {renderTypedText(typedText)}
-            {!isTypingComplete && (
-              <span className="animate-pulse-cursor font-bold ml-1" style={{ color: '#FE4629' }}>|</span>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-      return (
-      <div ref={containerRef} className="h-screen w-full relative overflow-hidden" style={{ backgroundColor: '#4B0A23' }}>
-        
-        {/* Custom Cursor Text Only */}
-        {cursorText && (
-          <div className="fixed pointer-events-none z-50 text-xs font-medium whitespace-nowrap"
-               style={{
-                 left: mousePosition.x + 10,
-                 top: mousePosition.y + 10,
-                 color: '#FE4629'
-               }}>
-            {cursorText}
-          </div>
-        )}
 
 
-        
-
-
-
-
-
-
-
-
-      {/* Top Bar with Hover Effects */}
-      <div
-        className="absolute top-6 right-6 text-sm font-inter flex items-center gap-6 z-20 animate-slide-down"
-        style={{ animationDelay: "0.2s", color: '#FE4629' }}
+  // Pantalla principal con animación integrada
+  return (
+    <div 
+      ref={containerRef} 
+      className="h-screen w-full relative overflow-hidden transition-all duration-1000 ease-in-out cursor-auto"
+                         style={{
+             backgroundColor: mounted && introStage === 3 ? '#4B0A23' : '#000000',
+             transition: 'background-color 1s ease-in-out'
+           }}
       >
-                 <span 
-           className="transition-colors duration-300 cursor-pointer font-mono"
-           style={{ color: '#FE4629' }}
-           onMouseEnter={() => handleSimpleHover("Live", "bg-orange-400")}
-           onMouseLeave={handleSimpleLeave}
-         >
-           {formatTimeWithHighlight(currentTime)}
-         </span>
-                 <span 
-           className="transition-colors duration-300 cursor-pointer"
-           style={{ color: '#FE4629' }}
-           onMouseEnter={() => handleSimpleHover("Today", "bg-orange-400")}
-           onMouseLeave={handleSimpleLeave}
-         >
-           {formatDateWithHighlight(currentTime)}
-         </span>
-      </div>
 
 
 
-      {/* Central Logo with Subtle Hover Effects */}
-      <div className="absolute inset-0 flex items-center justify-center z-20">
-        <div className="text-center animate-scale-in">
-          <div className="flex justify-center items-center mb-8">
-            <img 
-              src="/Bombeta_white.svg" 
-              alt="Bombeta" 
-              className="w-[500px] h-auto cursor-pointer"
-              onMouseEnter={() => handleSimpleHover("Bombeta", "bg-orange-400")}
-              onMouseLeave={handleSimpleLeave}
-            />
-          </div>
 
-          <div
-            className="font-inter text-2xl leading-relaxed max-w-3xl mx-auto mb-8 animate-fade-in-up"
-            style={{ animationDelay: "0.2s", color: 'rgba(254, 70, 41, 0.9)' }}
-          >
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+              {/* Logo único que hace la animación y luego permanece */}
+        <div className="absolute inset-0 flex items-center justify-center z-20">
+          <div className="text-center animate-scale-in">
+            <div className="flex justify-center items-center mb-8">
+              <img 
+                                   src={mounted && introStage === 0 ? "/Bombeta_intro.svg" : "/Bombeta_white.svg"}
+                alt="Bombeta" 
+                className="w-[500px] h-auto cursor-pointer transition-all duration-1000 ease-in-out"
+                onMouseEnter={() => handleSimpleHover("Bombeta", "bg-orange-400")}
+                onMouseLeave={handleSimpleLeave}
+                style={{
+                  transform: mounted && introStage === 2 ? 'scale(1.05)' : 'scale(1)',
+                  transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : 'all 1s ease-in-out',
+                  opacity: mounted ? 1 : 0
+                }}
+              />
+            </div>
+
+                      <div
+              className="font-inter text-2xl leading-relaxed max-w-3xl mx-auto mb-8"
+              style={{ 
+                color: 'rgba(254, 70, 41, 0.9)',
+                opacity: showMainContent ? 1 : 0,
+                visibility: showMainContent ? 'visible' : 'hidden',
+                transition: 'opacity 0.8s ease-out, visibility 0s, transform 0.8s ease-out',
+                transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
+              }}
+            >
             <div>
               Empowering <span 
                 className="font-newsreader italic text-3xl transition-all duration-300 cursor-pointer"
@@ -354,11 +316,13 @@ export default function HomePage() {
             onClick={() => setShowSignup(true)}
             className="px-12 py-4 font-inter text-lg font-semibold rounded-lg animate-fade-in-up"
             style={{ 
-              animationDelay: "0.4s", 
               backgroundColor: '#FE4629',
               color: '#4B0A23',
               border: '2px solid #FE4629',
-              transition: 'all 0.3s ease'
+              opacity: showMainContent ? 1 : 0,
+              visibility: showMainContent ? 'visible' : 'hidden',
+              transition: 'all 0.3s ease, opacity 0.8s ease-out 0.2s, visibility 0s, transform 0.8s ease-out 0.2s',
+              transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = 'transparent';
@@ -375,157 +339,174 @@ export default function HomePage() {
                       {/* Schedule info */}
             <div
               className="font-inter text-sm mt-4 animate-fade-in-up"
-              style={{ animationDelay: "0.5s", color: 'rgba(254, 70, 41, 0.7)' }}
+              style={{ 
+                color: 'rgba(254, 70, 41, 0.7)',
+                opacity: showMainContent ? 1 : 0,
+                visibility: showMainContent ? 'visible' : 'hidden',
+                transition: 'opacity 0.8s ease-out 0.4s, visibility 0s, transform 0.8s ease-out 0.4s',
+                transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
+              }}
             >
               Every Tuesday <span style={{ color: '#FAF5EB' }}>11</span>:00 am
             </div>
         </div>
       </div>
 
-      {/* Simple Features Button */}
-      <button
-        onClick={() => setShowQuotes(true)}
-        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-30 w-12 h-12 bg-orange-600 hover:bg-orange-500 transition-colors duration-200 flex items-center justify-center"
-        onMouseEnter={() => handleSimpleHover("Features", "bg-orange-400")}
-        onMouseLeave={handleSimpleLeave}
-      >
-        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-        </svg>
-      </button>
+                 {/* Newsletter Header */}
+           <div
+             className="fixed top-4 left-0 w-full z-30"
+             style={{
+               opacity: showMainContent ? 1 : 0,
+               visibility: showMainContent ? 'visible' : 'hidden',
+               transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
+               transform: showMainContent ? 'translateY(0)' : 'translateY(-20px)',
+               height: '60px'
+             }}
+           >
+             {/* Left - Features Icon */}
+             <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
+               <button
+                 onClick={() => setShowQuotes(true)}
+                 className="w-6 h-6 hover:scale-110 transition-transform duration-300 cursor-pointer"
+                 onMouseEnter={() => handleSimpleHover("Features", "bg-orange-400")}
+                 onMouseLeave={handleSimpleLeave}
+               >
+                 <svg 
+                   viewBox="0 0 24 24" 
+                   fill="none" 
+                   stroke="#FE4629" 
+                   strokeWidth="2" 
+                   strokeLinecap="round" 
+                   strokeLinejoin="round"
+                   className="w-full h-full"
+                 >
+                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                 </svg>
+               </button>
+             </div>
 
-      {/* Enhanced Floating Quotes Window */}
-      {showQuotes && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-40 cursor-auto animate-fade-in">
-          <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-3xl p-8 max-w-4xl w-full mx-4 relative shadow-2xl shadow-orange-600/20 animate-scale-in-modal">
+             {/* Center - Newsletter Brand */}
+             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+               <div className="text-center">
+                 <span className="font-inter text-sm font-normal text-[#FE4629]/60 tracking-wider uppercase">The</span>
+                 <div className="font-inter text-xl font-bold text-[#FE4629] tracking-wider mt-1">NEWSLETTER</div>
+               </div>
+             </div>
+           </div>
+
+           {/* Footer */}
+           <div
+             className="fixed bottom-4 left-0 w-full z-30"
+             style={{
+               opacity: showMainContent ? 1 : 0,
+               visibility: showMainContent ? 'visible' : 'hidden',
+               transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
+               transform: showMainContent ? 'translateY(0)' : 'translateY(-20px)'
+             }}
+           >
+             {/* Right - Live Time */}
+             <div className="absolute bottom-0 right-8">
+               <span 
+                 className="font-inter text-base font-normal text-[#FE4629] font-mono"
+               >
+                 {currentTime ? formatTimeWithHighlight(currentTime) : '--:--:--'}
+               </span>
+             </div>
+           </div>
+
+                 {/* Enhanced Floating Quotes Window */}
+           {showQuotes && (
+             <div className={`fixed inset-0 flex items-center justify-center z-40 cursor-auto ${quotesAnimating ? 'animate-fade-out' : 'animate-fade-in'}`} style={{ backgroundColor: '#4B0A23' }}>
+               <div className={`p-8 max-w-4xl w-full mx-4 relative ${quotesAnimating ? 'animate-scale-out-modal' : 'animate-scale-in-modal'}`} style={{ backgroundColor: '#4B0A23' }}>
             
-            {/* Close Button */}
-            <button
-              onClick={() => {
-                setQuotesAnimating(true)
-                setTimeout(() => {
-                  setShowQuotes(false)
-                  setQuotesAnimating(false)
-                }, 300)
-              }}
-              className="absolute top-6 right-6 text-white/60 hover:text-white text-2xl transition-all duration-300 hover:rotate-180 hover:scale-125 z-10"
-            >
-              ×
-            </button>
+                             {/* Close Button */}
+                 <button
+                   onClick={() => {
+                     setQuotesAnimating(true)
+                     setTimeout(() => {
+                       setShowQuotes(false)
+                       setQuotesAnimating(false)
+                     }, 300)
+                   }}
+                   className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-4xl transition-all duration-300 hover:rotate-180 hover:scale-125"
+                   style={{ color: 'rgba(254, 70, 41, 0.6)' }}
+                 >
+                   ×
+                 </button>
 
-            {/* Header */}
-            <div className="text-center mb-8 animate-slide-up">
-              <h2 className="text-white font-inter text-3xl mb-2">
-                Why <span className="font-newsreader italic text-orange-600">Bombeta</span>?
-              </h2>
-              <p className="text-white/70 font-inter text-lg">
-                The features that make us different
-              </p>
-            </div>
+                             {/* Header */}
+                 <div className="text-center mb-8 animate-slide-up">
+                   <h2 className="text-[#FE4629] font-inter text-3xl mb-2 flex items-center justify-center gap-2">
+                     <span>Why</span>
+                     <img src="/Bombeta_white.svg" alt="Bombeta" className="h-8 w-auto" />
+                     <span>?</span>
+                   </h2>
+                   <p className="text-[#FE4629]/70 font-inter text-lg">
+                     The newsletter for founders
+                   </p>
+                 </div>
 
-            {/* Enhanced Quotes Grid */}
-            <div className="grid md:grid-cols-2 gap-6">
+            {/* Simplified Features Grid */}
+            <div className="grid md:grid-cols-2 gap-8">
               
-              {/* Quote 1 */}
-              <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-gradient-to-br hover:from-orange-600/20 hover:to-orange-400/10 hover:border-orange-400/40 transition-all duration-500 animate-slide-up" style={{animationDelay: "0.1s"}}>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-orange-500/30 transition-colors duration-300">
-                    <span className="text-orange-400 text-xl">🎯</span>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-inter text-lg font-semibold mb-2 group-hover:text-orange-100 transition-colors duration-300">
-                      Built for <span className="font-newsreader italic text-orange-600">founders</span> who build
-                    </h3>
-                    <p className="text-white/80 font-inter text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
-                      Specifically designed for ambitious entrepreneurs who are actively building and scaling their ventures.
-                    </p>
-                  </div>
-                </div>
+              {/* Feature 1 */}
+              <div className="text-center animate-slide-up" style={{animationDelay: "0.1s"}}>
+                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
+                  BUILT FOR FOUNDERS
+                </h3>
+                <p className="text-[#FE4629]/80 font-inter text-sm">
+                  who build and scale
+                </p>
               </div>
 
-              {/* Quote 2 */}
-              <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-gradient-to-br hover:from-orange-600/20 hover:to-orange-400/10 hover:border-orange-400/40 transition-all duration-500 animate-slide-up" style={{animationDelay: "0.2s"}}>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-orange-500/30 transition-colors duration-300">
-                    <span className="text-orange-400 text-xl">🛠️</span>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-inter text-lg font-semibold mb-2 group-hover:text-orange-100 transition-colors duration-300">
-                      Human playbooks, tested in the trenches
-                    </h3>
-                    <p className="text-white/80 font-inter text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
-                      Real strategies from operators who've been through the challenges you're facing right now.
-                    </p>
-                  </div>
-                </div>
+              {/* Feature 2 */}
+              <div className="text-center animate-slide-up" style={{animationDelay: "0.2s"}}>
+                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
+                  HUMAN PLAYBOOKS
+                </h3>
+                <p className="text-[#FE4629]/80 font-inter text-sm">
+                  tested in the trenches
+                </p>
               </div>
 
-              {/* Quote 3 */}
-              <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-gradient-to-br hover:from-orange-600/20 hover:to-orange-400/10 hover:border-orange-400/40 transition-all duration-500 animate-slide-up" style={{animationDelay: "0.3s"}}>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-orange-500/30 transition-colors duration-300">
-                    <span className="text-orange-400 text-xl">✍️</span>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-inter text-lg font-semibold mb-2 group-hover:text-orange-100 transition-colors duration-300">
-                      Every word written by operators, not algorithms
-                    </h3>
-                    <p className="text-white/80 font-inter text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
-                      100% human insights from people who've built successful companies, not AI-generated content.
-                    </p>
-                  </div>
-                </div>
+              {/* Feature 3 */}
+              <div className="text-center animate-slide-up" style={{animationDelay: "0.3s"}}>
+                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
+                  WRITTEN BY OPERATORS
+                </h3>
+                <p className="text-[#FE4629]/80 font-inter text-sm">
+                  not algorithms
+                </p>
               </div>
 
-              {/* Quote 4 */}
-              <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-gradient-to-br hover:from-orange-600/20 hover:to-orange-400/10 hover:border-orange-400/40 transition-all duration-500 animate-slide-up" style={{animationDelay: "0.4s"}}>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-orange-500/30 transition-colors duration-300">
-                    <span className="text-orange-400 text-xl">🚀</span>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-inter text-lg font-semibold mb-2 group-hover:text-orange-100 transition-colors duration-300">
-                      Stay two launches ahead of your rivals
-                    </h3>
-                    <p className="text-white/80 font-inter text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
-                      Get the competitive intelligence and strategic insights that keep you ahead of the competition.
-                    </p>
-                  </div>
-                </div>
+              {/* Feature 4 */}
+              <div className="text-center animate-slide-up" style={{animationDelay: "0.4s"}}>
+                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
+                  STAY AHEAD
+                </h3>
+                <p className="text-[#FE4629]/80 font-inter text-sm">
+                  of your rivals
+                </p>
               </div>
 
-              {/* Quote 5 */}
-              <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-gradient-to-br hover:from-orange-600/20 hover:to-orange-400/10 hover:border-orange-400/40 transition-all duration-500 animate-slide-up" style={{animationDelay: "0.5s"}}>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-orange-500/30 transition-colors duration-300">
-                    <span className="text-orange-400 text-xl">⚡</span>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-inter text-lg font-semibold mb-2 group-hover:text-orange-100 transition-colors duration-300">
-                      Weekly tactics to ship faster & scale smarter
-                    </h3>
-                    <p className="text-white/80 font-inter text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
-                      Actionable strategies delivered every week to accelerate your product development and growth.
-                    </p>
-                  </div>
-                </div>
+              {/* Feature 5 */}
+              <div className="text-center animate-slide-up" style={{animationDelay: "0.5s"}}>
+                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
+                  WEEKLY TACTICS
+                </h3>
+                <p className="text-[#FE4629]/80 font-inter text-sm">
+                  to ship faster
+                </p>
               </div>
 
-              {/* Quote 6 */}
-              <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-gradient-to-br hover:from-orange-600/20 hover:to-orange-400/10 hover:border-orange-400/40 transition-all duration-500 animate-slide-up" style={{animationDelay: "0.6s"}}>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-orange-500/30 transition-colors duration-300">
-                    <span className="text-orange-400 text-xl">👥</span>
-                  </div>
-                  <div>
-                    <h3 className="text-white font-inter text-lg font-semibold mb-2 group-hover:text-orange-100 transition-colors duration-300">
-                      Trusted by 8,000+ <span className="font-newsreader italic text-orange-600">founders</span> & VCs
-                    </h3>
-                    <p className="text-white/80 font-inter text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
-                      Join a proven community of successful entrepreneurs and investors. Delivered Tuesdays at 11:00.
-                    </p>
-                  </div>
-                </div>
+              {/* Feature 6 */}
+              <div className="text-center animate-slide-up" style={{animationDelay: "0.6s"}}>
+                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
+                  8,000+ FOUNDERS
+                </h3>
+                <p className="text-[#FE4629]/80 font-inter text-sm">
+                  trust us
+                </p>
               </div>
 
             </div>
@@ -534,14 +515,28 @@ export default function HomePage() {
             <div className="text-center mt-8 animate-slide-up" style={{animationDelay: "0.7s"}}>
               <button
                 onClick={() => {
-                  setShowQuotes(false)
-                  setShowSignup(true)
+                  setQuotesAnimating(true)
+                  setTimeout(() => {
+                    setShowQuotes(false)
+                    setQuotesAnimating(false)
+                    setTimeout(() => {
+                      setShowSignup(true)
+                    }, 300)
+                  }, 300)
                 }}
-                className="group/cta px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-500 text-black font-inter font-semibold rounded-xl hover:from-orange-500 hover:to-orange-400 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-orange-600/30"
+                className="px-8 py-3 bg-[#FE4629] text-[#4B0A23] font-inter font-semibold rounded-xl transition-all duration-300"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FE4629';
+                  e.currentTarget.style.border = '2px solid #FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FE4629';
+                  e.currentTarget.style.color = '#4B0A23';
+                  e.currentTarget.style.border = '2px solid #FE4629';
+                }}
               >
-                <span className="group-hover/cta:tracking-wider transition-all duration-300">
-                  Join the Community
-                </span>
+                Join the Club
               </button>
             </div>
 
@@ -896,6 +891,24 @@ export default function HomePage() {
             opacity: 0.5;
           }
         }
+
+        @keyframes spring {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.3);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        .animate-spring {
+          animation: spring 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+
 
         
 
