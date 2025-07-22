@@ -419,20 +419,7 @@ export default function HomePage() {
              <div className={`fixed inset-0 flex items-center justify-center z-40 cursor-auto ${quotesAnimating ? 'animate-fade-out' : 'animate-fade-in'}`} style={{ backgroundColor: '#4B0A23' }}>
                <div className={`p-8 max-w-4xl w-full mx-4 relative ${quotesAnimating ? 'animate-scale-out-modal' : 'animate-scale-in-modal'}`} style={{ backgroundColor: '#4B0A23' }}>
             
-                             {/* Close Button */}
-                 <button
-                   onClick={() => {
-                     setQuotesAnimating(true)
-                     setTimeout(() => {
-                       setShowQuotes(false)
-                       setQuotesAnimating(false)
-                     }, 300)
-                   }}
-                   className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-4xl transition-all duration-300 hover:rotate-180 hover:scale-125"
-                   style={{ color: 'rgba(254, 70, 41, 0.6)' }}
-                 >
-                   ×
-                 </button>
+
 
                              {/* Header */}
                  <div className="text-center mb-8 animate-slide-up">
@@ -538,6 +525,23 @@ export default function HomePage() {
               >
                 Join the Club
               </button>
+              
+              {/* Close Button */}
+              <div className="mt-6">
+                <button
+                  onClick={() => {
+                    setQuotesAnimating(true)
+                    setTimeout(() => {
+                      setShowQuotes(false)
+                      setQuotesAnimating(false)
+                    }, 300)
+                  }}
+                  className="text-2xl transition-all duration-300 hover:rotate-180 hover:scale-125"
+                  style={{ color: 'rgba(254, 70, 41, 0.6)' }}
+                >
+                  ×
+                </button>
+              </div>
             </div>
 
           </div>
