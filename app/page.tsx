@@ -7,6 +7,7 @@ export default function HomePage() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [showSignup, setShowSignup] = useState(false)
+  const [signupAnimating, setSignupAnimating] = useState(false)
   const [showMainContent, setShowMainContent] = useState(false)
   const [showQuotes, setShowQuotes] = useState(false)
   const [quotesAnimating, setQuotesAnimating] = useState(false)
@@ -75,7 +76,7 @@ export default function HomePage() {
         
         // Pausa dramática después del punto y coma
         if (currentWord.includes(";")) {
-          setTimeout(typeWords, 1500) // Pausa de 1.5 segundos
+          setTimeout(typeWords, 2000) // Pausa de 2 segundos
         } else {
           setTimeout(typeWords, 120 + Math.random() * 80) // Variable timing for natural feel
         }
@@ -130,7 +131,7 @@ export default function HomePage() {
         {parts.map((part, index) => (
           <span key={index}>
             {part === '11' ? (
-              <span className="text-orange-400 font-bold">{part}</span>
+              <span style={{ color: '#FAF5EB' }}>{part}</span>
             ) : (
               part
             )}
@@ -163,7 +164,7 @@ export default function HomePage() {
           {parts.map((part, index) => (
             <span key={index}>
               {part === '11' || part === '11,' ? (
-                <span className="text-orange-400 font-bold">{part}</span>
+                <span style={{ color: '#FAF5EB' }}>{part}</span>
               ) : (
                 part
               )}
@@ -259,10 +260,10 @@ export default function HomePage() {
 
         {/* Typing Animation */}
         <div className="max-w-4xl mx-auto px-8 text-center">
-          <div className="text-white font-inter text-2xl md:text-3xl leading-relaxed">
+          <div className="font-inter text-2xl md:text-3xl leading-loose" style={{ color: '#FE4629' }}>
             {renderTypedText(typedText)}
             {!isTypingComplete && (
-              <span className="animate-pulse-cursor text-orange-600 font-bold ml-1">|</span>
+              <span className="animate-pulse-cursor font-bold ml-1" style={{ color: '#FE4629' }}>|</span>
             )}
           </div>
         </div>
@@ -271,185 +272,51 @@ export default function HomePage() {
   }
 
       return (
-      <div ref={containerRef} className="h-screen w-full relative overflow-hidden bg-black cursor-none">
+      <div ref={containerRef} className="h-screen w-full relative overflow-hidden" style={{ backgroundColor: '#4B0A23' }}>
         
-        {/* Artistic Reactive Background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Primary Reactive Wave */}
-          <div 
-            className="absolute inset-0 opacity-[0.12] transition-all duration-700 ease-out"
-            style={{
-              background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 87, 51, 0.15) 0%, rgba(255, 87, 51, 0.05) 30%, transparent 60%)`
-            }}
-          />
-          
-          {/* Secondary Subtle Layer */}
-          <div 
-            className="absolute inset-0 opacity-[0.08] transition-all duration-1000 ease-out"
-            style={{
-              background: `radial-gradient(1200px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255, 255, 255, 0.08) 0%, rgba(255, 87, 51, 0.03) 40%, transparent 70%)`
-            }}
-          />
-          
-          {/* Floating Particles */}
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-orange-400/30 rounded-full animate-float-particle"
-              style={{
-                left: `${20 + i * 10}%`,
-                top: `${15 + (i % 3) * 20}%`,
-                animationDelay: `${i * 0.5}s`,
-                animationDuration: `${8 + i * 2}s`
-              }}
-            />
-          ))}
-          
-          {/* Subtle Grid Lines */}
-          <div className="absolute inset-0 opacity-[0.02]">
-            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <defs>
-                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                  <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255, 87, 51, 0.1)" strokeWidth="0.1"/>
-                </pattern>
-              </defs>
-              <rect width="100" height="100" fill="url(#grid)" />
-            </svg>
-          </div>
-          
-          {/* Reactive Ripple Effect */}
-          <div 
-            className="absolute w-96 h-96 rounded-full opacity-[0.03] transition-all duration-1000 ease-out"
-            style={{
-              left: mousePosition.x - 192,
-              top: mousePosition.y - 192,
-              background: `conic-gradient(from 0deg, transparent, rgba(255, 87, 51, 0.1), transparent)`,
-              transform: `scale(${isHovering ? 1.2 : 1})`
-            }}
-          />
-        </div>
-
-
-
-      {/* Enhanced Custom Cursor with Color Changes */}
-      <div
-        className="fixed pointer-events-none z-50 transition-all duration-0"
-        style={{
-          left: mousePosition.x - (isHovering ? 12 : 8),
-          top: mousePosition.y - (isHovering ? 12 : 8),
-        }}
-      >
-        <div className={`${isHovering ? 'w-6 h-6' : 'w-4 h-4'} ${cursorColor} rounded-full mix-blend-difference transition-all duration-50`} />
+        {/* Custom Cursor Text Only */}
         {cursorText && (
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-orange-400 text-xs font-medium whitespace-nowrap">
+          <div className="fixed pointer-events-none z-50 text-xs font-medium whitespace-nowrap"
+               style={{
+                 left: mousePosition.x + 10,
+                 top: mousePosition.y + 10,
+                 color: '#FE4629'
+               }}>
             {cursorText}
           </div>
         )}
-      </div>
 
-      {/* Simple Cursor Trail */}
-      <div
-        className="fixed w-96 h-96 pointer-events-none z-10 transition-all duration-300 ease-out opacity-10"
-        style={{
-          left: mousePosition.x - 192,
-          top: mousePosition.y - 192,
-          background: "radial-gradient(circle, rgba(255, 87, 51, 0.1) 0%, rgba(255, 87, 51, 0.05) 30%, transparent 70%)",
-        }}
-      />
 
-      {/* Enhanced Floating Elements with Parallax */}
-      <div className="absolute inset-0">
-        {/* Morphing Orbs with Advanced Movement */}
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full transition-all duration-1000 ease-out animate-float-advanced"
-            style={{
-              left: `${15 + i * 12}%`,
-              top: `${10 + (i % 3) * 25}%`,
-              width: `${80 + i * 20}px`,
-              height: `${80 + i * 20}px`,
-              background: `radial-gradient(circle, ${
-                i % 2 === 0 
-                  ? 'rgba(255, 255, 255, 0.08)' 
-                  : 'rgba(255, 87, 51, 0.12)'
-              } 0%, transparent 70%)`,
-              transform: `
-                translate(
-                  ${(mousePosition.x - window.innerWidth * (0.15 + i * 0.12)) * (0.02 + i * 0.005)}px, 
-                  ${(mousePosition.y - window.innerHeight * (0.1 + (i % 3) * 0.25)) * (0.02 + i * 0.005)}px
-                ) 
-                scale(${1 + Math.sin(Date.now() * 0.001 + i) * 0.1})
-                rotate(${Date.now() * 0.02 + i * 30}deg)
-              `,
-              animationDelay: `${i * 0.2}s`,
-              filter: `blur(${i % 2}px)`,
-            }}
-          />
-        ))}
+        
 
-        {/* Advanced Floating Particles with Physics */}
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute transition-all duration-1000 ease-out animate-particle-float"
-            style={{
-              left: `${10 + i * 7}%`,
-              top: `${15 + (i % 4) * 18}%`,
-              width: `${2 + (i % 3)}px`,
-              height: `${2 + (i % 3)}px`,
-              background: i % 3 === 0 ? '#ff5733' : 'rgba(255, 255, 255, 0.6)',
-              borderRadius: '50%',
-              transform: `
-                translate(
-                  ${(mousePosition.x - window.innerWidth * (0.1 + i * 0.07)) * (0.008 + i * 0.003)}px,
-                  ${(mousePosition.y - window.innerHeight * (0.15 + (i % 4) * 0.18)) * (0.008 + i * 0.003)}px
-                ) 
-                scale(${1 + Math.sin(Date.now() * 0.002 + i) * 0.3})
-              `,
-              animationDelay: `${i * 0.1}s`,
-              boxShadow: `0 0 ${4 + i}px rgba(255, 87, 51, 0.4)`,
-            }}
-          />
-        ))}
-      </div>
+
+
+
+
+
+
 
       {/* Top Bar with Hover Effects */}
       <div
-        className="absolute top-6 right-6 text-white text-sm font-inter flex items-center gap-6 z-20 animate-slide-down"
-        style={{ animationDelay: "0.2s" }}
+        className="absolute top-6 right-6 text-sm font-inter flex items-center gap-6 z-20 animate-slide-down"
+        style={{ animationDelay: "0.2s", color: '#FE4629' }}
       >
                  <span 
-           className="hover:text-orange-400 transition-colors duration-300 cursor-pointer"
-           onMouseEnter={() => handleSimpleHover("Today", "bg-orange-400")}
-           onMouseLeave={handleSimpleLeave}
-         >
-           {formatDateWithHighlight(currentTime)}
-         </span>
-                 <span 
-           className="hover:text-orange-400 transition-colors duration-300 cursor-pointer font-mono"
+           className="transition-colors duration-300 cursor-pointer font-mono"
+           style={{ color: '#FE4629' }}
            onMouseEnter={() => handleSimpleHover("Live", "bg-orange-400")}
            onMouseLeave={handleSimpleLeave}
          >
            {formatTimeWithHighlight(currentTime)}
          </span>
-        <span 
-          className="hover:text-orange-400 transition-colors duration-300 cursor-pointer tracking-widest"
-          onMouseEnter={() => handleSimpleHover("Weekly", "bg-orange-400")}
-          onMouseLeave={handleSimpleLeave}
-        >
-          NEWSLETTER
-        </span>
-        <div 
-          className="w-6 h-6 rounded-full bg-white/10 border border-white/20 hover:bg-orange-400/20 hover:border-orange-400 transition-all duration-300 cursor-pointer"
-          onMouseEnter={() => handleSimpleHover("Status", "bg-orange-400")}
-          onMouseLeave={handleSimpleLeave}
-        ></div>
-        <div 
-          className="w-4 h-4 bg-orange-600/60 transform rotate-45 hover:rotate-180 hover:bg-orange-400 transition-all duration-500 cursor-pointer"
-          onMouseEnter={() => handleSimpleHover("Menu", "bg-orange-400")}
-          onMouseLeave={handleSimpleLeave}
-        ></div>
+                 <span 
+           className="transition-colors duration-300 cursor-pointer"
+           style={{ color: '#FE4629' }}
+           onMouseEnter={() => handleSimpleHover("Today", "bg-orange-400")}
+           onMouseLeave={handleSimpleLeave}
+         >
+           {formatDateWithHighlight(currentTime)}
+         </span>
       </div>
 
 
@@ -457,55 +324,60 @@ export default function HomePage() {
       {/* Central Logo with Subtle Hover Effects */}
       <div className="absolute inset-0 flex items-center justify-center z-20">
         <div className="text-center animate-scale-in">
-          <h1 className="text-8xl md:text-9xl font-bold text-white mb-8">
-            <span 
-              className="font-newsreader italic text-orange-600 hover:text-orange-400 transition-all duration-300 cursor-pointer"
-              onMouseEnter={() => handleSimpleHover("Bom", "bg-orange-400")}
+          <div className="flex justify-center items-center mb-8">
+            <img 
+              src="/Bombeta_white.svg" 
+              alt="Bombeta" 
+              className="w-[500px] h-auto cursor-pointer"
+              onMouseEnter={() => handleSimpleHover("Bombeta", "bg-orange-400")}
               onMouseLeave={handleSimpleLeave}
-            >
-              Bom
-            </span>
-            <span 
-              className="font-inter hover:text-orange-100 transition-all duration-300 cursor-pointer"
-              onMouseEnter={() => handleSimpleHover("beta", "bg-orange-400")}
-              onMouseLeave={handleSimpleLeave}
-            >
-              beta
-            </span>
-          </h1>
+            />
+          </div>
 
           <div
-            className="text-white/90 font-inter text-2xl leading-relaxed max-w-3xl mx-auto mb-8 animate-fade-in-up"
-            style={{ animationDelay: "0.2s" }}
+            className="font-inter text-2xl leading-relaxed max-w-3xl mx-auto mb-8 animate-fade-in-up"
+            style={{ animationDelay: "0.2s", color: 'rgba(254, 70, 41, 0.9)' }}
           >
             <div>
               Empowering <span 
-                className="font-newsreader italic text-orange-600 text-3xl hover:text-orange-400 transition-all duration-300 cursor-pointer"
+                className="font-newsreader italic text-3xl transition-all duration-300 cursor-pointer"
+                style={{ color: '#FE4629' }}
                 onMouseEnter={() => handleSimpleHover("Founders", "bg-orange-400")}
                 onMouseLeave={handleSimpleLeave}
               >
                 founders
-              </span> to build the future
+              </span>{" "}<span className="font-inter text-2xl" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>to build the future</span>
             </div>
           </div>
 
           <button
             onClick={() => setShowSignup(true)}
-            className="group/btn relative px-12 py-4 bg-transparent border-2 border-orange-600 text-orange-600 font-inter text-lg font-semibold rounded-none transition-all duration-500 hover:bg-orange-600 hover:text-black overflow-hidden animate-fade-in-up hover:scale-105"
-            style={{ animationDelay: "0.4s" }}
-            onMouseEnter={() => handleSimpleHover("Click to Join", "bg-green-500")}
-            onMouseLeave={handleSimpleLeave}
+            className="px-12 py-4 font-inter text-lg font-semibold rounded-lg animate-fade-in-up"
+            style={{ 
+              animationDelay: "0.4s", 
+              backgroundColor: '#FE4629',
+              color: '#4B0A23',
+              border: '2px solid #FE4629',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#FE4629';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#FE4629';
+              e.currentTarget.style.color = '#4B0A23';
+            }}
           >
-            <span className="relative z-10 transition-all duration-300 group-hover/btn:tracking-wider">Secure My Spot Now</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-500 transform scale-x-0 group-hover/btn:scale-x-100 transition-transform duration-500 origin-left"></div>
+            Secure My Spot Now
           </button>
 
                       {/* Schedule info */}
             <div
-              className="text-white/70 font-inter text-sm mt-4 animate-fade-in-up"
-              style={{ animationDelay: "0.5s" }}
+              className="font-inter text-sm mt-4 animate-fade-in-up"
+              style={{ animationDelay: "0.5s", color: 'rgba(254, 70, 41, 0.7)' }}
             >
-              Tuesdays <span className="text-orange-400 font-bold">11</span>:<span className="text-orange-400 font-bold">11</span> am
+              Every Tuesday <span style={{ color: '#FAF5EB' }}>11</span>:00 am
             </div>
         </div>
       </div>
@@ -650,7 +522,7 @@ export default function HomePage() {
                       Trusted by 8,000+ <span className="font-newsreader italic text-orange-600">founders</span> & VCs
                     </h3>
                     <p className="text-white/80 font-inter text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
-                      Join a proven community of successful entrepreneurs and investors. Delivered Tuesdays at 07:00.
+                      Join a proven community of successful entrepreneurs and investors. Delivered Tuesdays at 11:00.
                     </p>
                   </div>
                 </div>
@@ -679,73 +551,90 @@ export default function HomePage() {
 
       {/* Enhanced Signup Modal */}
       {showSignup && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 cursor-auto animate-fade-in">
-          <div className="bg-black/90 border border-white/20 rounded-2xl p-8 max-w-md w-full mx-4 relative backdrop-blur-md animate-scale-in-modal shadow-2xl shadow-orange-600/10">
+        <div className={`fixed inset-0 flex items-center justify-center z-50 cursor-auto ${signupAnimating ? 'animate-fade-out' : 'animate-fade-in'}`} style={{ backgroundColor: '#4B0A23' }}>
+          <div className={`border rounded-2xl p-8 max-w-md w-full mx-4 relative ${signupAnimating ? 'animate-scale-out-modal' : 'animate-scale-in-modal'}`} style={{ backgroundColor: '#4B0A23', borderColor: 'rgba(254, 70, 41, 0.2)', boxShadow: '0 25px 50px -12px rgba(254, 70, 41, 0.1)' }}>
             <button
-              onClick={() => setShowSignup(false)}
-              className="absolute top-4 right-4 text-white/60 hover:text-white text-2xl transition-all duration-300 hover:rotate-180 hover:scale-125"
+              onClick={() => {
+                setSignupAnimating(true)
+                setTimeout(() => {
+                  setShowSignup(false)
+                  setSignupAnimating(false)
+                }, 300)
+              }}
+              className="absolute top-4 right-4 text-2xl transition-all duration-300 hover:rotate-180 hover:scale-125"
+              style={{ color: 'rgba(254, 70, 41, 0.6)' }}
             >
               ×
             </button>
 
-            <h2 className="text-white font-inter text-2xl mb-2 text-center animate-slide-up">
-              Join <span className="font-newsreader italic text-orange-600">Bombeta</span>
+            <h2 className="font-inter text-2xl mb-2 text-center animate-slide-up flex items-center justify-center gap-2" style={{ color: '#FE4629' }}>
+              Join <img src="/Bombeta_white.svg" alt="Bombeta" className="h-8 w-auto" />
             </h2>
 
-            <p className="text-white/70 font-inter text-sm mb-6 text-center animate-slide-up" style={{animationDelay: "0.1s"}}>
+            <p className="font-inter text-sm mb-6 text-center animate-slide-up" style={{animationDelay: "0.1s", color: 'rgba(254, 70, 41, 0.7)' }}>
               Get exclusive insights delivered weekly
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="animate-slide-up" style={{animationDelay: "0.2s"}}>
-                <label className="block text-white/80 font-inter text-sm mb-2">Name</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white font-inter placeholder-white/40 focus:outline-none focus:border-orange-600 focus:bg-white/10 transition-all duration-300 hover:border-white/40"
-                  placeholder="Your name"
-                  required
-                />
+                <label className="block font-inter text-sm mb-2" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>Name</label>
+                                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300 placeholder-muted"
+                    style={{ 
+                      backgroundColor: 'rgba(254, 70, 41, 0.05)', 
+                      border: '1px solid rgba(254, 70, 41, 0.2)', 
+                      color: '#FE4629'
+                    }}
+                    placeholder="Your name"
+                    required
+                  />
               </div>
 
               <div className="animate-slide-up" style={{animationDelay: "0.3s"}}>
-                <label className="block text-white/80 font-inter text-sm mb-2">Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white font-inter placeholder-white/40 focus:outline-none focus:border-orange-600 focus:bg-white/10 transition-all duration-300 hover:border-white/40"
-                  placeholder="your@email.com"
-                  required
-                />
+                <label className="block font-inter text-sm mb-2" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>Email</label>
+                                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300 placeholder-muted"
+                    style={{ 
+                      backgroundColor: 'rgba(254, 70, 41, 0.05)', 
+                      border: '1px solid rgba(254, 70, 41, 0.2)', 
+                      color: '#FE4629'
+                    }}
+                    placeholder="your@email.com"
+                    required
+                  />
               </div>
 
               <div className="animate-slide-up" style={{animationDelay: "0.4s"}}>
-                <label className="block text-white/80 font-inter text-sm mb-2">Language</label>
+                <label className="block font-inter text-sm mb-2" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>Language</label>
                 <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, language: "en" })}
-                    className={`flex items-center gap-2 px-4 py-3 border rounded-lg transition-all duration-300 hover:scale-105 ${
-                      formData.language === "en"
-                        ? "border-orange-600 bg-orange-600/10 text-orange-600"
-                        : "border-white/20 bg-white/5 text-white/80 hover:border-white/40"
-                    }`}
+                    className="px-4 py-3 border rounded-lg transition-all duration-300 hover:scale-105"
+                    style={{
+                      borderColor: formData.language === "en" ? '#FE4629' : 'rgba(254, 70, 41, 0.2)',
+                      backgroundColor: formData.language === "en" ? 'rgba(254, 70, 41, 0.1)' : 'rgba(254, 70, 41, 0.05)',
+                      color: '#FE4629'
+                    }}
                   >
-                    <span className="text-lg">🇺🇸</span>
                     <span className="font-inter text-sm">English</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setFormData({ ...formData, language: "es" })}
-                    className={`flex items-center gap-2 px-4 py-3 border rounded-lg transition-all duration-300 hover:scale-105 ${
-                      formData.language === "es"
-                        ? "border-orange-600 bg-orange-600/10 text-orange-600"
-                        : "border-white/20 bg-white/5 text-white/80 hover:border-white/40"
-                    }`}
+                    className="px-4 py-3 border rounded-lg transition-all duration-300 hover:scale-105"
+                    style={{
+                      borderColor: formData.language === "es" ? '#FE4629' : 'rgba(254, 70, 41, 0.2)',
+                      backgroundColor: formData.language === "es" ? 'rgba(254, 70, 41, 0.1)' : 'rgba(254, 70, 41, 0.05)',
+                      color: '#FE4629'
+                    }}
                   >
-                    <span className="text-lg">🇪🇸</span>
                     <span className="font-inter text-sm">Español</span>
                   </button>
                 </div>
@@ -753,8 +642,22 @@ export default function HomePage() {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-orange-600 text-black font-inter font-semibold rounded-lg hover:bg-orange-700 transition-all duration-300 mt-6 hover:scale-105 hover:shadow-lg animate-slide-up"
-                style={{animationDelay: "0.5s"}}
+                className="w-full py-3 font-inter font-semibold rounded-lg mt-6 animate-slide-up"
+                style={{
+                  animationDelay: "0.5s",
+                  backgroundColor: '#FE4629',
+                  color: '#4B0A23',
+                  border: '1px solid #FE4629',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FE4629';
+                  e.currentTarget.style.color = '#4B0A23';
+                }}
               >
                 Join Bombeta
               </button>
@@ -772,6 +675,15 @@ export default function HomePage() {
           100% {
             opacity: 1;
             transform: translateY(0);
+          }
+        }
+
+        @keyframes fade-out {
+          0% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
           }
         }
 
@@ -816,6 +728,17 @@ export default function HomePage() {
           100% {
             opacity: 1;
             transform: scale(1) translateY(0);
+          }
+        }
+
+        @keyframes scale-out-modal {
+          0% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(0.7) translateY(50px);
           }
         }
 
@@ -927,6 +850,10 @@ export default function HomePage() {
           opacity: 0;
         }
 
+        .animate-scale-out-modal {
+          animation: scale-out-modal 0.3s ease-in forwards;
+        }
+
         .animate-float-advanced {
           animation: float-advanced 6s ease-in-out infinite;
         }
@@ -976,6 +903,14 @@ export default function HomePage() {
 
         .animate-fade-in {
           animation: fade-in-up 0.5s ease-out forwards;
+        }
+
+        .animate-fade-out {
+          animation: fade-out 0.3s ease-in forwards;
+        }
+
+        .placeholder-muted::placeholder {
+          color: rgba(254, 70, 41, 0.4);
         }
       `}</style>
     </div>
