@@ -28,6 +28,8 @@ export default function HomePage() {
   
   // Estado para controlar la transición a Weekly Builds
   const [showWeeklyBuilds, setShowWeeklyBuilds] = useState(false)
+  const [logoTransitioned, setLogoTransitioned] = useState(false)
+  const [showWeeklyBuildsContent, setShowWeeklyBuildsContent] = useState(false)
   
   // Estados para la animación de inicio
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
@@ -276,7 +278,11 @@ export default function HomePage() {
 
 
               {/* Logo único que hace la animación y luego permanece */}
-        <div className="absolute inset-0 flex items-center justify-center z-20">
+        <div className="absolute inset-0 flex items-center justify-center z-20"
+             style={{
+               transform: logoTransitioned ? 'translateY(calc(55vh - 10px))' : 'translateY(0)',
+               transition: 'transform 1.2s ease-in-out'
+             }}>
           <div className="text-center animate-scale-in">
             <div className="flex justify-center items-center mb-8">
               <img 
@@ -286,8 +292,8 @@ export default function HomePage() {
                 onMouseEnter={() => handleSimpleHover("Bombeta", "bg-orange-400")}
                 onMouseLeave={handleSimpleLeave}
                 style={{
-                  transform: mounted && introStage === 2 ? 'scale(1.05)' : 'scale(1)',
-                  transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : 'all 1s ease-in-out',
+                  transform: mounted && introStage === 2 ? 'scale(1.05)' : logoTransitioned ? 'scale(0.4)' : 'scale(1)',
+                  transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : logoTransitioned ? 'transform 1.2s ease-in-out' : 'all 1s ease-in-out',
                   opacity: mounted ? 1 : 0
                 }}
               />
@@ -399,7 +405,17 @@ export default function HomePage() {
              {/* Right - The Weekly Builds Button */}
              <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
                <button
-                 onClick={() => setShowWeeklyBuilds(true)}
+                 onClick={() => {
+                   setShowWeeklyBuilds(true);
+                   // Transición del logo después de que el contenido se desvanezca
+                   setTimeout(() => {
+                     setLogoTransitioned(true);
+                     // Mostrar el contenido de Weekly Builds después de que el logo se posicione
+                     setTimeout(() => {
+                       setShowWeeklyBuildsContent(true);
+                     }, 1200); // Delay para que coincida con la duración de la transición del logo
+                   }, 800); // Delay para que coincida con la duración de las transiciones
+                 }}
                  className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer"
                  style={{ 
                    backgroundColor: 'transparent',
@@ -691,6 +707,91 @@ export default function HomePage() {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Weekly Builds Content */}
+      {showWeeklyBuildsContent && (
+        <>
+
+
+          {/* Weekly Builds Header */}
+          <div className="fixed top-4 left-0 w-full z-40" style={{ height: '60px' }}>
+            {/* Left - Join Newsletter Button */}
+            <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
+              <button
+                onClick={() => setShowSignup(true)}
+                className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer"
+                style={{ 
+                  backgroundColor: '#FE4629',
+                  color: '#4B0A23',
+                  border: '2px solid #FE4629'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FE4629';
+                  handleSimpleHover("Join the Club", "bg-orange-400");
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FE4629';
+                  e.currentTarget.style.color = '#4B0A23';
+                  handleSimpleLeave();
+                }}
+              >
+                Join the Club
+              </button>
+            </div>
+
+            {/* Center - Weekly Builds Brand */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className="text-center">
+                <span className="font-inter text-sm font-normal text-[#FE4629]/60 tracking-wider uppercase">The</span>
+                <div className="font-inter text-xl font-bold text-[#FE4629] tracking-wider mt-1">WEEKLY BUILDS</div>
+              </div>
+            </div>
+
+            {/* Right - The Newsletter Button */}
+            <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
+              <button
+                onClick={() => {
+                  setShowWeeklyBuildsContent(false);
+                  setTimeout(() => {
+                    setLogoTransitioned(false);
+                    setTimeout(() => {
+                      setShowWeeklyBuilds(false);
+                    }, 1200);
+                  }, 300);
+                }}
+                className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer"
+                style={{ 
+                  backgroundColor: 'transparent',
+                  color: '#FE4629',
+                  border: '2px solid #FE4629'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FE4629';
+                  e.currentTarget.style.color = '#4B0A23';
+                  handleSimpleHover("The Newsletter", "bg-orange-400");
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FE4629';
+                  handleSimpleLeave();
+                }}
+              >
+                The Newsletter
+              </button>
+            </div>
+          </div>
+
+          {/* Footer - Live Time */}
+          <div className="fixed bottom-4 right-8 z-40">
+            <span 
+              className="font-inter text-base font-normal text-[#FE4629] font-mono"
+            >
+              {currentTime ? formatTimeWithHighlight(currentTime) : '--:--:--'}
+            </span>
+          </div>
+        </>
       )}
 
       <style jsx>{`
