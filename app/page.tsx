@@ -392,6 +392,30 @@ export default function HomePage() {
                  <div className="font-inter text-xl font-bold text-[#FE4629] tracking-wider mt-1">NEWSLETTER</div>
                </div>
              </div>
+
+             {/* Right - The Weekly Builds Button */}
+             <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
+               <button
+                 className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer"
+                 style={{ 
+                   backgroundColor: 'transparent',
+                   color: '#FE4629',
+                   border: '2px solid #FE4629'
+                 }}
+                 onMouseEnter={(e) => {
+                   e.currentTarget.style.backgroundColor = '#FE4629';
+                   e.currentTarget.style.color = '#4B0A23';
+                   handleSimpleHover("The Weekly Builds", "bg-orange-400");
+                 }}
+                 onMouseLeave={(e) => {
+                   e.currentTarget.style.backgroundColor = 'transparent';
+                   e.currentTarget.style.color = '#FE4629';
+                   handleSimpleLeave();
+                 }}
+               >
+                 The Weekly Builds
+               </button>
+             </div>
            </div>
 
            {/* Footer */}
