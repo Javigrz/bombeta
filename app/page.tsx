@@ -26,6 +26,9 @@ export default function HomePage() {
     language: "en",
   })
   
+  // Estado para controlar la transición a Weekly Builds
+  const [showWeeklyBuilds, setShowWeeklyBuilds] = useState(false)
+  
   // Estados para la animación de inicio
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
   const [introTextComplete, setIntroTextComplete] = useState(false)
@@ -290,65 +293,65 @@ export default function HomePage() {
               />
             </div>
 
-                      <div
-              className="font-inter text-2xl leading-relaxed max-w-3xl mx-auto mb-8"
-              style={{ 
-                color: 'rgba(254, 70, 41, 0.9)',
-                opacity: showMainContent ? 1 : 0,
-                visibility: showMainContent ? 'visible' : 'hidden',
-                transition: 'opacity 0.8s ease-out, visibility 0s, transform 0.8s ease-out',
-                transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
-              }}
-            >
-            <div>
-              Empowering <span 
-                className="font-newsreader italic text-3xl transition-all duration-300 cursor-pointer"
-                style={{ color: '#FE4629' }}
-                onMouseEnter={() => handleSimpleHover("Founders", "bg-orange-400")}
-                onMouseLeave={handleSimpleLeave}
-              >
-                founders
-              </span>{" "}<span className="font-inter text-2xl" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>to build the future</span>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setShowSignup(true)}
-            className="px-12 py-4 font-inter text-lg font-semibold rounded-lg animate-fade-in-up"
+                                <div
+            className="font-inter text-2xl leading-relaxed max-w-3xl mx-auto mb-8"
             style={{ 
-              backgroundColor: '#FE4629',
-              color: '#4B0A23',
-              border: '2px solid #FE4629',
-              opacity: showMainContent ? 1 : 0,
-              visibility: showMainContent ? 'visible' : 'hidden',
-              transition: 'all 0.3s ease, opacity 0.8s ease-out 0.2s, visibility 0s, transform 0.8s ease-out 0.2s',
-              transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#FE4629';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#FE4629';
-              e.currentTarget.style.color = '#4B0A23';
+              color: 'rgba(254, 70, 41, 0.9)',
+              opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+              visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+              transition: 'opacity 0.8s ease-out, visibility 0s, transform 0.8s ease-out',
+              transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
             }}
           >
-            Secure My Spot Now
-          </button>
-
-                      {/* Schedule info */}
-            <div
-              className="font-inter text-sm mt-4 animate-fade-in-up"
-              style={{ 
-                color: 'rgba(254, 70, 41, 0.7)',
-                opacity: showMainContent ? 1 : 0,
-                visibility: showMainContent ? 'visible' : 'hidden',
-                transition: 'opacity 0.8s ease-out 0.4s, visibility 0s, transform 0.8s ease-out 0.4s',
-                transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
-              }}
+          <div>
+            Empowering <span 
+              className="font-newsreader italic text-3xl transition-all duration-300 cursor-pointer"
+              style={{ color: '#FE4629' }}
+              onMouseEnter={() => handleSimpleHover("Founders", "bg-orange-400")}
+              onMouseLeave={handleSimpleLeave}
             >
-              Every Tuesday <span style={{ color: '#FAF5EB' }}>11</span>:00 am
-            </div>
+              founders
+            </span>{" "}<span className="font-inter text-2xl" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>to build the future</span>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setShowSignup(true)}
+          className="px-12 py-4 font-inter text-lg font-semibold rounded-lg animate-fade-in-up"
+          style={{ 
+            backgroundColor: '#FE4629',
+            color: '#4B0A23',
+            border: '2px solid #FE4629',
+            opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+            visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+            transition: 'all 0.3s ease, opacity 0.8s ease-out 0.2s, visibility 0s, transform 0.8s ease-out 0.2s',
+            transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = '#FE4629';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#FE4629';
+            e.currentTarget.style.color = '#4B0A23';
+          }}
+        >
+          Secure My Spot Now
+        </button>
+
+                {/* Schedule info */}
+        <div
+          className="font-inter text-sm mt-4 animate-fade-in-up"
+          style={{ 
+            color: 'rgba(254, 70, 41, 0.7)',
+            opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+            visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+            transition: 'opacity 0.8s ease-out 0.4s, visibility 0s, transform 0.8s ease-out 0.4s',
+            transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
+          }}
+        >
+          Every Tuesday <span style={{ color: '#FAF5EB' }}>11</span>:00 am
+        </div>
         </div>
       </div>
 
@@ -356,10 +359,10 @@ export default function HomePage() {
            <div
              className="fixed top-4 left-0 w-full z-30"
              style={{
-               opacity: showMainContent ? 1 : 0,
-               visibility: showMainContent ? 'visible' : 'hidden',
+               opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+               visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
                transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
-               transform: showMainContent ? 'translateY(0)' : 'translateY(-20px)',
+               transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)',
                height: '60px'
              }}
            >
@@ -396,6 +399,7 @@ export default function HomePage() {
              {/* Right - The Weekly Builds Button */}
              <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
                <button
+                 onClick={() => setShowWeeklyBuilds(true)}
                  className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer"
                  style={{ 
                    backgroundColor: 'transparent',
@@ -422,10 +426,10 @@ export default function HomePage() {
            <div
              className="fixed bottom-4 left-0 w-full z-30"
              style={{
-               opacity: showMainContent ? 1 : 0,
-               visibility: showMainContent ? 'visible' : 'hidden',
+               opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+               visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
                transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
-               transform: showMainContent ? 'translateY(0)' : 'translateY(-20px)'
+               transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)'
              }}
            >
              {/* Right - Live Time */}
