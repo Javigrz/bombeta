@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
+// Eliminar la importación de MomentumLogoHot
 
 export default function HomePage() {
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
@@ -9,8 +10,6 @@ export default function HomePage() {
   const [showSignup, setShowSignup] = useState(false)
   const [signupAnimating, setSignupAnimating] = useState(false)
   const [showMainContent, setShowMainContent] = useState(false)
-  const [showQuotes, setShowQuotes] = useState(false)
-  const [quotesAnimating, setQuotesAnimating] = useState(false)
   const [typedText, setTypedText] = useState("")
   const [isTypingComplete, setIsTypingComplete] = useState(false)
   const [showHighlights, setShowHighlights] = useState(false)
@@ -257,6 +256,7 @@ export default function HomePage() {
              transition: 'background-color 1s ease-in-out'
            }}
       >
+      {/* Eliminado MomentumLogoHot */}
 
 
 
@@ -372,27 +372,7 @@ export default function HomePage() {
                height: '60px'
              }}
            >
-             {/* Left - Features Icon */}
-             <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
-               <button
-                 onClick={() => setShowQuotes(true)}
-                 className="w-6 h-6 hover:scale-110 transition-transform duration-300 cursor-pointer"
-                 onMouseEnter={() => handleSimpleHover("Features", "bg-orange-400")}
-                 onMouseLeave={handleSimpleLeave}
-               >
-                 <svg 
-                   viewBox="0 0 24 24" 
-                   fill="none" 
-                   stroke="#FE4629" 
-                   strokeWidth="2" 
-                   strokeLinecap="round" 
-                   strokeLinejoin="round"
-                   className="w-full h-full"
-                 >
-                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                 </svg>
-               </button>
-             </div>
+
 
              {/* Center - Newsletter Brand */}
              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -402,8 +382,8 @@ export default function HomePage() {
                </div>
              </div>
 
-             {/* Right - The Weekly Builds Button */}
-             <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
+                          {/* Left - The Weekly Builds Button */}
+             <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
                <button
                  onClick={() => {
                    setShowWeeklyBuilds(true);
@@ -433,7 +413,7 @@ export default function HomePage() {
                    handleSimpleLeave();
                  }}
                >
-                 The Weekly Builds
+                 THE WEEKLY BUILDS
                </button>
              </div>
            </div>
@@ -458,139 +438,7 @@ export default function HomePage() {
              </div>
            </div>
 
-                 {/* Enhanced Floating Quotes Window */}
-           {showQuotes && (
-             <div className={`fixed inset-0 flex items-center justify-center z-40 cursor-auto ${quotesAnimating ? 'animate-fade-out' : 'animate-fade-in'}`} style={{ backgroundColor: '#4B0A23' }}>
-               <div className={`p-8 max-w-4xl w-full mx-4 relative ${quotesAnimating ? 'animate-scale-out-modal' : 'animate-scale-in-modal'}`} style={{ backgroundColor: '#4B0A23' }}>
-            
 
-
-                             {/* Header */}
-                 <div className="text-center mb-8 animate-slide-up">
-                   <h2 className="text-[#FE4629] font-inter text-3xl mb-2 flex items-center justify-center gap-2">
-                     <span>Why</span>
-                     <img src="/Bombeta_white.svg" alt="Bombeta" className="h-8 w-auto" />
-                     <span>?</span>
-                   </h2>
-                   <p className="text-[#FE4629]/70 font-inter text-lg">
-                     The newsletter for founders
-                   </p>
-                 </div>
-
-            {/* Simplified Features Grid */}
-            <div className="grid md:grid-cols-2 gap-8">
-              
-              {/* Feature 1 */}
-              <div className="text-center animate-slide-up" style={{animationDelay: "0.1s"}}>
-                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
-                  BUILT FOR FOUNDERS
-                </h3>
-                <p className="text-[#FE4629]/80 font-inter text-sm">
-                  who build and scale
-                </p>
-              </div>
-
-              {/* Feature 2 */}
-              <div className="text-center animate-slide-up" style={{animationDelay: "0.2s"}}>
-                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
-                  HUMAN PLAYBOOKS
-                </h3>
-                <p className="text-[#FE4629]/80 font-inter text-sm">
-                  tested in the trenches
-                </p>
-              </div>
-
-              {/* Feature 3 */}
-              <div className="text-center animate-slide-up" style={{animationDelay: "0.3s"}}>
-                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
-                  WRITTEN BY OPERATORS
-                </h3>
-                <p className="text-[#FE4629]/80 font-inter text-sm">
-                  not algorithms
-                </p>
-              </div>
-
-              {/* Feature 4 */}
-              <div className="text-center animate-slide-up" style={{animationDelay: "0.4s"}}>
-                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
-                  STAY AHEAD
-                </h3>
-                <p className="text-[#FE4629]/80 font-inter text-sm">
-                  of your rivals
-                </p>
-              </div>
-
-              {/* Feature 5 */}
-              <div className="text-center animate-slide-up" style={{animationDelay: "0.5s"}}>
-                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
-                  WEEKLY TACTICS
-                </h3>
-                <p className="text-[#FE4629]/80 font-inter text-sm">
-                  to ship faster
-                </p>
-              </div>
-
-              {/* Feature 6 */}
-              <div className="text-center animate-slide-up" style={{animationDelay: "0.6s"}}>
-                <h3 className="text-[#FE4629] font-inter text-xl font-bold mb-2 tracking-wider">
-                  8,000+ FOUNDERS
-                </h3>
-                <p className="text-[#FE4629]/80 font-inter text-sm">
-                  trust us
-                </p>
-              </div>
-
-            </div>
-
-            {/* Footer CTA */}
-            <div className="text-center mt-8 animate-slide-up" style={{animationDelay: "0.7s"}}>
-              <button
-                onClick={() => {
-                  setQuotesAnimating(true)
-                  setTimeout(() => {
-                    setShowQuotes(false)
-                    setQuotesAnimating(false)
-                    setTimeout(() => {
-                      setShowSignup(true)
-                    }, 300)
-                  }, 300)
-                }}
-                className="px-8 py-3 bg-[#FE4629] text-[#4B0A23] font-inter font-semibold rounded-xl transition-all duration-300"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FE4629';
-                  e.currentTarget.style.border = '2px solid #FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FE4629';
-                  e.currentTarget.style.color = '#4B0A23';
-                  e.currentTarget.style.border = '2px solid #FE4629';
-                }}
-              >
-                Join the Club
-              </button>
-              
-              {/* Close Button */}
-              <div className="mt-6">
-                <button
-                  onClick={() => {
-                    setQuotesAnimating(true)
-                    setTimeout(() => {
-                      setShowQuotes(false)
-                      setQuotesAnimating(false)
-                    }, 300)
-                  }}
-                  className="text-2xl transition-all duration-300 hover:rotate-180 hover:scale-125"
-                  style={{ color: 'rgba(254, 70, 41, 0.6)' }}
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      )}
 
       {/* Enhanced Signup Modal */}
       {showSignup && (
@@ -736,9 +584,9 @@ export default function HomePage() {
                   e.currentTarget.style.color = '#4B0A23';
                   handleSimpleLeave();
                 }}
-              >
-                Join the Club
-              </button>
+                               >
+                 JOIN THE CLUB
+               </button>
             </div>
 
             {/* Center - Weekly Builds Brand */}
@@ -777,9 +625,9 @@ export default function HomePage() {
                   e.currentTarget.style.color = '#FE4629';
                   handleSimpleLeave();
                 }}
-              >
-                The Newsletter
-              </button>
+                               >
+                 THE NEWSLETTER
+               </button>
             </div>
           </div>
 
