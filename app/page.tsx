@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
+import MomentumLogo from "../components/momentum-logo"
 // Eliminar la importación de MomentumLogoHot
 
 export default function HomePage() {
@@ -573,19 +574,19 @@ export default function HomePage() {
                 onClick={() => setShowSignup(true)}
                 className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
                 style={{ 
-                  backgroundColor: '#FE4629',
-                  color: '#4B0A23',
-                  border: '2px solid #FE4629',
+                  backgroundColor: 'transparent',
+                  color: '#FAF5EB',
+                  border: '2px solid rgba(250,245,235,0.25)',
                   animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FE4629';
+                  e.currentTarget.style.backgroundColor = '#FAF5EB';
+                  e.currentTarget.style.color = '#4B0A23';
                   handleSimpleHover("Join the Club", "bg-orange-400");
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FE4629';
-                  e.currentTarget.style.color = '#4B0A23';
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FAF5EB';
                   handleSimpleLeave();
                 }}
               >
@@ -620,18 +621,18 @@ export default function HomePage() {
                 className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
                 style={{ 
                   backgroundColor: 'transparent',
-                  color: '#FE4629',
-                  border: '2px solid #FE4629',
+                  color: '#FAF5EB',
+                  border: '2px solid rgba(250,245,235,0.25)',
                   animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FE4629';
+                  e.currentTarget.style.backgroundColor = '#FAF5EB';
                   e.currentTarget.style.color = '#4B0A23';
                   handleSimpleHover("The Newsletter", "bg-orange-400");
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FE4629';
+                  e.currentTarget.style.color = '#FAF5EB';
                   handleSimpleLeave();
                 }}
               >
@@ -645,15 +646,14 @@ export default function HomePage() {
             {/* HOTTEST BUILDS THIS WEEK */}
             <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s' }}>
               <div className="flex items-center gap-3 mb-6">
-                <div className={`w-4 h-4 bg-blue-500 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}></div>
-                <h2 className="font-inter text-2xl font-bold text-[#FE4629]">HOTTEST BUILDS THIS WEEK</h2>
+                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">HOTTEST BUILDS THIS WEEK</h2>
                 <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: 847]</span>
               </div>
               
               {/* Product Cards */}
               <div className="space-y-6">
                 {/* Released */}
-                <div className={`border border-[#FE4629]/20 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s' }}>
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s' }}>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
                       <span className="font-inter text-2xl font-bold text-[#FAF5EB]">1.</span>
@@ -662,7 +662,11 @@ export default function HomePage() {
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-inter text-xl font-bold text-[#FE4629]">Released</h3>
-                        <span className="font-inter text-lg text-[#FE4629]">[momentum: 234]</span>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="hot" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">234</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-transparent bg-clip-text hot-gradient">Hot</span>
+                        </div>
                       </div>
                       <p className="font-inter text-sm text-[#FAF5EB]">AI for effortless guest communication & revenue growth</p>
                     </div>
@@ -670,7 +674,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Lero */}
-                <div className={`border border-[#FE4629]/20 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s' }}>
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s' }}>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
                       <span className="font-inter text-2xl font-bold text-[#FAF5EB]">2.</span>
@@ -679,7 +683,11 @@ export default function HomePage() {
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-inter text-xl font-bold text-[#FE4629]">Lero</h3>
-                        <span className="font-inter text-lg text-[#FE4629]">[momentum: 156]</span>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="building" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">156</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                        </div>
                       </div>
                       <p className="font-inter text-sm text-[#FAF5EB]">Zero bounce for founders</p>
                     </div>
@@ -691,25 +699,28 @@ export default function HomePage() {
             {/* RISING BUILDS */}
             <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.8s' : '0.8s' }}>
               <div className="flex items-center gap-3 mb-6">
-                <div className={`w-4 h-4 bg-yellow-500 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}></div>
-                <h2 className="font-inter text-2xl font-bold text-yellow-500">RISING BUILDS</h2>
+                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">RISING BUILDS</h2>
                 <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: 200-100]</span>
               </div>
               
               <div className="space-y-6">
                 {/* MindDump */}
-                <div className={`border border-[#FE4629]/20 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.0s' : '1.0s' }}>
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.0s' : '1.0s' }}>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
                       <span className="font-inter text-2xl font-bold text-[#FAF5EB]">3.</span>
-                      <div className="w-12 h-12 bg-[#FE4629] rounded-lg flex items-center justify-center">
-                        <span className="font-inter text-white font-bold text-lg">M</span>
+                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">M</span>
                       </div>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-inter text-xl font-bold text-[#FE4629]">MindDump</h3>
-                        <span className="font-inter text-lg text-[#FE4629]">[momentum: 189]</span>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="building" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">189</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                        </div>
                       </div>
                       <p className="font-inter text-sm text-[#FAF5EB]">Brain-to-text voice notes</p>
                     </div>
@@ -717,18 +728,22 @@ export default function HomePage() {
                 </div>
 
                 {/* CodeSnap */}
-                <div className={`border border-[#FE4629]/20 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.2s' : '1.2s' }}>
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.2s' : '1.2s' }}>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
                       <span className="font-inter text-2xl font-bold text-[#FAF5EB]">4.</span>
-                      <div className="w-12 h-12 bg-[#FE4629] rounded-lg flex items-center justify-center">
-                        <span className="font-inter text-white font-bold text-lg">C</span>
+                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">C</span>
                       </div>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-inter text-xl font-bold text-[#FE4629]">CodeSnap</h3>
-                        <span className="font-inter text-lg text-[#FE4629]">[momentum: 145]</span>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="normal" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">145</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/40">Steady</span>
+                        </div>
                       </div>
                       <p className="font-inter text-sm text-[#FAF5EB]">Screenshot your code beautifully</p>
                     </div>
@@ -740,25 +755,28 @@ export default function HomePage() {
             {/* FRESH BUILDS */}
             <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.4s' : '1.4s' }}>
               <div className="flex items-center gap-3 mb-6">
-                <div className={`w-4 h-4 bg-green-500 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}></div>
-                <h2 className="font-inter text-2xl font-bold text-green-500">FRESH BUILDS</h2>
-                <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: &lt;100]</span>
+                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">FRESH BUILDS</h2>
+                <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: {'<100'}]</span>
               </div>
               
               <div className="space-y-6">
                 {/* TaskFlow */}
-                <div className={`border border-[#FE4629]/20 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.6s' : '1.6s' }}>
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.6s' : '1.6s' }}>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
                       <span className="font-inter text-2xl font-bold text-[#FAF5EB]">5.</span>
-                      <div className="w-12 h-12 bg-[#FE4629] rounded-lg flex items-center justify-center">
-                        <span className="font-inter text-white font-bold text-lg">T</span>
+                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">T</span>
                       </div>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-inter text-xl font-bold text-[#FE4629]">TaskFlow</h3>
-                        <span className="font-inter text-lg text-[#FE4629]">[momentum: 87]</span>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="building" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">87</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                        </div>
                       </div>
                       <p className="font-inter text-sm text-[#FAF5EB]">Visual project management for teams</p>
                     </div>
@@ -766,18 +784,22 @@ export default function HomePage() {
                 </div>
 
                 {/* DataViz */}
-                <div className={`border border-[#FE4629]/20 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.8s' : '1.8s' }}>
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.8s' : '1.8s' }}>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
                       <span className="font-inter text-2xl font-bold text-[#FAF5EB]">6.</span>
-                      <div className="w-12 h-12 bg-[#FE4629] rounded-lg flex items-center justify-center">
-                        <span className="font-inter text-white font-bold text-lg">D</span>
+                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">D</span>
                       </div>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-inter text-xl font-bold text-[#FE4629]">DataViz</h3>
-                        <span className="font-inter text-lg text-[#FE4629]">[momentum: 65]</span>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="normal" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">65</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/40">Steady</span>
+                        </div>
                       </div>
                       <p className="font-inter text-sm text-[#FAF5EB]">Beautiful charts from any data source</p>
                     </div>
@@ -799,6 +821,16 @@ export default function HomePage() {
       )}
 
       <style jsx>{`
+        .hot-gradient {
+          background-image: linear-gradient(90deg, #22D3EE, #60A5FA, #8B5CF6, #EC4899);
+          animation: hueShift 6s linear infinite;
+          background-size: 300% 100%;
+        }
+        @keyframes hueShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
         @keyframes fade-in-up {
           0% {
             opacity: 0;
