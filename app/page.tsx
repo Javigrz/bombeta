@@ -2,10 +2,10 @@
 
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
-import { useRouter } from "next/navigation"
+import MomentumLogo from "../components/momentum-logo"
+// Eliminar la importación de MomentumLogoHot
 
 export default function HomePage() {
-  const router = useRouter()
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [showSignup, setShowSignup] = useState(false)
@@ -25,6 +25,12 @@ export default function HomePage() {
     email: "",
     language: "en",
   })
+  
+  // Estado para controlar la transición a Weekly Builds
+  const [showWeeklyBuilds, setShowWeeklyBuilds] = useState(false)
+  const [logoTransitioned, setLogoTransitioned] = useState(false)
+  const [showWeeklyBuildsContent, setShowWeeklyBuildsContent] = useState(false)
+  const [isExitingWeeklyBuilds, setIsExitingWeeklyBuilds] = useState(false)
   
   // Estados para la animación de inicio
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
@@ -246,7 +252,9 @@ export default function HomePage() {
   return (
     <div 
       ref={containerRef} 
-      className="w-full h-screen overflow-hidden relative transition-all duration-1000 ease-in-out cursor-auto"
+      className={`w-full relative transition-all duration-1000 ease-in-out cursor-auto ${
+        showWeeklyBuildsContent ? 'min-h-screen overflow-y-auto' : 'h-screen overflow-hidden'
+      }`}
       style={{
         backgroundColor: mounted && introStage === 3 ? '#4B0A23' : '#000000',
         transition: 'background-color 1s ease-in-out'
@@ -275,7 +283,11 @@ export default function HomePage() {
 
               {/* Logo único que hace la animación y luego permanece */}
         <div 
-          className="absolute inset-0 flex items-center justify-center z-20"
+          className={`${logoTransitioned ? 'fixed' : 'absolute'} inset-0 flex items-center justify-center z-20`}
+          style={{
+            transform: logoTransitioned ? 'translateY(calc(55vh - 10px))' : 'translateY(0)',
+            transition: 'transform 1.2s ease-in-out'
+          }}
         >
           <div className="text-center animate-scale-in">
             <div className="flex justify-center items-center mb-8">
@@ -286,8 +298,8 @@ export default function HomePage() {
                 onMouseEnter={() => handleSimpleHover("Bombeta", "bg-orange-400")}
                 onMouseLeave={handleSimpleLeave}
                 style={{
-                  transform: mounted && introStage === 2 ? 'scale(1.05)' : 'scale(1)',
-                  transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : 'all 1s ease-in-out',
+                  transform: mounted && introStage === 2 ? 'scale(1.05)' : logoTransitioned ? 'scale(0.4)' : 'scale(1)',
+                  transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : logoTransitioned ? 'transform 1.2s ease-in-out' : 'all 1s ease-in-out',
                   opacity: mounted ? 1 : 0
                 }}
               />
@@ -297,10 +309,10 @@ export default function HomePage() {
             className="font-inter text-2xl leading-relaxed max-w-3xl mx-auto mb-8"
             style={{ 
               color: 'rgba(254, 70, 41, 0.9)',
-              opacity: showMainContent ? 1 : 0,
-              visibility: showMainContent ? 'visible' : 'hidden',
+              opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+              visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
               transition: 'opacity 0.8s ease-out, visibility 0s, transform 0.8s ease-out',
-              transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
+              transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
             }}
           >
           <div>
@@ -322,10 +334,10 @@ export default function HomePage() {
             backgroundColor: '#FE4629',
             color: '#4B0A23',
             border: '2px solid #FE4629',
-            opacity: showMainContent ? 1 : 0,
-            visibility: showMainContent ? 'visible' : 'hidden',
+            opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+            visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
             transition: 'all 0.3s ease, opacity 0.8s ease-out 0.2s, visibility 0s, transform 0.8s ease-out 0.2s',
-            transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
+            transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = 'transparent';
@@ -344,10 +356,10 @@ export default function HomePage() {
           className="font-inter text-sm mt-4 animate-fade-in-up"
           style={{ 
             color: 'rgba(254, 70, 41, 0.7)',
-            opacity: showMainContent ? 1 : 0,
-            visibility: showMainContent ? 'visible' : 'hidden',
+            opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+            visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
             transition: 'opacity 0.8s ease-out 0.4s, visibility 0s, transform 0.8s ease-out 0.4s',
-            transform: showMainContent ? 'translateY(0)' : 'translateY(15px)'
+            transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
           }}
         >
           Every Tuesday <span style={{ color: '#FAF5EB' }}>11</span>:00 am
@@ -359,10 +371,10 @@ export default function HomePage() {
            <div
              className="fixed top-4 left-0 w-full z-30"
              style={{
-               opacity: showMainContent ? 1 : 0,
-               visibility: showMainContent ? 'visible' : 'hidden',
+               opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+               visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
                transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
-               transform: showMainContent ? 'translateY(0)' : 'translateY(-20px)',
+               transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)',
                height: '60px'
              }}
            >
@@ -379,7 +391,17 @@ export default function HomePage() {
                           {/* Left - The Weekly Builds Button */}
              <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
                <button
-                onClick={() => router.push('/weekly-builds')}
+                 onClick={() => {
+                   setShowWeeklyBuilds(true);
+                   // Transición del logo después de que el contenido se desvanezca
+                   setTimeout(() => {
+                     setLogoTransitioned(true);
+                     // Mostrar el contenido de Weekly Builds después de que el logo se posicione
+                     setTimeout(() => {
+                       setShowWeeklyBuildsContent(true);
+                     }, 1200); // Delay para que coincida con la duración de la transición del logo
+                   }, 800); // Delay para que coincida con la duración de las transiciones
+                 }}
                  className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer"
                  style={{ 
                    backgroundColor: 'transparent',
@@ -406,10 +428,10 @@ export default function HomePage() {
            <div
              className="fixed bottom-4 left-0 w-full z-30"
              style={{
-               opacity: showMainContent ? 1 : 0,
-               visibility: showMainContent ? 'visible' : 'hidden',
+               opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+               visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
                transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
-               transform: showMainContent ? 'translateY(0)' : 'translateY(-20px)'
+               transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)'
              }}
            >
              {/* Right - Live Time */}
@@ -541,7 +563,262 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* Weekly Builds Content */}
+      {showWeeklyBuildsContent && (
+        <>
+          {/* Weekly Builds Header */}
+          <div className={`fixed top-4 left-0 w-full z-40 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ height: '60px', animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>
+            {/* Left - Join Newsletter Button */}
+            <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
+              <button
+                onClick={() => setShowSignup(true)}
+                className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
+                style={{ 
+                  backgroundColor: 'transparent',
+                  color: '#FAF5EB',
+                  border: '2px solid rgba(250,245,235,0.25)',
+                  animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FAF5EB';
+                  e.currentTarget.style.color = '#4B0A23';
+                  handleSimpleHover("Join the Club", "bg-orange-400");
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FAF5EB';
+                  handleSimpleLeave();
+                }}
+              >
+                JOIN THE CLUB
+              </button>
+            </div>
 
+            {/* Center - Weekly Builds Brand */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className={`text-center ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.3s' : '0.3s' }}>
+                <span className="font-inter text-sm font-normal text-[#FE4629]/60 tracking-wider uppercase">The</span>
+                <div className="font-inter text-xl font-bold text-[#FE4629] tracking-wider mt-1">WEEKLY BUILDS</div>
+              </div>
+            </div>
+
+            {/* Right - The Newsletter Button */}
+            <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
+              <button
+                onClick={() => {
+                  setIsExitingWeeklyBuilds(true);
+                  setTimeout(() => {
+                    setShowWeeklyBuildsContent(false);
+                    setTimeout(() => {
+                      setLogoTransitioned(false);
+                      setTimeout(() => {
+                        setShowWeeklyBuilds(false);
+                        setIsExitingWeeklyBuilds(false);
+                      }, 1200);
+                    }, 300);
+                  }, 1200); // Más tiempo para que se complete la animación de fade-out
+                }}
+                className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
+                style={{ 
+                  backgroundColor: 'transparent',
+                  color: '#FAF5EB',
+                  border: '2px solid rgba(250,245,235,0.25)',
+                  animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FAF5EB';
+                  e.currentTarget.style.color = '#4B0A23';
+                  handleSimpleHover("The Newsletter", "bg-orange-400");
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FAF5EB';
+                  handleSimpleLeave();
+                }}
+              >
+                THE NEWSLETTER
+              </button>
+            </div>
+          </div>
+
+          {/* Weekly Builds Content - Scrollable */}
+          <div className="min-h-screen pt-24 pb-20 px-8 max-w-6xl mx-auto overflow-y-auto">
+            {/* HOTTEST BUILDS THIS WEEK */}
+            <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s' }}>
+              <div className="flex items-center gap-3 mb-6">
+                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">HOTTEST BUILDS THIS WEEK</h2>
+                <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: 847]</span>
+              </div>
+              
+              {/* Product Cards */}
+              <div className="space-y-6">
+                {/* Released */}
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s' }}>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">1.</span>
+                      <img src="/released.png" alt="Released" className="w-12 h-12 rounded-lg" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">Released</h3>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="hot" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">234</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-transparent bg-clip-text hot-gradient">Hot</span>
+                        </div>
+                      </div>
+                      <p className="font-inter text-sm text-[#FAF5EB]">AI for effortless guest communication & revenue growth</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Lero */}
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s' }}>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">2.</span>
+                      <img src="/lero.png" alt="Lero" className="w-12 h-12 rounded-lg" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">Lero</h3>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="building" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">156</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                        </div>
+                      </div>
+                      <p className="font-inter text-sm text-[#FAF5EB]">Zero bounce for founders</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* RISING BUILDS */}
+            <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.8s' : '0.8s' }}>
+              <div className="flex items-center gap-3 mb-6">
+                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">RISING BUILDS</h2>
+                <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: 200-100]</span>
+              </div>
+              
+              <div className="space-y-6">
+                {/* MindDump */}
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.0s' : '1.0s' }}>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">3.</span>
+                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">M</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">MindDump</h3>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="building" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">189</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                        </div>
+                      </div>
+                      <p className="font-inter text-sm text-[#FAF5EB]">Brain-to-text voice notes</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CodeSnap */}
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.2s' : '1.2s' }}>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">4.</span>
+                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">C</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">CodeSnap</h3>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="normal" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">145</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/40">Steady</span>
+                        </div>
+                      </div>
+                      <p className="font-inter text-sm text-[#FAF5EB]">Screenshot your code beautifully</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* FRESH BUILDS */}
+            <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.4s' : '1.4s' }}>
+              <div className="flex items-center gap-3 mb-6">
+                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">FRESH BUILDS</h2>
+                <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: {'<100'}]</span>
+              </div>
+              
+              <div className="space-y-6">
+                {/* TaskFlow */}
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.6s' : '1.6s' }}>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">5.</span>
+                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">T</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">TaskFlow</h3>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="building" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">87</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                        </div>
+                      </div>
+                      <p className="font-inter text-sm text-[#FAF5EB]">Visual project management for teams</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* DataViz */}
+                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.8s' : '1.8s' }}>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">6.</span>
+                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">D</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">DataViz</h3>
+                        <div className="flex items-center gap-2">
+                          <MomentumLogo state="normal" size={32} />
+                          <span className="font-inter text-xl text-[#FE4629]">65</span>
+                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/40">Steady</span>
+                        </div>
+                      </div>
+                      <p className="font-inter text-sm text-[#FAF5EB]">Beautiful charts from any data source</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer - Live Time */}
+          <div className={`fixed bottom-4 right-8 z-40 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>
+            <span 
+              className="font-inter text-base font-normal text-[#FE4629] font-mono"
+            >
+              {currentTime ? formatTimeWithHighlight(currentTime) : '--:--:--'}
+            </span>
+          </div>
+        </>
+      )}
 
       <style jsx>{`
         .hot-gradient {
@@ -798,15 +1075,6 @@ export default function HomePage() {
 
         .animate-spring {
           animation: spring 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        /* Optimizations for smooth hover during scroll */
-        .hover-optimized {
-          contain: layout style paint;
-          will-change: border-color, background-color;
-          backface-visibility: hidden;
-          -webkit-font-smoothing: antialiased;
-          transform: translateZ(0);
         }
 
 
