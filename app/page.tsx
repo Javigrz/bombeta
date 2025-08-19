@@ -5,6 +5,65 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import MomentumLogo from "../components/momentum-logo"
 // Eliminar la importación de MomentumLogoHot
 
+// Componente de gráfica de tendencia minimalista
+interface MomentumTrendProps {
+  data: number[]
+  color?: string
+  width?: number
+  height?: number
+}
+
+function MomentumTrend({ data, color = "#FE4629", width = 80, height = 24 }: MomentumTrendProps) {
+  if (data.length < 2) return null
+  
+  const max = Math.max(...data)
+  const min = Math.min(...data)
+  const range = max - min || 1
+  
+  const points = data.map((value, index) => {
+    const x = (index / (data.length - 1)) * width
+    const y = height - ((value - min) / range) * height
+    return `${x},${y}`
+  }).join(' ')
+  
+  return (
+    <svg width={width} height={height} className="overflow-visible">
+      <polyline
+        points={points}
+        fill="none"
+        stroke={color}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.9"
+      />
+    </svg>
+  )
+}
+
+// Inline expandable details for ranking products
+interface InlineDetailsProps {
+  description: string
+  categories: string[]
+  makers: string
+}
+
+function InlineDetails({ description, categories, makers }: InlineDetailsProps) {
+  return (
+    <div className="mt-3 border-t border-[#FAF5EB]/10 pt-3 animate-fade-in">
+      <p className="font-inter text-sm text-[#FAF5EB] leading-relaxed mb-2">{description}</p>
+      <div className="flex flex-wrap items-center gap-2 mb-2">
+        {categories.map((cat) => (
+          <span key={cat} className="px-2 py-1 rounded-md bg-[#FE4629]/10 text-[#FE4629] text-xs font-semibold uppercase">
+            {cat}
+          </span>
+        ))}
+      </div>
+      <p className="font-inter text-xs text-[#FE4629]/80">Makers: {makers}</p>
+    </div>
+  )
+}
+
 export default function HomePage() {
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -36,6 +95,9 @@ export default function HomePage() {
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
   const [introTextComplete, setIntroTextComplete] = useState(false)
   const [isClient, setIsClient] = useState(false)
+  
+  // Estado para el hover de productos
+  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null)
   
   const containerRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
@@ -283,7 +345,7 @@ export default function HomePage() {
 
               {/* Logo único que hace la animación y luego permanece */}
         <div 
-          className={`${logoTransitioned ? 'fixed' : 'absolute'} inset-0 flex items-center justify-center z-20`}
+          className={`${logoTransitioned ? 'fixed' : 'absolute'} inset-0 flex items-center justify-center ${logoTransitioned ? 'z-10' : 'z-20'} ${showWeeklyBuildsContent ? 'pointer-events-none' : ''}`}
           style={{
             transform: logoTransitioned ? 'translateY(calc(55vh - 10px))' : 'translateY(0)',
             transition: 'transform 1.2s ease-in-out'
@@ -575,18 +637,18 @@ export default function HomePage() {
                 className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
                 style={{ 
                   backgroundColor: 'transparent',
-                  color: '#FAF5EB',
-                  border: '2px solid rgba(250,245,235,0.25)',
+                  color: '#FE4629',
+                  border: '2px solid #FE4629',
                   animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FAF5EB';
+                  e.currentTarget.style.backgroundColor = '#FE4629';
                   e.currentTarget.style.color = '#4B0A23';
                   handleSimpleHover("Join the Club", "bg-orange-400");
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FAF5EB';
+                  e.currentTarget.style.color = '#FE4629';
                   handleSimpleLeave();
                 }}
               >
@@ -621,18 +683,18 @@ export default function HomePage() {
                 className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
                 style={{ 
                   backgroundColor: 'transparent',
-                  color: '#FAF5EB',
-                  border: '2px solid rgba(250,245,235,0.25)',
+                  color: '#FE4629',
+                  border: '2px solid #FE4629',
                   animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FAF5EB';
+                  e.currentTarget.style.backgroundColor = '#FE4629';
                   e.currentTarget.style.color = '#4B0A23';
                   handleSimpleHover("The Newsletter", "bg-orange-400");
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FAF5EB';
+                  e.currentTarget.style.color = '#FE4629';
                   handleSimpleLeave();
                 }}
               >
@@ -642,171 +704,252 @@ export default function HomePage() {
           </div>
 
           {/* Weekly Builds Content - Scrollable */}
-          <div className="min-h-screen pt-24 pb-20 px-8 max-w-6xl mx-auto overflow-y-auto">
-            {/* HOTTEST BUILDS THIS WEEK */}
-            <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s' }}>
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">HOTTEST BUILDS THIS WEEK</h2>
+          <div className="min-h-screen pt-32 pb-20 px-8 max-w-6xl mx-auto overflow-y-auto">
+            {/* TOP 3 BUILDS */}
+            <div className={`mb-16 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s' }}>
+              <div className="flex items-center gap-3 mb-8">
+                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">TOP 3 THIS WEEK</h2>
                 <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: 847]</span>
               </div>
               
-              {/* Product Cards */}
-              <div className="space-y-6">
-                {/* Released */}
-                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s' }}>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">1.</span>
-                      <img src="/released.png" alt="Released" className="w-12 h-12 rounded-lg" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">Released</h3>
-                        <div className="flex items-center gap-2">
-                          <MomentumLogo state="hot" size={32} />
-                          <span className="font-inter text-xl text-[#FE4629]">234</span>
-                          <span className="font-inter text-xs uppercase tracking-wider text-transparent bg-clip-text hot-gradient">Hot</span>
-                        </div>
-                      </div>
-                      <p className="font-inter text-sm text-[#FAF5EB]">AI for effortless guest communication & revenue growth</p>
-                    </div>
+              {/* Top 3 Horizontal Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* 1st Place - Released */}
+                                 <div className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent backdrop-blur-sm relative ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s' }}>
+                  <div className="absolute -top-3 left-6">
+                    <span className="bg-[#FE4629] text-[#4B0A23] px-3 py-1 rounded-full font-inter text-sm font-bold">1ST</span>
+                  </div>
+                  <div className="text-center">
+                    <img src="/released.png" alt="Released" className="w-16 h-16 rounded-lg mx-auto mb-6" />
+                    <h3 className="font-inter text-2xl font-bold text-[#FE4629] mb-4">Released</h3>
+                                                              <p className="font-inter text-base text-[#FAF5EB] mb-6 leading-relaxed h-12 flex items-center justify-center">AI for effortless guest communication & revenue growth</p>
+                     <div className="flex justify-center mb-8">
+                       <MomentumTrend data={[180, 195, 210, 225, 234]} color="#FE4629" width={100} height={28} />
+                     </div>
+                     <div className="flex justify-center">
+                       <div className="flex items-center gap-3">
+                         <MomentumLogo state="hot" size={36} />
+                         <div className="flex flex-col items-start">
+                           <div className="flex items-center gap-3">
+                             <span className="font-inter text-2xl text-[#FE4629] font-bold">234</span>
+                             <span className="font-inter text-sm uppercase tracking-wider text-transparent bg-clip-text hot-gradient">Hot</span>
+                           </div>
+                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+48 this week</span>
+                         </div>
+                       </div>
+                     </div>
                   </div>
                 </div>
 
-                {/* Lero */}
-                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s' }}>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">2.</span>
-                      <img src="/lero.png" alt="Lero" className="w-12 h-12 rounded-lg" />
+                {/* 2nd Place - Lero */}
+                                 <div className={`border border-[#FAF5EB]/15 rounded-lg p-12 bg-transparent backdrop-blur-sm relative ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s' }}>
+                  <div className="absolute -top-3 left-6">
+                    <span className="bg-[#FAF5EB]/20 text-[#FAF5EB] px-3 py-1 rounded-full font-inter text-sm font-bold">2ND</span>
+                  </div>
+                  <div className="text-center">
+                    <img src="/lero.png" alt="Lero" className="w-16 h-16 rounded-lg mx-auto mb-6" />
+                    <h3 className="font-inter text-2xl font-bold text-[#FE4629] mb-4">Lero</h3>
+                                                              <p className="font-inter text-base text-[#FAF5EB] mb-6 leading-relaxed h-12 flex items-center justify-center">Zero bounce for founders</p>
+                     <div className="flex justify-center mb-8">
+                       <MomentumTrend data={[120, 135, 145, 150, 156]} color="#FE4629" width={100} height={28} />
+                     </div>
+                     <div className="flex justify-center">
+                       <div className="flex items-center gap-3">
+                         <MomentumLogo state="building" size={36} />
+                         <div className="flex flex-col items-start">
+                           <div className="flex items-center gap-3">
+                             <span className="font-inter text-2xl text-[#FE4629] font-bold">156</span>
+                             <span className="font-inter text-sm uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                           </div>
+                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+32 this week</span>
+                         </div>
+                       </div>
+                     </div>
+                  </div>
+                </div>
+
+                {/* 3rd Place - MindDump */}
+                                 <div className={`border border-[#FAF5EB]/10 rounded-lg p-12 bg-transparent backdrop-blur-sm relative ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.8s' : '0.8s' }}>
+                  <div className="absolute -top-3 left-6">
+                    <span className="bg-[#FAF5EB]/10 text-[#FAF5EB] px-3 py-1 rounded-full font-inter text-sm font-bold">3RD</span>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center mx-auto mb-6">
+                      <span className="font-inter text-[#FAF5EB] font-bold text-2xl">M</span>
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">Lero</h3>
-                        <div className="flex items-center gap-2">
-                          <MomentumLogo state="building" size={32} />
-                          <span className="font-inter text-xl text-[#FE4629]">156</span>
-                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
-                        </div>
-                      </div>
-                      <p className="font-inter text-sm text-[#FAF5EB]">Zero bounce for founders</p>
-                    </div>
+                    <h3 className="font-inter text-2xl font-bold text-[#FE4629] mb-4">MindDump</h3>
+                                                              <p className="font-inter text-base text-[#FAF5EB] mb-6 leading-relaxed h-12 flex items-center justify-center">Brain-to-text voice notes</p>
+                     <div className="flex justify-center mb-8">
+                       <MomentumTrend data={[125, 130, 138, 142, 145]} color="#FE4629" width={100} height={28} />
+                     </div>
+                     <div className="flex justify-center">
+                       <div className="flex items-center gap-3">
+                         <MomentumLogo state="building" size={36} />
+                         <div className="flex flex-col items-start">
+                           <div className="flex items-center gap-3">
+                             <span className="font-inter text-2xl text-[#FE4629] font-bold">145</span>
+                             <span className="font-inter text-sm uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                           </div>
+                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+23 this week</span>
+                         </div>
+                       </div>
+                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* RISING BUILDS */}
-            <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.8s' : '0.8s' }}>
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">RISING BUILDS</h2>
-                <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: 200-100]</span>
-              </div>
+                         {/* RANKING CONTINUATION */}
+             <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.0s' : '1.0s' }}>
               
-              <div className="space-y-6">
-                {/* MindDump */}
-                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.0s' : '1.0s' }}>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">3.</span>
-                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
-                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">M</span>
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">MindDump</h3>
-                        <div className="flex items-center gap-2">
-                          <MomentumLogo state="building" size={32} />
-                          <span className="font-inter text-xl text-[#FE4629]">189</span>
-                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
-                        </div>
-                      </div>
-                      <p className="font-inter text-sm text-[#FAF5EB]">Brain-to-text voice notes</p>
-                    </div>
-                  </div>
-                </div>
-
+              <div className="space-y-4">
                 {/* CodeSnap */}
-                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.2s' : '1.2s' }}>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">4.</span>
-                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
-                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">C</span>
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-inter text-xl font-bold text-[#FE4629]">CodeSnap</h3>
-                        <div className="flex items-center gap-2">
-                          <MomentumLogo state="normal" size={32} />
-                          <span className="font-inter text-xl text-[#FE4629]">145</span>
-                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/40">Steady</span>
+                                 <div 
+                   className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-300 hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                   style={{ animationDelay: isExitingWeeklyBuilds ? '1.2s' : '1.2s' }}
+                   onMouseEnter={() => {
+                     console.log('Hover CodeSnap');
+                     setHoveredProduct('codesnap');
+                   }}
+                   onMouseLeave={() => {
+                     console.log('Leave CodeSnap');
+                     setHoveredProduct(null);
+                   }}
+                 >
+                   <div className="flex items-center gap-4">
+                     <div className="flex items-center gap-3">
+                       <span className="font-inter text-xl font-bold text-[#FAF5EB] w-6">4.</span>
+                       <div className="w-10 h-10 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                         <span className="font-inter text-[#FAF5EB] font-bold text-sm">C</span>
+                       </div>
+                     </div>
+                     <div className="flex-1">
+                                              <div className="flex items-center justify-between">
+                          <h3 className="font-inter text-xl font-bold text-[#FE4629]">CodeSnap</h3>
+                          <div className="flex items-center gap-3">
+                            <MomentumTrend data={[110, 125, 135, 140, 145]} color="#FE4629" width={60} height={20} />
+                            <div className="flex items-center gap-2">
+                              <MomentumLogo state="normal" size={32} />
+                              <div className="flex flex-col items-start">
+                                <span className="font-inter text-lg text-[#FE4629] font-bold">145</span>
+                                <span className="font-inter text-sm text-[#FE4629] font-semibold">+18</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <p className="font-inter text-sm text-[#FAF5EB]">Screenshot your code beautifully</p>
-                    </div>
+                       <p className="font-inter text-sm text-[#FAF5EB]/80">Screenshot your code beautifully</p>
+                     </div>
                   </div>
+                  
+                  {/* Inline details that expand the card */}
+                  {hoveredProduct === 'codesnap' && (
+                    <InlineDetails
+                      description="Create beautiful screenshots of your code with customizable themes, syntax highlighting, and professional formatting."
+                      categories={["Developer Tools"]}
+                      makers="Sarah Chen, Alex Rodriguez"
+                    />
+                  )}
                 </div>
-              </div>
-            </div>
 
-            {/* FRESH BUILDS */}
-            <div className={`mb-12 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.4s' : '1.4s' }}>
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">FRESH BUILDS</h2>
-                <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: {'<100'}]</span>
-              </div>
-              
-              <div className="space-y-6">
-                {/* TaskFlow */}
-                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.6s' : '1.6s' }}>
+                                {/* TaskFlow */}
+                <div 
+                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-300 hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                  style={{ animationDelay: isExitingWeeklyBuilds ? '1.4s' : '1.4s' }}
+                  onMouseEnter={() => {
+                    console.log('Hover TaskFlow');
+                    setHoveredProduct('taskflow');
+                  }}
+                  onMouseLeave={() => {
+                    console.log('Leave TaskFlow');
+                    setHoveredProduct(null);
+                  }}
+                >
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
-                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">5.</span>
-                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
-                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">T</span>
+                      <span className="font-inter text-xl font-bold text-[#FAF5EB] w-6">5.</span>
+                      <div className="w-10 h-10 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-sm">T</span>
                       </div>
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
+                                             <div className="flex items-center justify-between">
                         <h3 className="font-inter text-xl font-bold text-[#FE4629]">TaskFlow</h3>
-                        <div className="flex items-center gap-2">
-                          <MomentumLogo state="building" size={32} />
-                          <span className="font-inter text-xl text-[#FE4629]">87</span>
-                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
+                        <div className="flex items-center gap-3">
+                          <MomentumTrend data={[65, 72, 78, 82, 87]} color="#FE4629" width={60} height={20} />
+                          <div className="flex items-center gap-2">
+                            <MomentumLogo state="building" size={32} />
+                            <div className="flex flex-col items-start">
+                              <span className="font-inter text-lg text-[#FE4629] font-bold">87</span>
+                              <span className="font-inter text-sm text-[#FE4629] font-semibold">+15</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <p className="font-inter text-sm text-[#FAF5EB]">Visual project management for teams</p>
-                    </div>
-                  </div>
-                </div>
+                     <p className="font-inter text-sm text-[#FAF5EB]/80">Visual project management for teams</p>
+                   </div>
+                 </div>
+                 
+                 {/* Inline details that expand the card */}
+                 {hoveredProduct === 'taskflow' && (
+                   <InlineDetails
+                     description="Streamline your team's workflow with intuitive task management, real-time collaboration, and visual project tracking."
+                     categories={["Productivity", "Project Management"]}
+                     makers="Marcus Johnson, Emily Zhang"
+                   />
+                 )}
+               </div>
 
-                {/* DataViz */}
-                <div className={`border border-[#FAF5EB]/10 rounded-lg p-6 bg-transparent backdrop-blur-sm ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '1.8s' : '1.8s' }}>
+                                {/* DataViz */}
+                <div 
+                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-300 hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                  style={{ animationDelay: isExitingWeeklyBuilds ? '1.6s' : '1.6s' }}
+                  onMouseEnter={() => {
+                    console.log('Hover DataViz');
+                    setHoveredProduct('dataviz');
+                  }}
+                  onMouseLeave={() => {
+                    console.log('Leave DataViz');
+                    setHoveredProduct(null);
+                  }}
+                >
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
-                      <span className="font-inter text-2xl font-bold text-[#FAF5EB]">6.</span>
-                      <div className="w-12 h-12 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
-                        <span className="font-inter text-[#FAF5EB] font-bold text-lg">D</span>
+                      <span className="font-inter text-xl font-bold text-[#FAF5EB] w-6">6.</span>
+                      <div className="w-10 h-10 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
+                        <span className="font-inter text-[#FAF5EB] font-bold text-sm">D</span>
                       </div>
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
+                                             <div className="flex items-center justify-between">
                         <h3 className="font-inter text-xl font-bold text-[#FE4629]">DataViz</h3>
-                        <div className="flex items-center gap-2">
-                          <MomentumLogo state="normal" size={32} />
-                          <span className="font-inter text-xl text-[#FE4629]">65</span>
-                          <span className="font-inter text-xs uppercase tracking-wider text-[#FAF5EB]/40">Steady</span>
+                        <div className="flex items-center gap-3">
+                          <MomentumTrend data={[50, 55, 58, 62, 65]} color="#FE4629" width={60} height={20} />
+                          <div className="flex items-center gap-2">
+                            <MomentumLogo state="normal" size={32} />
+                            <div className="flex flex-col items-start">
+                              <span className="font-inter text-lg text-[#FE4629] font-bold">65</span>
+                              <span className="font-inter text-sm text-[#FE4629] font-semibold">+12</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <p className="font-inter text-sm text-[#FAF5EB]">Beautiful charts from any data source</p>
-                    </div>
-                  </div>
-                </div>
+                     <p className="font-inter text-sm text-[#FAF5EB]/80">Beautiful charts from any data source</p>
+                   </div>
+                 </div>
+                 
+                 {/* Inline details that expand the card */}
+                 {hoveredProduct === 'dataviz' && (
+                   <InlineDetails
+                     description="Transform raw data into stunning, interactive visualizations. Connect to any data source and create professional charts, dashboards, and reports with zero coding required."
+                     categories={["Data", "Analytics"]}
+                     makers="David Kim, Lisa Patel"
+                   />
+                 )}
+               </div>
               </div>
             </div>
+
+
           </div>
 
           {/* Footer - Live Time */}
