@@ -50,16 +50,16 @@ interface InlineDetailsProps {
 
 function InlineDetails({ description, categories, makers }: InlineDetailsProps) {
   return (
-    <div className="mt-3 border-t border-[#FAF5EB]/10 pt-3 animate-fade-in">
+    <div className="mt-3 border-t border-[#FAF5EB]/10 pt-3">
       <p className="font-inter text-sm text-[#FAF5EB] leading-relaxed mb-2">{description}</p>
       <div className="flex flex-wrap items-center gap-2 mb-2">
         {categories.map((cat) => (
-          <span key={cat} className="px-2 py-1 rounded-md bg-[#FE4629]/10 text-[#FE4629] text-xs font-semibold uppercase">
+          <span key={cat} className="px-2 py-1 rounded-md bg-[#FE4629]/20 text-[#FE4629] text-xs font-semibold uppercase border border-[#FE4629]/30">
             {cat}
           </span>
         ))}
       </div>
-      <p className="font-inter text-xs text-[#FE4629]/80">Makers: {makers}</p>
+      <p className="font-inter text-xs text-[#FE4629]">Makers: {makers}</p>
     </div>
   )
 }
@@ -424,7 +424,7 @@ export default function HomePage() {
             transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
           }}
         >
-          Every Tuesday <span style={{ color: '#FAF5EB' }}>11</span>:00 am
+          Every Tuesday 11:00 am
         </div>
         </div>
       </div>
@@ -520,7 +520,7 @@ export default function HomePage() {
                   setSignupAnimating(false)
                 }, 300)
               }}
-              className="absolute top-4 right-4 text-2xl transition-all duration-300 hover:rotate-180 hover:scale-125"
+              className="absolute top-4 right-4 text-2xl soft-glow-hover"
               style={{ color: 'rgba(254, 70, 41, 0.6)' }}
             >
               ×
@@ -713,11 +713,16 @@ export default function HomePage() {
               </div>
               
               {/* Top 3 Horizontal Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
                 {/* 1st Place - Released */}
-                                 <div className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent backdrop-blur-sm relative ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s' }}>
-                  <div className="absolute -top-3 left-6">
-                    <span className="bg-[#FE4629] text-[#4B0A23] px-3 py-1 rounded-full font-inter text-sm font-bold">1ST</span>
+                                 <div 
+                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-500 ease-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                   style={{ animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s' }}
+                   onMouseEnter={() => setHoveredProduct('released')}
+                   onMouseLeave={() => setHoveredProduct(null)}
+                 >
+                  <div className="absolute top-4 right-4">
+                    <span className="font-inter text-2xl font-light text-[#FE4629]/40">01</span>
                   </div>
                   <div className="text-center">
                     <img src="/released.png" alt="Released" className="w-16 h-16 rounded-lg mx-auto mb-6" />
@@ -734,17 +739,40 @@ export default function HomePage() {
                              <span className="font-inter text-2xl text-[#FE4629] font-bold">234</span>
                              <span className="font-inter text-sm uppercase tracking-wider text-transparent bg-clip-text hot-gradient">Hot</span>
                            </div>
-                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+48 this week</span>
+                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+48 today</span>
                          </div>
                        </div>
                      </div>
                   </div>
+                  
+                  {/* Complete info overlay */}
+                  {hoveredProduct === 'released' && (
+                    <div className="absolute inset-0 rounded-lg flex items-end transition-all duration-400 ease-out">
+                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg"></div>
+                      <div className="relative w-full p-4 bg-gradient-to-t from-[#4B0A23] via-[#4B0A23]/80 to-transparent rounded-b-lg">
+                        <p className="font-inter text-sm text-white leading-relaxed mb-3">AI-powered guest communication platform that automates check-ins, handles inquiries, and maximizes revenue through intelligent upselling.</p>
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                          {["AI", "Hospitality", "Revenue"].map((cat) => (
+                            <span key={cat} className="px-2 py-1 rounded-md bg-[#FE4629]/20 text-[#FE4629] text-xs font-semibold uppercase border border-[#FE4629]/30">
+                              {cat}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="font-inter text-xs text-[#FE4629]">Makers: Maria Lopez, James Chen</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* 2nd Place - Lero */}
-                                 <div className={`border border-[#FAF5EB]/15 rounded-lg p-12 bg-transparent backdrop-blur-sm relative ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s' }}>
-                  <div className="absolute -top-3 left-6">
-                    <span className="bg-[#FAF5EB]/20 text-[#FAF5EB] px-3 py-1 rounded-full font-inter text-sm font-bold">2ND</span>
+                                 <div 
+                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-500 ease-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                   style={{ animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s' }}
+                   onMouseEnter={() => setHoveredProduct('lero')}
+                   onMouseLeave={() => setHoveredProduct(null)}
+                 >
+                  <div className="absolute top-4 right-4">
+                    <span className="font-inter text-2xl font-light text-[#FAF5EB]/30">02</span>
                   </div>
                   <div className="text-center">
                     <img src="/lero.png" alt="Lero" className="w-16 h-16 rounded-lg mx-auto mb-6" />
@@ -761,21 +789,44 @@ export default function HomePage() {
                              <span className="font-inter text-2xl text-[#FE4629] font-bold">156</span>
                              <span className="font-inter text-sm uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
                            </div>
-                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+32 this week</span>
+                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+32 today</span>
                          </div>
                        </div>
                      </div>
                   </div>
+                  
+                  {/* Complete info overlay */}
+                  {hoveredProduct === 'lero' && (
+                    <div className="absolute inset-0 rounded-lg flex items-end transition-all duration-400 ease-out">
+                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg"></div>
+                      <div className="relative w-full p-4 bg-gradient-to-t from-[#4B0A23] via-[#4B0A23]/80 to-transparent rounded-b-lg">
+                        <p className="font-inter text-sm text-white leading-relaxed mb-3">Anti-bounce platform specifically designed for founders. Reduces website abandonment through intelligent engagement flows and personalized retention strategies.</p>
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                          {["Retention", "Analytics", "Founders"].map((cat) => (
+                            <span key={cat} className="px-2 py-1 rounded-md bg-[#FE4629]/20 text-[#FE4629] text-xs font-semibold uppercase border border-[#FE4629]/30">
+                              {cat}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="font-inter text-xs text-[#FE4629]">Makers: Alex Rivera, Sophie Kim</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* 3rd Place - MindDump */}
-                                 <div className={`border border-[#FAF5EB]/10 rounded-lg p-12 bg-transparent backdrop-blur-sm relative ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.8s' : '0.8s' }}>
-                  <div className="absolute -top-3 left-6">
-                    <span className="bg-[#FAF5EB]/10 text-[#FAF5EB] px-3 py-1 rounded-full font-inter text-sm font-bold">3RD</span>
+                                 <div 
+                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-500 ease-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                   style={{ animationDelay: isExitingWeeklyBuilds ? '0.8s' : '0.8s' }}
+                   onMouseEnter={() => setHoveredProduct('minddump')}
+                   onMouseLeave={() => setHoveredProduct(null)}
+                 >
+                  <div className="absolute top-4 right-4">
+                    <span className="font-inter text-2xl font-light text-[#FAF5EB]/20">03</span>
                   </div>
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center mx-auto mb-6">
-                      <span className="font-inter text-[#FAF5EB] font-bold text-2xl">M</span>
+                    <div className="w-16 h-16 bg-[#FE4629] rounded-lg flex items-center justify-center mx-auto mb-6">
+                      <span className="font-inter text-[#4B0A23] font-bold text-2xl">M</span>
                     </div>
                     <h3 className="font-inter text-2xl font-bold text-[#FE4629] mb-4">MindDump</h3>
                                                               <p className="font-inter text-base text-[#FAF5EB] mb-6 leading-relaxed h-12 flex items-center justify-center">Brain-to-text voice notes</p>
@@ -790,11 +841,29 @@ export default function HomePage() {
                              <span className="font-inter text-2xl text-[#FE4629] font-bold">145</span>
                              <span className="font-inter text-sm uppercase tracking-wider text-[#FAF5EB]/60">Rising</span>
                            </div>
-                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+23 this week</span>
+                           <span className="font-inter text-sm text-[#FE4629] font-semibold">+23 today</span>
                          </div>
                        </div>
                      </div>
                   </div>
+                  
+                  {/* Complete info overlay */}
+                  {hoveredProduct === 'minddump' && (
+                    <div className="absolute inset-0 rounded-lg flex items-end transition-all duration-400 ease-out">
+                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg"></div>
+                      <div className="relative w-full p-4 bg-gradient-to-t from-[#4B0A23] via-[#4B0A23]/80 to-transparent rounded-b-lg">
+                        <p className="font-inter text-sm text-white leading-relaxed mb-3">Revolutionary voice-to-text brain dump tool that captures your thoughts instantly. Perfect for brainstorming, meeting notes, and creative ideation with AI-powered organization.</p>
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                          {["Voice AI", "Productivity", "Notes"].map((cat) => (
+                            <span key={cat} className="px-2 py-1 rounded-md bg-[#FE4629]/20 text-[#FE4629] text-xs font-semibold uppercase border border-[#FE4629]/30">
+                              {cat}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="font-inter text-xs text-[#FE4629]">Makers: Sam Taylor, Rachel Park</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -818,7 +887,7 @@ export default function HomePage() {
                  >
                    <div className="flex items-center gap-4">
                      <div className="flex items-center gap-3">
-                       <span className="font-inter text-xl font-bold text-[#FAF5EB] w-6">4.</span>
+                       <span className="font-inter text-2xl font-light text-[#FAF5EB]/20 w-8">04</span>
                        <div className="w-10 h-10 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
                          <span className="font-inter text-[#FAF5EB] font-bold text-sm">C</span>
                        </div>
@@ -842,13 +911,17 @@ export default function HomePage() {
                   </div>
                   
                   {/* Inline details that expand the card */}
-                  {hoveredProduct === 'codesnap' && (
+                  <div className={`transition-all duration-700 ease-out overflow-hidden ${
+                    hoveredProduct === 'codesnap' 
+                      ? 'max-h-48 opacity-100' 
+                      : 'max-h-0 opacity-0'
+                  }`}>
                     <InlineDetails
                       description="Create beautiful screenshots of your code with customizable themes, syntax highlighting, and professional formatting."
                       categories={["Developer Tools"]}
                       makers="Sarah Chen, Alex Rodriguez"
                     />
-                  )}
+                  </div>
                 </div>
 
                                 {/* TaskFlow */}
@@ -866,7 +939,7 @@ export default function HomePage() {
                 >
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
-                      <span className="font-inter text-xl font-bold text-[#FAF5EB] w-6">5.</span>
+                      <span className="font-inter text-2xl font-light text-[#FAF5EB]/20 w-8">05</span>
                       <div className="w-10 h-10 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
                         <span className="font-inter text-[#FAF5EB] font-bold text-sm">T</span>
                       </div>
@@ -890,13 +963,17 @@ export default function HomePage() {
                  </div>
                  
                  {/* Inline details that expand the card */}
-                 {hoveredProduct === 'taskflow' && (
+                 <div className={`transition-all duration-700 ease-out overflow-hidden ${
+                   hoveredProduct === 'taskflow' 
+                     ? 'max-h-48 opacity-100' 
+                     : 'max-h-0 opacity-0'
+                 }`}>
                    <InlineDetails
                      description="Streamline your team's workflow with intuitive task management, real-time collaboration, and visual project tracking."
                      categories={["Productivity", "Project Management"]}
                      makers="Marcus Johnson, Emily Zhang"
                    />
-                 )}
+                 </div>
                </div>
 
                                 {/* DataViz */}
@@ -914,7 +991,7 @@ export default function HomePage() {
                 >
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
-                      <span className="font-inter text-xl font-bold text-[#FAF5EB] w-6">6.</span>
+                      <span className="font-inter text-2xl font-light text-[#FAF5EB]/20 w-8">06</span>
                       <div className="w-10 h-10 bg-[#FAF5EB]/10 rounded-lg flex items-center justify-center">
                         <span className="font-inter text-[#FAF5EB] font-bold text-sm">D</span>
                       </div>
@@ -938,13 +1015,17 @@ export default function HomePage() {
                  </div>
                  
                  {/* Inline details that expand the card */}
-                 {hoveredProduct === 'dataviz' && (
+                 <div className={`transition-all duration-700 ease-out overflow-hidden ${
+                   hoveredProduct === 'dataviz' 
+                     ? 'max-h-48 opacity-100' 
+                     : 'max-h-0 opacity-0'
+                 }`}>
                    <InlineDetails
                      description="Transform raw data into stunning, interactive visualizations. Connect to any data source and create professional charts, dashboards, and reports with zero coding required."
                      categories={["Data", "Analytics"]}
                      makers="David Kim, Lisa Patel"
                    />
-                 )}
+                 </div>
                </div>
               </div>
             </div>
@@ -1226,6 +1307,33 @@ export default function HomePage() {
 
 
 
+        @keyframes expand-subtle {
+          0% {
+            opacity: 0;
+            max-height: 0;
+            transform: translateY(-4px) scale(0.98);
+            padding-top: 0;
+            margin-top: 0;
+          }
+          50% {
+            opacity: 0.3;
+            max-height: 80px;
+            transform: translateY(-2px) scale(0.99);
+          }
+          100% {
+            opacity: 1;
+            max-height: 200px;
+            transform: translateY(0) scale(1);
+            padding-top: 12px;
+            margin-top: 12px;
+          }
+        }
+
+        .animate-expand-subtle {
+          animation: expand-subtle 1.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+          overflow: hidden;
+        }
+
         .animate-fade-in {
           animation: fade-in-up 0.5s ease-out forwards;
         }
@@ -1237,7 +1345,24 @@ export default function HomePage() {
         .placeholder-muted::placeholder {
           color: rgba(254, 70, 41, 0.4);
         }
+
+        @keyframes soft-glow {
+          0% {
+            text-shadow: 0 0 0 rgba(254, 70, 41, 0);
+          }
+          50% {
+            text-shadow: 0 0 6px rgba(254, 70, 41, 0.45);
+          }
+          100% {
+            text-shadow: 0 0 0 rgba(254, 70, 41, 0);
+          }
+        }
+
+        .soft-glow-hover:hover {
+          animation: soft-glow 0.9s ease-out;
+        }
       `}</style>
     </div>
   )
 }
+
