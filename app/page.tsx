@@ -90,6 +90,7 @@ export default function HomePage() {
   const [logoTransitioned, setLogoTransitioned] = useState(false)
   const [showWeeklyBuildsContent, setShowWeeklyBuildsContent] = useState(false)
   const [isExitingWeeklyBuilds, setIsExitingWeeklyBuilds] = useState(false)
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
   
   // Estados para la animación de inicio
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
@@ -160,6 +161,12 @@ export default function HomePage() {
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY)
+      // Ocultar header inmediatamente al hacer scroll
+      if (window.scrollY > 10) {
+        setIsHeaderVisible(false)
+      } else {
+        setIsHeaderVisible(true)
+      }
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
@@ -629,9 +636,9 @@ export default function HomePage() {
       {showWeeklyBuildsContent && (
         <>
           {/* Weekly Builds Header */}
-          <div className={`fixed top-4 left-0 w-full z-40 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ height: '60px', animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>
+          <div className={`fixed top-4 left-0 w-full z-40 transition-all duration-300 ease-out ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'} ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{ height: '60px', animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>
             {/* Left - Join Newsletter Button */}
-            <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
+            <div className={`fixed top-1/2 left-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
               <button
                 onClick={() => setShowSignup(true)}
                 className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
@@ -657,7 +664,7 @@ export default function HomePage() {
             </div>
 
             {/* Center - Weekly Builds Brand */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
               <div className={`text-center ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.3s' : '0.3s' }}>
                 <span className="font-inter text-sm font-normal text-[#FE4629]/60 tracking-wider uppercase">The</span>
                 <div className="font-inter text-xl font-bold text-[#FE4629] tracking-wider mt-1">WEEKLY BUILDS</div>
@@ -665,7 +672,7 @@ export default function HomePage() {
             </div>
 
             {/* Right - The Newsletter Button */}
-            <div className="absolute top-1/2 right-8 transform -translate-y-1/2">
+            <div className={`fixed top-1/2 right-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
               <button
                 onClick={() => {
                   setIsExitingWeeklyBuilds(true);
@@ -706,18 +713,34 @@ export default function HomePage() {
           {/* Weekly Builds Content - Scrollable */}
           <div className="min-h-screen pt-32 pb-20 px-8 max-w-6xl mx-auto overflow-y-auto">
             {/* TOP 3 BUILDS */}
-            <div className={`mb-16 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s' }}>
+            <div className="mb-16 transition-all duration-1000 ease-out" style={{ 
+              opacity: isExitingWeeklyBuilds ? 0 : 1, 
+              transform: isExitingWeeklyBuilds ? 'translateY(40px) scale(0.98)' : 'translateY(0) scale(1)',
+              animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s'
+            }}>
               <div className="flex items-center gap-3 mb-8">
-                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide">TOP 3 THIS WEEK</h2>
-                <span className={`font-inter text-lg text-[#FE4629] ml-auto ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>[momentum: 847]</span>
+                <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide transition-all duration-800 ease-out" style={{
+                  opacity: isExitingWeeklyBuilds ? 0 : 1, 
+                  transform: isExitingWeeklyBuilds ? 'translateY(-15px) scale(0.95)' : 'translateY(0) scale(1)'
+                }}>TOP 3 THIS WEEK</h2>
+                <span className="font-inter text-lg text-[#FE4629] ml-auto transition-all duration-800 ease-out" style={{
+                  opacity: isExitingWeeklyBuilds ? 0 : 1, 
+                  transform: isExitingWeeklyBuilds ? 'translateY(-15px) scale(0.95)' : 'translateY(0) scale(1)',
+                  animationDelay: isExitingWeeklyBuilds ? '0.05s' : '0.05s'
+                }}>[momentum: 847]</span>
               </div>
               
               {/* Top 3 Horizontal Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
                 {/* 1st Place - Released */}
-                                 <div 
-                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-500 ease-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
-                   style={{ animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s' }}
+                                                 <div 
+                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                  style={{ 
+                    opacity: isExitingWeeklyBuilds ? 0 : 1, 
+                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : 'translateY(0) scale(1) rotateX(0deg)',
+                    transition: 'all 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s'
+                  }}
                    onMouseEnter={() => setHoveredProduct('released')}
                    onMouseLeave={() => setHoveredProduct(null)}
                  >
@@ -747,8 +770,8 @@ export default function HomePage() {
                   
                   {/* Complete info overlay */}
                   {hoveredProduct === 'released' && (
-                    <div className="absolute inset-0 rounded-lg flex items-end transition-all duration-400 ease-out">
-                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg"></div>
+                    <div className="absolute inset-0 rounded-lg flex items-end animate-in slide-in-from-bottom-4 duration-300" style={{animation: 'slideIn 300ms ease-in-out forwards'}}>
+                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg animate-in fade-in duration-300" style={{animation: 'fadeIn 300ms ease-in-out forwards'}}></div>
                       <div className="relative w-full p-4 bg-gradient-to-t from-[#4B0A23] via-[#4B0A23]/80 to-transparent rounded-b-lg">
                         <p className="font-inter text-sm text-white leading-relaxed mb-3">AI-powered guest communication platform that automates check-ins, handles inquiries, and maximizes revenue through intelligent upselling.</p>
                         <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -765,9 +788,14 @@ export default function HomePage() {
                 </div>
 
                 {/* 2nd Place - Lero */}
-                                 <div 
-                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-500 ease-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
-                   style={{ animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s' }}
+                                                 <div 
+                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                  style={{ 
+                    opacity: isExitingWeeklyBuilds ? 0 : 1, 
+                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : 'translateY(0) scale(1) rotateX(0deg)',
+                    transition: 'all 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s'
+                  }}
                    onMouseEnter={() => setHoveredProduct('lero')}
                    onMouseLeave={() => setHoveredProduct(null)}
                  >
@@ -797,8 +825,8 @@ export default function HomePage() {
                   
                   {/* Complete info overlay */}
                   {hoveredProduct === 'lero' && (
-                    <div className="absolute inset-0 rounded-lg flex items-end transition-all duration-400 ease-out">
-                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg"></div>
+                    <div className="absolute inset-0 rounded-lg flex items-end animate-in slide-in-from-bottom-4 duration-300" style={{animation: 'slideIn 300ms ease-in-out forwards'}}>
+                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg animate-in fade-in duration-300" style={{animation: 'fadeIn 300ms ease-in-out forwards'}}></div>
                       <div className="relative w-full p-4 bg-gradient-to-t from-[#4B0A23] via-[#4B0A23]/80 to-transparent rounded-b-lg">
                         <p className="font-inter text-sm text-white leading-relaxed mb-3">Anti-bounce platform specifically designed for founders. Reduces website abandonment through intelligent engagement flows and personalized retention strategies.</p>
                         <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -815,9 +843,14 @@ export default function HomePage() {
                 </div>
 
                 {/* 3rd Place - MindDump */}
-                                 <div 
-                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-500 ease-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
-                   style={{ animationDelay: isExitingWeeklyBuilds ? '0.8s' : '0.8s' }}
+                                                 <div 
+                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                  style={{ 
+                    opacity: isExitingWeeklyBuilds ? 0 : 1, 
+                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : 'translateY(0) scale(1) rotateX(0deg)',
+                    transition: 'all 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s'
+                  }}
                    onMouseEnter={() => setHoveredProduct('minddump')}
                    onMouseLeave={() => setHoveredProduct(null)}
                  >
@@ -849,8 +882,8 @@ export default function HomePage() {
                   
                   {/* Complete info overlay */}
                   {hoveredProduct === 'minddump' && (
-                    <div className="absolute inset-0 rounded-lg flex items-end transition-all duration-400 ease-out">
-                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg"></div>
+                    <div className="absolute inset-0 rounded-lg flex items-end animate-in slide-in-from-bottom-4 duration-300" style={{animation: 'slideIn 300ms ease-in-out forwards'}}>
+                      <div className="absolute inset-0 bg-[#4B0A23]/50 backdrop-blur-3xl rounded-lg animate-in fade-in duration-300" style={{animation: 'fadeIn 300ms ease-in-out forwards'}}></div>
                       <div className="relative w-full p-4 bg-gradient-to-t from-[#4B0A23] via-[#4B0A23]/80 to-transparent rounded-b-lg">
                         <p className="font-inter text-sm text-white leading-relaxed mb-3">Revolutionary voice-to-text brain dump tool that captures your thoughts instantly. Perfect for brainstorming, meeting notes, and creative ideation with AI-powered organization.</p>
                         <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -873,9 +906,9 @@ export default function HomePage() {
               
               <div className="space-y-4">
                 {/* CodeSnap */}
-                                 <div 
-                   className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-300 hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
-                   style={{ animationDelay: isExitingWeeklyBuilds ? '1.2s' : '1.2s' }}
+                                                 <div 
+                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer transition-all duration-500 ease-in-out hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                  style={{ animationDelay: isExitingWeeklyBuilds ? '1.2s' : '1.2s' }}
                    onMouseEnter={() => {
                      console.log('Hover CodeSnap');
                      setHoveredProduct('codesnap');
@@ -911,9 +944,9 @@ export default function HomePage() {
                   </div>
                   
                   {/* Inline details that expand the card */}
-                  <div className={`transition-all duration-700 ease-out overflow-hidden ${
+                  <div className={`overflow-hidden ${
                     hoveredProduct === 'codesnap' 
-                      ? 'max-h-48 opacity-100' 
+                      ? 'expand-animation' 
                       : 'max-h-0 opacity-0'
                   }`}>
                     <InlineDetails
@@ -926,7 +959,7 @@ export default function HomePage() {
 
                                 {/* TaskFlow */}
                 <div 
-                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-300 hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer transition-all duration-500 ease-in-out hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
                   style={{ animationDelay: isExitingWeeklyBuilds ? '1.4s' : '1.4s' }}
                   onMouseEnter={() => {
                     console.log('Hover TaskFlow');
@@ -963,9 +996,9 @@ export default function HomePage() {
                  </div>
                  
                  {/* Inline details that expand the card */}
-                 <div className={`transition-all duration-700 ease-out overflow-hidden ${
+                 <div className={`overflow-hidden ${
                    hoveredProduct === 'taskflow' 
-                     ? 'max-h-48 opacity-100' 
+                     ? 'expand-animation' 
                      : 'max-h-0 opacity-0'
                  }`}>
                    <InlineDetails
@@ -978,7 +1011,7 @@ export default function HomePage() {
 
                                 {/* DataViz */}
                 <div 
-                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent backdrop-blur-sm relative cursor-pointer transition-all duration-300 hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer transition-all duration-500 ease-in-out hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
                   style={{ animationDelay: isExitingWeeklyBuilds ? '1.6s' : '1.6s' }}
                   onMouseEnter={() => {
                     console.log('Hover DataViz');
@@ -1015,9 +1048,9 @@ export default function HomePage() {
                  </div>
                  
                  {/* Inline details that expand the card */}
-                 <div className={`transition-all duration-700 ease-out overflow-hidden ${
+                 <div className={`overflow-hidden ${
                    hoveredProduct === 'dataviz' 
-                     ? 'max-h-48 opacity-100' 
+                     ? 'expand-animation' 
                      : 'max-h-0 opacity-0'
                  }`}>
                    <InlineDetails
@@ -1360,6 +1393,101 @@ export default function HomePage() {
 
         .soft-glow-hover:hover {
           animation: soft-glow 0.9s ease-out;
+        }
+
+        /* FORZAR TRANSICIONES LENTAS PARA OVERLAYS */
+        .overlay-transition-slow {
+          transition: all 500ms ease-in-out !important;
+        }
+
+        .details-transition-slow {
+          transition: all 600ms ease-in-out !important;
+        }
+
+        /* ANIMACIONES PERSONALIZADAS PARA OVERLAYS */
+        @keyframes overlay-fade-in {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+
+        .overlay-animate {
+          animation: overlay-fade-in 500ms ease-in-out !important;
+        }
+
+        /* ANIMACIONES PERSONALIZADAS PARA OVERLAYS */
+        @keyframes slideIn {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+
+        /* ANIMACIONES PARA DETALLES EXPANDIBLES */
+        @keyframes expandDetails {
+          0% {
+            max-height: 0;
+            opacity: 0;
+          }
+          100% {
+            max-height: 200px;
+            opacity: 1;
+          }
+        }
+
+        .expand-animation {
+          animation: expandDetails 400ms ease-in-out forwards;
+        }
+
+        /* ANIMACIONES MEJORADAS PARA TOP 3 */
+        @keyframes top3-exit {
+          0% {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotateX(0deg);
+          }
+          50% {
+            opacity: 0.7;
+            transform: translateY(15px) scale(0.96) rotateX(2deg);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.92) rotateX(5deg);
+          }
+        }
+
+        .top3-exit-animation {
+          animation: top3-exit 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes title-exit {
+          0% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-15px) scale(0.95);
+          }
+        }
+
+        .title-exit-animation {
+          animation: title-exit 800ms ease-out forwards;
         }
       `}</style>
     </div>
