@@ -764,11 +764,10 @@ export default function HomePage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
                 {/* 1st Place - Released */}
                                                  <div 
-                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
                     opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
                     transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
-                    transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.8s ease-out 0.4s' : 'all 0.8s ease-out 0.4s'),
                     animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s'
                   }}
                    onMouseEnter={() => setHoveredProduct('released')}
@@ -819,11 +818,10 @@ export default function HomePage() {
 
                 {/* 2nd Place - Lero */}
                                                  <div 
-                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
                     opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
                     transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
-                    transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.8s ease-out 0.6s' : 'all 0.8s ease-out 0.6s'),
                     animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s'
                   }}
                    onMouseEnter={() => setHoveredProduct('lero')}
@@ -874,11 +872,10 @@ export default function HomePage() {
 
                 {/* 3rd Place - MindDump */}
                                                  <div 
-                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
                     opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
                     transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
-                    transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.8s ease-out 0.8s' : 'all 0.8s ease-out 0.8s'),
                     animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s'
                   }}
                    onMouseEnter={() => setHoveredProduct('minddump')}
@@ -937,7 +934,7 @@ export default function HomePage() {
               <div className="space-y-4">
                 {/* CodeSnap */}
                                                  <div 
-                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer transition-all duration-500 ease-in-out hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer smooth-hover hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
                   style={{ animationDelay: isExitingWeeklyBuilds ? '1.2s' : '1.2s' }}
                    onMouseEnter={() => {
                      console.log('Hover CodeSnap');
@@ -989,7 +986,7 @@ export default function HomePage() {
 
                                 {/* TaskFlow */}
                 <div 
-                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer transition-all duration-500 ease-in-out hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer smooth-hover hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
                   style={{ animationDelay: isExitingWeeklyBuilds ? '1.4s' : '1.4s' }}
                   onMouseEnter={() => {
                     console.log('Hover TaskFlow');
@@ -1041,7 +1038,7 @@ export default function HomePage() {
 
                                 {/* DataViz */}
                 <div 
-                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer transition-all duration-500 ease-in-out hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
+                  className={`border border-[#FAF5EB]/10 rounded-lg p-4 bg-transparent relative cursor-pointer smooth-hover hover:border-[#FE4629]/30 hover:bg-[#FE4629]/5 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} 
                   style={{ animationDelay: isExitingWeeklyBuilds ? '1.6s' : '1.6s' }}
                   onMouseEnter={() => {
                     console.log('Hover DataViz');
@@ -1136,6 +1133,44 @@ export default function HomePage() {
           100% {
             opacity: 0;
           }
+        }
+
+        /* FORZAR TRANSICIONES DE HOVER */
+        .top3-card {
+          transition: all 0.3s ease-out !important;
+        }
+        .top3-card:hover {
+          transition: all 0.3s ease-out !important;
+        }
+        .weekly-card {
+          transition: all 0.3s ease-out !important;
+        }
+        .weekly-card:hover {
+          transition: all 0.3s ease-out !important;
+        }
+        
+        /* ANIMACIONES SMOOTH PARA HOVER */
+        .smooth-hover {
+          transition: border-color 0.3s ease-out, 
+                      background-color 0.3s ease-out, 
+                      transform 0.3s ease-out, 
+                      box-shadow 0.3s ease-out !important;
+        }
+        
+        .smooth-hover:hover {
+          transition: border-color 0.3s ease-out, 
+                      background-color 0.3s ease-out, 
+                      transform 0.3s ease-out, 
+                      box-shadow 0.3s ease-out !important;
+        }
+        
+        /* ANIMACIONES DE ENTRADA/SALIDA PARA TOP 3 */
+        .top3-entry-exit {
+          transition: opacity 0.8s ease-out, transform 0.8s ease-out !important;
+        }
+        
+        .top3-exiting {
+          transition: opacity 0.2s ease-out, transform 0.2s ease-out !important;
         }
 
         @keyframes slide-down {
