@@ -91,6 +91,7 @@ export default function HomePage() {
   const [showWeeklyBuildsContent, setShowWeeklyBuildsContent] = useState(false)
   const [isExitingWeeklyBuilds, setIsExitingWeeklyBuilds] = useState(false)
   const [isHeaderVisible, setIsHeaderVisible] = useState(true)
+  const [isTop3Entering, setIsTop3Entering] = useState(false)
   
   // Estados para la animación de inicio
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
@@ -468,6 +469,14 @@ export default function HomePage() {
                      // Mostrar el contenido de Weekly Builds después de que el logo se posicione
                      setTimeout(() => {
                        setShowWeeklyBuildsContent(true);
+                       // Activar animación de entrada del TOP 3
+                       setTimeout(() => {
+                         setIsTop3Entering(true);
+                         // Mantener isTop3Entering en true después de la animación
+                         setTimeout(() => {
+                           // No resetear isTop3Entering, mantenerlo en true
+                         }, 1000); // Tiempo suficiente para que se complete la animación
+                       }, 300); // Pequeño delay para que el contenido se renderice
                      }, 1200); // Delay para que coincida con la duración de la transición del logo
                    }, 800); // Delay para que coincida con la duración de las transiciones
                  }}
@@ -636,9 +645,18 @@ export default function HomePage() {
       {showWeeklyBuildsContent && (
         <>
           {/* Weekly Builds Header */}
-          <div className={`fixed top-4 left-0 w-full z-40 transition-all duration-300 ease-out ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'} ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{ height: '60px', animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>
+          <div className={`fixed top-4 left-0 w-full z-40 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{ 
+            height: '60px', 
+            opacity: isExitingWeeklyBuilds ? 0 : (!isHeaderVisible ? 0 : 1),
+            transform: isExitingWeeklyBuilds ? 'translateY(-20px)' : 'translateY(0)',
+            transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : 'all 0.3s ease-out'
+          }}>
             {/* Left - Join Newsletter Button */}
-            <div className={`fixed top-1/2 left-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+            <div className={`fixed top-1/2 left-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{
+              opacity: isExitingWeeklyBuilds ? 0 : (!isHeaderVisible ? 0 : 1),
+              transform: isExitingWeeklyBuilds ? 'translateY(-20px)' : 'translateY(-50%)',
+              transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : 'all 0.3s ease-out'
+            }}>
               <button
                 onClick={() => setShowSignup(true)}
                 className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
@@ -664,7 +682,11 @@ export default function HomePage() {
             </div>
 
             {/* Center - Weekly Builds Brand */}
-            <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+            <div className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{
+              opacity: isExitingWeeklyBuilds ? 0 : (!isHeaderVisible ? 0 : 1),
+              transform: isExitingWeeklyBuilds ? 'translate(-50%, -20px)' : 'translate(-50%, -50%)',
+              transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : 'all 0.3s ease-out'
+            }}>
               <div className={`text-center ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.3s' : '0.3s' }}>
                 <span className="font-inter text-sm font-normal text-[#FE4629]/60 tracking-wider uppercase">The</span>
                 <div className="font-inter text-xl font-bold text-[#FE4629] tracking-wider mt-1">WEEKLY BUILDS</div>
@@ -672,10 +694,15 @@ export default function HomePage() {
             </div>
 
             {/* Right - The Newsletter Button */}
-            <div className={`fixed top-1/2 right-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+            <div className={`fixed top-1/2 right-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{
+              opacity: isExitingWeeklyBuilds ? 0 : (!isHeaderVisible ? 0 : 1),
+              transform: isExitingWeeklyBuilds ? 'translateY(-20px)' : 'translateY(-50%)',
+              transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : 'all 0.3s ease-out'
+            }}>
               <button
                 onClick={() => {
                   setIsExitingWeeklyBuilds(true);
+                  setIsTop3Entering(false); // Resetear la animación de entrada
                   setTimeout(() => {
                     setShowWeeklyBuildsContent(false);
                     setTimeout(() => {
@@ -683,9 +710,9 @@ export default function HomePage() {
                       setTimeout(() => {
                         setShowWeeklyBuilds(false);
                         setIsExitingWeeklyBuilds(false);
-                      }, 1200);
-                    }, 300);
-                  }, 1200); // Más tiempo para que se complete la animación de fade-out
+                      }, 600);
+                    }, 150);
+                  }, 600); // Reducido de 1200ms a 600ms
                 }}
                 className={`px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`}
                 style={{ 
@@ -714,18 +741,21 @@ export default function HomePage() {
           <div className="min-h-screen pt-32 pb-20 px-8 max-w-6xl mx-auto overflow-y-auto">
             {/* TOP 3 BUILDS */}
             <div className="mb-16 transition-all duration-1000 ease-out" style={{ 
-              opacity: isExitingWeeklyBuilds ? 0 : 1, 
-              transform: isExitingWeeklyBuilds ? 'translateY(40px) scale(0.98)' : 'translateY(0) scale(1)',
+              opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
+              transform: isExitingWeeklyBuilds ? 'translateY(40px) scale(0.98)' : (isTop3Entering ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)'),
+              transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.8s ease-out' : 'all 0.8s ease-out'),
               animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s'
             }}>
               <div className="flex items-center gap-3 mb-8">
                 <h2 className="font-inter text-2xl font-bold text-[#FE4629] tracking-wide transition-all duration-800 ease-out" style={{
-                  opacity: isExitingWeeklyBuilds ? 0 : 1, 
-                  transform: isExitingWeeklyBuilds ? 'translateY(-15px) scale(0.95)' : 'translateY(0) scale(1)'
+                  opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
+                  transform: isExitingWeeklyBuilds ? 'translateY(-15px) scale(0.95)' : (isTop3Entering ? 'translateY(0) scale(1)' : 'translateY(-20px) scale(0.9)'),
+                  transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.6s ease-out 0.2s' : 'all 0.6s ease-out 0.2s')
                 }}>TOP 3 THIS WEEK</h2>
                 <span className="font-inter text-lg text-[#FE4629] ml-auto transition-all duration-800 ease-out" style={{
-                  opacity: isExitingWeeklyBuilds ? 0 : 1, 
-                  transform: isExitingWeeklyBuilds ? 'translateY(-15px) scale(0.95)' : 'translateY(0) scale(1)',
+                  opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
+                  transform: isExitingWeeklyBuilds ? 'translateY(-15px) scale(0.95)' : (isTop3Entering ? 'translateY(0) scale(1)' : 'translateY(-20px) scale(0.9)'),
+                  transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.6s ease-out 0.3s' : 'all 0.6s ease-out 0.3s'),
                   animationDelay: isExitingWeeklyBuilds ? '0.05s' : '0.05s'
                 }}>[momentum: 847]</span>
               </div>
@@ -736,9 +766,9 @@ export default function HomePage() {
                                                  <div 
                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
-                    opacity: isExitingWeeklyBuilds ? 0 : 1, 
-                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : 'translateY(0) scale(1) rotateX(0deg)',
-                    transition: 'all 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
+                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
+                    transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.8s ease-out 0.4s' : 'all 0.8s ease-out 0.4s'),
                     animationDelay: isExitingWeeklyBuilds ? '0.2s' : '0.2s'
                   }}
                    onMouseEnter={() => setHoveredProduct('released')}
@@ -791,9 +821,9 @@ export default function HomePage() {
                                                  <div 
                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
-                    opacity: isExitingWeeklyBuilds ? 0 : 1, 
-                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : 'translateY(0) scale(1) rotateX(0deg)',
-                    transition: 'all 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
+                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
+                    transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.8s ease-out 0.6s' : 'all 0.8s ease-out 0.6s'),
                     animationDelay: isExitingWeeklyBuilds ? '0.4s' : '0.4s'
                   }}
                    onMouseEnter={() => setHoveredProduct('lero')}
@@ -846,9 +876,9 @@ export default function HomePage() {
                                                  <div 
                   className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer transition-all duration-700 ease-in-out hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
-                    opacity: isExitingWeeklyBuilds ? 0 : 1, 
-                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : 'translateY(0) scale(1) rotateX(0deg)',
-                    transition: 'all 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                    opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
+                    transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
+                    transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : (isTop3Entering ? 'all 0.8s ease-out 0.8s' : 'all 0.8s ease-out 0.8s'),
                     animationDelay: isExitingWeeklyBuilds ? '0.6s' : '0.6s'
                   }}
                    onMouseEnter={() => setHoveredProduct('minddump')}
