@@ -105,8 +105,30 @@ export default function HomePage() {
 
   // Estado para la página de El Programa
   const [showPlaybookPage, setShowPlaybookPage] = useState(false)
+  const [isExitingPlaybook, setIsExitingPlaybook] = useState(false)
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
+
+  // Estado para la página de Misión
+  const [showMisionPage, setShowMisionPage] = useState(false)
+  const [isExitingMision, setIsExitingMision] = useState(false)
+
+  // Funciones para cerrar páginas con animación
+  const closePlaybookPage = useCallback(() => {
+    setIsExitingPlaybook(true)
+    setTimeout(() => {
+      setShowPlaybookPage(false)
+      setIsExitingPlaybook(false)
+    }, 300)
+  }, [])
+
+  const closeMisionPage = useCallback(() => {
+    setIsExitingMision(true)
+    setTimeout(() => {
+      setShowMisionPage(false)
+      setIsExitingMision(false)
+    }, 300)
+  }, [])
 
   // Feature flag para Weekly Builds
   const showWeeklyBuildsButton = process.env.NEXT_PUBLIC_SHOW_WEEKLY_BUILDS === 'true'
@@ -367,6 +389,28 @@ export default function HomePage() {
             transform: translateY(0);
           }
         }
+
+        @keyframes stackInPage {
+          from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes stackOutPage {
+          from {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.95);
+          }
+        }
       `}</style>
 
       {/* Eliminado MomentumLogoHot */}
@@ -446,7 +490,10 @@ export default function HomePage() {
             </a>
             <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
             <a
-              href="#quien-soy"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowMisionPage(true);
+              }}
               className="transition-all duration-300 cursor-pointer"
               style={{ color: 'rgba(254, 70, 41, 0.8)' }}
               onMouseEnter={(e) => {
@@ -570,7 +617,7 @@ export default function HomePage() {
                 transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
             >
-              2 ediciones al mes · Plazas limitadas
+              Formación de IA uno a uno.
             </div>
           </div>
         </div>
@@ -762,9 +809,11 @@ export default function HomePage() {
       {/* Página completa de El Programa / The Playbook */}
       {showPlaybookPage && (
         <div
-          className="fixed inset-0 z-50 overflow-y-auto"
+          className="fixed inset-0 overflow-y-auto"
           style={{
             backgroundColor: '#4B0A23',
+            animation: isExitingPlaybook ? 'stackOutPage 0.3s cubic-bezier(0.4, 0, 0.6, 1)' : 'stackInPage 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            zIndex: isExitingPlaybook ? 60 : 50
           }}
         >
           {/* Logo y menú de navegación */}
@@ -772,6 +821,8 @@ export default function HomePage() {
             <img
               src="/javigil.svg"
               alt="javigil"
+              onClick={() => closePlaybookPage()}
+              className="cursor-pointer"
               style={{
                 width: '150px',
                 height: 'auto',
@@ -783,7 +834,7 @@ export default function HomePage() {
               <a
                 onClick={(e) => {
                   e.preventDefault();
-                  setShowPlaybookPage(false);
+                  closePlaybookPage();
                 }}
                 className="transition-all duration-300 cursor-pointer"
                 style={{ color: 'rgba(254, 70, 41, 0.8)' }}
@@ -798,7 +849,15 @@ export default function HomePage() {
               </a>
               <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
               <a
-                href="#quien-soy"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsExitingPlaybook(true);
+                  setShowMisionPage(true);
+                  setTimeout(() => {
+                    setShowPlaybookPage(false);
+                    setIsExitingPlaybook(false);
+                  }, 300);
+                }}
                 className="transition-all duration-300 cursor-pointer"
                 style={{ color: 'rgba(254, 70, 41, 0.8)' }}
                 onMouseEnter={(e) => {
@@ -838,10 +897,10 @@ export default function HomePage() {
                 El <span className="font-newsreader italic">sistema operativo</span> del ejecutivo moderno
               </p>
 
-              {/* Los 4 Pilares */}
+              {/* One to one */}
               <div className="max-w-5xl mx-auto">
                 <h2 className="font-inter text-5xl font-bold mb-8" style={{ color: '#FE4629' }}>
-                  Los 4 Pilares
+                  One to one
                 </h2>
                 <p className="font-inter text-xl mb-12" style={{ color: 'rgba(254, 70, 41, 0.75)' }}>
                   20 horas para dominar lo que importa
@@ -943,10 +1002,10 @@ export default function HomePage() {
                       <Clock size={48} style={{ color: '#FE4629' }} strokeWidth={1.5} />
                     </div>
                     <h3 className="font-inter text-2xl font-bold mb-3" style={{ color: '#4B0A23' }}>
-                      20h
+                      20h 1a1
                     </h3>
                     <p className="font-inter text-sm leading-relaxed" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
-                      Formación presencial o remota
+                      Formación presencial o remota. Uno a uno
                     </p>
                   </div>
 
@@ -996,8 +1055,8 @@ export default function HomePage() {
             <div className="text-center mt-12">
               <button
                 onClick={() => {
-                  setShowPlaybookPage(false);
-                  setShowModal(true);
+                  closePlaybookPage();
+                  setTimeout(() => setShowSignup(true), 350);
                 }}
                 className="font-inter text-xl font-semibold px-12 py-4 rounded-lg mb-4 transition-all duration-300"
                 style={{
@@ -1017,7 +1076,190 @@ export default function HomePage() {
                 Solicita tu plaza
               </button>
               <p className="font-inter text-sm" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
-                2 ediciones al mes · Plazas limitadas
+                Formación de IA uno a uno.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Página completa de Misión */}
+      {showMisionPage && (
+        <div
+          className="fixed inset-0 overflow-y-auto"
+          style={{
+            backgroundColor: '#4B0A23',
+            animation: isExitingMision ? 'stackOutPage 0.3s cubic-bezier(0.4, 0, 0.6, 1)' : 'stackInPage 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            zIndex: isExitingMision ? 60 : 50
+          }}
+        >
+          {/* Logo y menú de navegación */}
+          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center" style={{ backgroundColor: 'transparent' }}>
+            <img
+              src="/javigil.svg"
+              alt="javigil"
+              onClick={() => closeMisionPage()}
+              className="cursor-pointer"
+              style={{
+                width: '150px',
+                height: 'auto',
+              }}
+            />
+
+            {/* Menú de navegación debajo del logo */}
+            <div className="font-inter text-sm mt-2">
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeMisionPage();
+                }}
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                Home
+              </a>
+              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsExitingMision(true);
+                  setShowPlaybookPage(true);
+                  setTimeout(() => {
+                    setShowMisionPage(false);
+                    setIsExitingMision(false);
+                  }, 300);
+                }}
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                El Programa
+              </a>
+              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
+              <a
+                href="#precio"
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                Precio
+              </a>
+            </div>
+          </div>
+
+          {/* Contenido con scroll */}
+          <div className="pt-24 pb-16">
+            {/* SECCIÓN MISIÓN */}
+            <div className="w-full py-12 px-8">
+              <div className="max-w-4xl mx-auto">
+                {/* Layout con foto y contenido */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-center mb-16">
+                  {/* Foto */}
+                  <div className="flex justify-center md:justify-start">
+                    <div className="relative">
+                      <img
+                        src="/foto_javigil.jpg"
+                        alt="Javi Gil"
+                        className="w-80 h-80 object-cover rounded-2xl"
+                        style={{ filter: 'grayscale(100%)' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Contenido */}
+                  <div>
+                    <p className="font-newsreader text-xl font-semibold mb-8 leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
+                      Lidero en un banco tier-1. <br></br>
+                      Y tengo mis propias empresas. De IA, claro
+                    </p>
+
+                    {/* Background */}
+                    <div className="space-y-2">
+                      <div className="flex items-start gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
+                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                          Monté mi primera empresa de IA antes de que ChatGPT existiera
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
+                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                          Pasé por Big Four, monté departamentos de IA desde cero
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
+                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                          Diseñé y desarrollé sistemas de más de 75 agentes de IA
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
+                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                          Hoy lidero la parte de préstamos en BBVA para Italia y Alemania
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
+                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                          Mientras sigo con mis empresas
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quote destacada */}
+                <div className="max-w-4xl mx-auto px-8 py-12 rounded-2xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.05)' }}>
+                  <p className="font-newsreader italic text-2xl leading-relaxed" style={{ color: '#FE4629' }}>
+                    "Podría quedarme en mi carril. Pero llevo años viendo lo mismo: ejecutivos brillantes tomando decisiones de IA a ciegas. Y me frustra. Porque cuando una empresa usa bien la IA, crece. Y cuando las empresas crecen, la rueda gira para todos. Ese es mi por qué. Este curso es el cómo."
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Final */}
+            <div className="text-center mt-4">
+              <button
+                onClick={() => {
+                  closeMisionPage();
+                  setTimeout(() => setShowSignup(true), 350);
+                }}
+                className="font-inter text-xl font-semibold px-12 py-4 rounded-lg mb-4 transition-all duration-300"
+                style={{
+                  backgroundColor: '#FE4629',
+                  color: '#4B0A23',
+                  border: '2px solid #FE4629',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FE4629';
+                  e.currentTarget.style.color = '#4B0A23';
+                }}
+              >
+                Solicita tu plaza
+              </button>
+              <p className="font-inter text-sm" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
+                Formación de IA uno a uno.
               </p>
             </div>
           </div>
