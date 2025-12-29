@@ -82,7 +82,7 @@ export default function HomePage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    language: "en",
+    position: "",
   })
   
   
@@ -329,8 +329,8 @@ export default function HomePage() {
 
   // Pantalla principal con animación integrada
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`w-full relative transition-all duration-1000 ease-in-out cursor-auto ${
         showWeeklyBuildsContent ? 'min-h-screen overflow-y-auto' : 'h-screen overflow-hidden'
       }`}
@@ -339,6 +339,19 @@ export default function HomePage() {
         transition: 'background-color 1s ease-in-out'
       }}
     >
+      {/* Estilos para prevenir fondo amarillo del autocompletado */}
+      <style>{`
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px rgba(254, 70, 41, 0.05) inset !important;
+          -webkit-text-fill-color: #FE4629 !important;
+          caret-color: #FE4629 !important;
+          border: 1px solid rgba(254, 70, 41, 0.2) !important;
+        }
+      `}</style>
+
       {/* Eliminado MomentumLogoHot */}
 
 
@@ -635,87 +648,79 @@ export default function HomePage() {
               ×
             </button>
 
-            <h2 className="font-inter text-2xl mb-2 text-center animate-slide-up flex items-center justify-center gap-2" style={{ color: '#FE4629' }}>
-              Join <img src="/javigil.svg" alt="javigil" className="h-8 w-auto" />
+            {/* Logo javigil centrado */}
+            <div className="flex justify-center mb-6 animate-slide-up">
+              <img src="/javigil.svg" alt="javigil" className="h-12 w-auto" />
+            </div>
+
+            <h2 className="font-inter text-3xl font-bold mb-2 text-center animate-slide-up" style={{ animationDelay: "0.1s", color: '#FE4629' }}>
+              Solicita tu plaza
             </h2>
 
-            <p className="font-inter text-sm mb-6 text-center animate-slide-up" style={{animationDelay: "0.1s", color: 'rgba(254, 70, 41, 0.7)' }}>
-              Get exclusive insights delivered weekly
+            <p className="font-inter text-sm mb-8 text-center animate-slide-up" style={{animationDelay: "0.15s", color: 'rgba(254, 70, 41, 0.7)' }}>
+              Plazas limitadas · Respuesta en 48h
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="animate-slide-up" style={{animationDelay: "0.2s"}}>
-                <label className="block font-inter text-sm mb-2" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>Name</label>
-                                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300 placeholder-muted"
-                    style={{ 
-                      backgroundColor: 'rgba(254, 70, 41, 0.05)', 
-                      border: '1px solid rgba(254, 70, 41, 0.2)', 
-                      color: '#FE4629'
-                    }}
-                    placeholder="Your name"
-                    required
-                  />
+                <label className="block font-inter text-sm font-medium mb-2" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>Nombre</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300 placeholder-muted"
+                  style={{
+                    backgroundColor: 'rgba(254, 70, 41, 0.05)',
+                    border: '1px solid rgba(254, 70, 41, 0.2)',
+                    color: '#FE4629'
+                  }}
+                  placeholder="Tu nombre"
+                  required
+                />
               </div>
 
               <div className="animate-slide-up" style={{animationDelay: "0.3s"}}>
-                <label className="block font-inter text-sm mb-2" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>Email</label>
-                                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300 placeholder-muted"
-                    style={{ 
-                      backgroundColor: 'rgba(254, 70, 41, 0.05)', 
-                      border: '1px solid rgba(254, 70, 41, 0.2)', 
-                      color: '#FE4629'
-                    }}
-                    placeholder="your@email.com"
-                    required
-                  />
+                <label className="block font-inter text-sm font-medium mb-2" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300 placeholder-muted"
+                  style={{
+                    backgroundColor: 'rgba(254, 70, 41, 0.05)',
+                    border: '1px solid rgba(254, 70, 41, 0.2)',
+                    color: '#FE4629'
+                  }}
+                  placeholder="tu@email.com"
+                  required
+                />
               </div>
 
               <div className="animate-slide-up" style={{animationDelay: "0.4s"}}>
-                <label className="block font-inter text-sm mb-2" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>Language</label>
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, language: "en" })}
-                    className="px-4 py-3 border rounded-lg transition-all duration-300 hover:scale-105"
-                    style={{
-                      borderColor: formData.language === "en" ? '#FE4629' : 'rgba(254, 70, 41, 0.2)',
-                      backgroundColor: formData.language === "en" ? 'rgba(254, 70, 41, 0.1)' : 'rgba(254, 70, 41, 0.05)',
-                      color: '#FE4629'
-                    }}
-                  >
-                    <span className="font-inter text-sm">English</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, language: "es" })}
-                    className="px-4 py-3 border rounded-lg transition-all duration-300 hover:scale-105"
-                    style={{
-                      borderColor: formData.language === "es" ? '#FE4629' : 'rgba(254, 70, 41, 0.2)',
-                      backgroundColor: formData.language === "es" ? 'rgba(254, 70, 41, 0.1)' : 'rgba(254, 70, 41, 0.05)',
-                      color: '#FE4629'
-                    }}
-                  >
-                    <span className="font-inter text-sm">Español</span>
-                  </button>
-                </div>
+                <label className="block font-inter text-sm font-medium mb-2" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>Cargo / Empresa</label>
+                <input
+                  type="text"
+                  value={formData.position}
+                  onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                  className="w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300 placeholder-muted"
+                  style={{
+                    backgroundColor: 'rgba(254, 70, 41, 0.05)',
+                    border: '1px solid rgba(254, 70, 41, 0.2)',
+                    color: '#FE4629'
+                  }}
+                  placeholder="CEO en Acme / Director de Ops en..."
+                  required
+                />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 font-inter font-semibold rounded-lg mt-6 animate-slide-up"
+                className="w-full py-4 font-inter font-semibold rounded-lg mt-6 animate-slide-up"
                 style={{
                   animationDelay: "0.5s",
                   backgroundColor: '#FE4629',
                   color: '#4B0A23',
-                  border: '1px solid #FE4629',
+                  border: '2px solid #FE4629',
                   transition: 'all 0.3s ease'
                 }}
                 onMouseEnter={(e) => {
@@ -727,7 +732,7 @@ export default function HomePage() {
                   e.currentTarget.style.color = '#4B0A23';
                 }}
               >
-                Join THE AI PLAYBOOK
+                Enviar solicitud
               </button>
             </form>
           </div>
