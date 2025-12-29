@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import MomentumLogo from "../components/momentum-logo"
+import { Clock, FileText, GitBranch, RefreshCw } from "lucide-react"
 // Eliminar la importación de MomentumLogoHot
 
 // Componente de gráfica de tendencia minimalista
@@ -101,6 +102,11 @@ export default function HomePage() {
   const [isExitingWeeklyBuilds, setIsExitingWeeklyBuilds] = useState(false)
   const [isTop3Entering, setIsTop3Entering] = useState(false)
   const [isHeaderVisible, setIsHeaderVisible] = useState(true)
+
+  // Estado para la página de El Programa
+  const [showPlaybookPage, setShowPlaybookPage] = useState(false)
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
+  const [expandedCard, setExpandedCard] = useState<string | null>(null)
 
   // Feature flag para Weekly Builds
   const showWeeklyBuildsButton = process.env.NEXT_PUBLIC_SHOW_WEEKLY_BUILDS === 'true'
@@ -350,6 +356,17 @@ export default function HomePage() {
           caret-color: #FE4629 !important;
           border: 1px solid rgba(254, 70, 41, 0.2) !important;
         }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(5px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
       `}</style>
 
       {/* Eliminado MomentumLogoHot */}
@@ -410,19 +427,22 @@ export default function HomePage() {
             }}
           >
             <a
-              href="#que-aprenderas"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowPlaybookPage(true);
+              }}
               className="transition-all duration-300 cursor-pointer"
               style={{ color: 'rgba(254, 70, 41, 0.8)' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = '#FE4629';
-                handleSimpleHover("Qué aprenderás", "bg-orange-400");
+                handleSimpleHover("El Programa", "bg-orange-400");
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
                 handleSimpleLeave();
               }}
             >
-              Qué aprenderás
+              El Programa
             </a>
             <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
             <a
@@ -431,14 +451,14 @@ export default function HomePage() {
               style={{ color: 'rgba(254, 70, 41, 0.8)' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = '#FE4629';
-                handleSimpleHover("Quién soy", "bg-orange-400");
+                handleSimpleHover("About", "bg-orange-400");
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
                 handleSimpleLeave();
               }}
             >
-              Quién soy
+              About
             </a>
             <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
             <a
@@ -735,6 +755,271 @@ export default function HomePage() {
                 Enviar solicitud
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Página completa de El Programa / The Playbook */}
+      {showPlaybookPage && (
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto"
+          style={{
+            backgroundColor: '#4B0A23',
+          }}
+        >
+          {/* Logo y menú de navegación */}
+          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center" style={{ backgroundColor: 'transparent' }}>
+            <img
+              src="/javigil.svg"
+              alt="javigil"
+              style={{
+                width: '150px',
+                height: 'auto',
+              }}
+            />
+
+            {/* Menú de navegación debajo del logo */}
+            <div className="font-inter text-sm mt-2">
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowPlaybookPage(false);
+                }}
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                Home
+              </a>
+              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
+              <a
+                href="#quien-soy"
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                About
+              </a>
+              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
+              <a
+                href="#precio"
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                Precio
+              </a>
+            </div>
+          </div>
+
+          {/* Contenido con scroll */}
+          <div className="pt-32 pb-16">
+            {/* Título principal */}
+            <div className="px-8 text-center mb-32">
+              <h1 className="font-inter text-6xl font-bold mb-6 mt-12" style={{ color: '#FE4629' }}>
+                THE AI PLAYBOOK
+              </h1>
+              <p className="font-inter text-2xl mb-16" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>
+                El <span className="font-newsreader italic">sistema operativo</span> del ejecutivo moderno
+              </p>
+
+              {/* Los 4 Pilares */}
+              <div className="max-w-5xl mx-auto">
+                <h2 className="font-inter text-5xl font-bold mb-8" style={{ color: '#FE4629' }}>
+                  Los 4 Pilares
+                </h2>
+                <p className="font-inter text-xl mb-12" style={{ color: 'rgba(254, 70, 41, 0.75)' }}>
+                  20 horas para dominar lo que importa
+                </p>
+
+                {/* Grid de 4 pilares preview */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                  <div className="text-center">
+                    <div className="font-inter text-2xl font-bold mb-2" style={{ color: '#FE4629' }}>01</div>
+                    <div className="font-inter text-lg font-semibold" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>ENTIENDES</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-inter text-2xl font-bold mb-2" style={{ color: '#FE4629' }}>02</div>
+                    <div className="font-inter text-lg font-semibold" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>CONTROLAS</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-inter text-2xl font-bold mb-2" style={{ color: '#FE4629' }}>03</div>
+                    <div className="font-inter text-lg font-semibold" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>EJECUTAS</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-inter text-2xl font-bold mb-2" style={{ color: '#FE4629' }}>04</div>
+                    <div className="font-inter text-lg font-semibold" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>LIDERAS</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+              {/* Secciones de ancho completo alternando colores */}
+
+            {/* ENTIENDES - Fondo crema */}
+            <div className="w-full py-16 px-8" style={{ backgroundColor: '#FAEBD7' }}>
+              <div className="max-w-5xl ml-[20%] mr-auto">
+                <h3 className="font-inter text-4xl font-bold mb-8 text-left" style={{ color: '#4B0A23' }}>
+                  ENTIENDES
+                </h3>
+                <div className="space-y-6 font-inter text-lg text-left" style={{ color: 'rgba(75, 10, 35, 0.9)' }}>
+                  <p>Sabrás qué es IA realmente, no el marketing, no el hype, y por qué "inteligencia" es la palabra más engañosa del siglo.</p>
+                  <p>Entenderás qué hace tu equipo técnico sin depender de que te lo traduzcan.</p>
+                  <p>Distinguirás ML de IA Generativa y sabrás cuándo usar cada una (y cuándo ninguna).</p>
+                </div>
+              </div>
+            </div>
+
+            {/* CONTROLAS - Fondo burdeos */}
+            <div className="w-full py-16 px-8" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-5xl ml-auto mr-[20%]">
+                <h3 className="font-inter text-4xl font-bold mb-8 text-right" style={{ color: '#FE4629' }}>
+                  CONTROLAS
+                </h3>
+                <div className="space-y-6 font-inter text-lg text-right" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
+                  <p>Detectarás humo en cualquier propuesta en los primeros 5 minutos.</p>
+                  <p>Sabrás qué preguntar para evaluar proyectos, proveedores y candidatos técnicos.</p>
+                  <p>Supervisarás implementaciones sin que te cuenten lo que quieren que sepas.</p>
+                  <p>Decidirás inversiones con criterio propio, no con la opinión de quien te vende.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* EJECUTAS - Fondo crema */}
+            <div className="w-full py-16 px-8" style={{ backgroundColor: '#FAEBD7' }}>
+              <div className="max-w-5xl ml-[20%] mr-auto">
+                <h3 className="font-inter text-4xl font-bold mb-8 text-left" style={{ color: '#4B0A23' }}>
+                  EJECUTAS
+                </h3>
+                <div className="space-y-6 font-inter text-lg text-left" style={{ color: 'rgba(75, 10, 35, 0.9)' }}>
+                  <p>Usarás IA para hacer en 1 hora lo que antes te llevaba un día.</p>
+                  <p>Optimizarás tu trabajo y el de tu equipo con herramientas que ya existen.</p>
+                  <p>Automatizarás tareas repetitivas que hoy te roban tiempo.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* LIDERAS - Fondo burdeos */}
+            <div className="w-full py-16 px-8" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-5xl ml-auto mr-[20%]">
+                <h3 className="font-inter text-4xl font-bold mb-8 text-right" style={{ color: '#FE4629' }}>
+                  LIDERAS
+                </h3>
+                <div className="space-y-6 font-inter text-lg text-right" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
+                  <p>Serás el que guía conversaciones de IA, no el que asiente sin entender.</p>
+                  <p>Contratarás talento técnico sabiendo quién sabe realmente y quién vende humo.</p>
+                  <p>Estarás donde hay que estar mientras el mundo se transforma.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* QUÉ TE LLEVAS - Recuadro crema centrado */}
+            <div className="w-full py-16 px-8 flex justify-center">
+              <div className="max-w-6xl w-full p-16 rounded-3xl" style={{ backgroundColor: '#FAEBD7' }}>
+                <h2 className="font-inter text-4xl font-bold text-center mb-16" style={{ color: '#4B0A23' }}>
+                  QUÉ TE LLEVAS
+                </h2>
+
+                {/* Grid de 4 columnas */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                  {/* 20 horas */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-24 h-24 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: '#4B0A23' }}>
+                      <Clock size={48} style={{ color: '#FE4629' }} strokeWidth={1.5} />
+                    </div>
+                    <h3 className="font-inter text-2xl font-bold mb-3" style={{ color: '#4B0A23' }}>
+                      20h
+                    </h3>
+                    <p className="font-inter text-sm leading-relaxed" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                      Formación presencial o remota
+                    </p>
+                  </div>
+
+                  {/* Cheatsheets */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-24 h-24 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: '#4B0A23' }}>
+                      <FileText size={48} style={{ color: '#FE4629' }} strokeWidth={1.5} />
+                    </div>
+                    <h3 className="font-inter text-2xl font-bold mb-3" style={{ color: '#4B0A23' }}>
+                      Cheatsheets
+                    </h3>
+                    <p className="font-inter text-sm leading-relaxed" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                      Las reglas simplificadas para no depender de tu memoria
+                    </p>
+                  </div>
+
+                  {/* Decision Trees */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-24 h-24 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: '#4B0A23' }}>
+                      <GitBranch size={48} style={{ color: '#FE4629' }} strokeWidth={1.5} />
+                    </div>
+                    <h3 className="font-inter text-2xl font-bold mb-3" style={{ color: '#4B0A23' }}>
+                      Decision Trees
+                    </h3>
+                    <p className="font-inter text-sm leading-relaxed" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                      Árboles de decisión para cada tipo de problema
+                    </p>
+                  </div>
+
+                  {/* Actualizaciones */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="w-24 h-24 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: '#4B0A23' }}>
+                      <RefreshCw size={48} style={{ color: '#FE4629' }} strokeWidth={1.5} />
+                    </div>
+                    <h3 className="font-inter text-2xl font-bold mb-3" style={{ color: '#4B0A23' }}>
+                      Actualizaciones
+                    </h3>
+                    <p className="font-inter text-sm leading-relaxed" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                      Esto cambia cada 6 meses. Tú no te quedas atrás con actualizaciones semanales
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Final - fuera del recuadro blanco */}
+            <div className="text-center mt-12">
+              <button
+                onClick={() => {
+                  setShowPlaybookPage(false);
+                  setShowModal(true);
+                }}
+                className="font-inter text-xl font-semibold px-12 py-4 rounded-lg mb-4 transition-all duration-300"
+                style={{
+                  backgroundColor: '#FE4629',
+                  color: '#4B0A23',
+                  border: '2px solid #FE4629',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FE4629';
+                  e.currentTarget.style.color = '#4B0A23';
+                }}
+              >
+                Solicita tu plaza
+              </button>
+              <p className="font-inter text-sm" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
+                2 ediciones al mes · Plazas limitadas
+              </p>
+            </div>
           </div>
         </div>
       )}
