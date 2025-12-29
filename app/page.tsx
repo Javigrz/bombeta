@@ -93,6 +93,9 @@ export default function HomePage() {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true)
   const [isTop3Entering, setIsTop3Entering] = useState(false)
   
+  // New: Environment variable to control "The Weekly Builds" button visibility
+  const showWeeklyBuildsButton = process.env.NEXT_PUBLIC_SHOW_WEEKLY_BUILDS === 'true';
+  
   // Estados para la animación de inicio
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
   const [introTextComplete, setIntroTextComplete] = useState(false)
@@ -459,6 +462,7 @@ export default function HomePage() {
              </div>
 
                           {/* Left - The Weekly Builds Button */}
+             {showWeeklyBuildsButton && (
              <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
                <button
                  onClick={() => {
@@ -500,6 +504,7 @@ export default function HomePage() {
                  THE WEEKLY BUILDS
                </button>
              </div>
+             )}
            </div>
 
            {/* Footer */}
