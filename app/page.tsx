@@ -362,9 +362,9 @@ export default function HomePage() {
 
               {/* Logo único que hace la animación y luego permanece */}
         <div
-          className="fixed z-20"
+          className="fixed z-20 flex flex-col items-center"
           style={{
-            top: logoTransitioned ? '2rem' : '50%',
+            top: logoTransitioned ? '1rem' : '50%',
             left: '50%',
             transform: logoTransitioned ? 'translateX(-50%)' : 'translate(-50%, -50%)',
             transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -385,6 +385,65 @@ export default function HomePage() {
               opacity: mounted ? 1 : 0
             }}
           />
+
+          {/* Links de navegación - dentro del contenedor del logo */}
+          <div
+            className="font-inter text-sm"
+            style={{
+              marginTop: logoTransitioned ? '-1.5rem' : '1rem',
+              opacity: logoTransitioned ? 1 : 0,
+              visibility: logoTransitioned ? 'visible' : 'hidden',
+              transition: 'all 0.8s ease-out 1s, visibility 0s 1s'
+            }}
+          >
+            <a
+              href="#que-aprenderas"
+              className="transition-all duration-300 cursor-pointer"
+              style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#FE4629';
+                handleSimpleHover("Qué aprenderás", "bg-orange-400");
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                handleSimpleLeave();
+              }}
+            >
+              Qué aprenderás
+            </a>
+            <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
+            <a
+              href="#quien-soy"
+              className="transition-all duration-300 cursor-pointer"
+              style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#FE4629';
+                handleSimpleHover("Quién soy", "bg-orange-400");
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                handleSimpleLeave();
+              }}
+            >
+              Quién soy
+            </a>
+            <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
+            <a
+              href="#precio"
+              className="transition-all duration-300 cursor-pointer"
+              style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#FE4629';
+                handleSimpleHover("Precio", "bg-orange-400");
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                handleSimpleLeave();
+              }}
+            >
+              Precio
+            </a>
+          </div>
         </div>
 
         {/* Contenido principal (texto, botón) - separado del logo */}
