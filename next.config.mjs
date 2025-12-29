@@ -1,14 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable TypeScript checks, disable ESLint due to config issues
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true, // TODO: Fix ESLint config circular dependency issue
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
+  // Optimize images - set to true for production, false for static export
   images: {
-    unoptimized: true,
+    unoptimized: false,
+    formats: ['image/avif', 'image/webp'],
   },
+  // Production optimizations
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
 }
 
 export default nextConfig

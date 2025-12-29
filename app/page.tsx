@@ -84,6 +84,7 @@ export default function HomePage() {
     name: "",
     email: "",
     position: "",
+    language: "en",
   })
   
   
@@ -113,6 +114,10 @@ export default function HomePage() {
   const [showMisionPage, setShowMisionPage] = useState(false)
   const [isExitingMision, setIsExitingMision] = useState(false)
 
+  // Estado para la página de Precio
+  const [showPrecioPage, setShowPrecioPage] = useState(false)
+  const [isExitingPrecio, setIsExitingPrecio] = useState(false)
+
   // Funciones para cerrar páginas con animación
   const closePlaybookPage = useCallback(() => {
     setIsExitingPlaybook(true)
@@ -127,6 +132,14 @@ export default function HomePage() {
     setTimeout(() => {
       setShowMisionPage(false)
       setIsExitingMision(false)
+    }, 300)
+  }, [])
+
+  const closePrecioPage = useCallback(() => {
+    setIsExitingPrecio(true)
+    setTimeout(() => {
+      setShowPrecioPage(false)
+      setIsExitingPrecio(false)
     }, 300)
   }, [])
 
@@ -306,7 +319,7 @@ export default function HomePage() {
     e.preventDefault()
     console.log("Form submitted:", formData)
     setShowSignup(false)
-    setFormData({ name: "", email: "", language: "en" })
+    setFormData({ name: "", email: "", position: "", language: "en" })
   }
 
   const renderTypedText = (text: string) => {
@@ -509,7 +522,11 @@ export default function HomePage() {
             </a>
             <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
             <a
-              href="#precio"
+              onClick={(e) => {
+                e.preventDefault();
+                console.log('Clicked Precio, setting showPrecioPage to true');
+                setShowPrecioPage(true);
+              }}
               className="transition-all duration-300 cursor-pointer"
               style={{ color: 'rgba(254, 70, 41, 0.8)' }}
               onMouseEnter={(e) => {
@@ -527,8 +544,8 @@ export default function HomePage() {
         </div>
 
         {/* Contenido principal (texto, botón) - separado del logo */}
-        <div className="absolute inset-0 flex items-center justify-center z-5">
-          <div className="text-center">
+        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 5, pointerEvents: 'none' }}>
+          <div className="text-center" style={{ pointerEvents: 'auto' }}>
             {/* Subtítulo */}
             <div
               className="mb-2"
@@ -871,7 +888,15 @@ export default function HomePage() {
               </a>
               <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
               <a
-                href="#precio"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsExitingPlaybook(true);
+                  setShowPrecioPage(true);
+                  setTimeout(() => {
+                    setShowPlaybookPage(false);
+                    setIsExitingPlaybook(false);
+                  }, 300);
+                }}
                 className="transition-all duration-300 cursor-pointer"
                 style={{ color: 'rgba(254, 70, 41, 0.8)' }}
                 onMouseEnter={(e) => {
@@ -1148,7 +1173,15 @@ export default function HomePage() {
               </a>
               <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
               <a
-                href="#precio"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsExitingMision(true);
+                  setShowPrecioPage(true);
+                  setTimeout(() => {
+                    setShowMisionPage(false);
+                    setIsExitingMision(false);
+                  }, 300);
+                }}
                 className="transition-all duration-300 cursor-pointer"
                 style={{ color: 'rgba(254, 70, 41, 0.8)' }}
                 onMouseEnter={(e) => {
@@ -1261,6 +1294,186 @@ export default function HomePage() {
               <p className="font-inter text-sm" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
                 Formación de IA uno a uno.
               </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Página completa de Precio */}
+      {showPrecioPage && (
+        <div
+          className="fixed inset-0 overflow-y-auto"
+          style={{
+            backgroundColor: '#4B0A23',
+            animation: isExitingPrecio ? 'stackOutPage 0.3s cubic-bezier(0.4, 0, 0.6, 1)' : 'stackInPage 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            zIndex: isExitingPrecio ? 60 : 50
+          }}
+        >
+          {/* Logo y menú de navegación */}
+          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center" style={{ backgroundColor: 'transparent' }}>
+            <img
+              src="/javigil.svg"
+              alt="javigil"
+              onClick={() => closePrecioPage()}
+              className="cursor-pointer"
+              style={{
+                width: '150px',
+                height: 'auto',
+              }}
+            />
+
+            {/* Menú de navegación debajo del logo */}
+            <div className="font-inter text-sm mt-2">
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  closePrecioPage();
+                }}
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                Home
+              </a>
+              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsExitingPrecio(true);
+                  setShowPlaybookPage(true);
+                  setTimeout(() => {
+                    setShowPrecioPage(false);
+                    setIsExitingPrecio(false);
+                  }, 300);
+                }}
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                El Programa
+              </a>
+              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsExitingPrecio(true);
+                  setShowMisionPage(true);
+                  setTimeout(() => {
+                    setShowPrecioPage(false);
+                    setIsExitingPrecio(false);
+                  }, 300);
+                }}
+                className="transition-all duration-300 cursor-pointer"
+                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
+                }}
+              >
+                Misión
+              </a>
+            </div>
+          </div>
+
+          {/* Contenido con scroll */}
+          <div className="pt-40 pb-8">
+            {/* SECCIÓN PRECIO */}
+            <div className="w-full px-8">
+              <div className="max-w-2xl mx-auto">
+                {/* Card de Precio */}
+                <div className="px-10 py-10 rounded-3xl" style={{ backgroundColor: '#FAEBD7' }}>
+                  {/* Precio */}
+                  <div className="text-center mb-8">
+                    <h1 className="font-inter text-6xl font-bold mb-2" style={{ color: '#4B0A23' }}>
+                      1.890€
+                    </h1>
+                    <p className="font-inter text-base" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                      IVA incluido
+                    </p>
+                  </div>
+
+                  {/* Lista de beneficios */}
+                  <div className="space-y-4 mb-8">
+                    {/* 20h formación */}
+                    <div className="p-4 rounded-xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.08)' }}>
+                      <h3 className="font-inter text-lg font-bold mb-1" style={{ color: '#4B0A23' }}>
+                        20h de formación one-to-one
+                      </h3>
+                      <p className="font-inter text-sm" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                        Presencial u online, como te venga mejor
+                      </p>
+                    </div>
+
+                    {/* Cheatsheets */}
+                    <div className="p-4 rounded-xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.08)' }}>
+                      <h3 className="font-inter text-lg font-bold mb-1" style={{ color: '#4B0A23' }}>
+                        Cheatsheets con las reglas simplificadas
+                      </h3>
+                      <p className="font-inter text-sm" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                        Para que no dependas de tu memoria
+                      </p>
+                    </div>
+
+                    {/* Árboles de decisión */}
+                    <div className="p-4 rounded-xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.08)' }}>
+                      <h3 className="font-inter text-lg font-bold mb-1" style={{ color: '#4B0A23' }}>
+                        Árboles de decisión
+                      </h3>
+                      <p className="font-inter text-sm" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                        Cada problema tiene su camino
+                      </p>
+                    </div>
+
+                    {/* Actualizaciones */}
+                    <div className="p-4 rounded-xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.08)' }}>
+                      <h3 className="font-inter text-lg font-bold mb-1" style={{ color: '#4B0A23' }}>
+                        Actualizaciones de por vida
+                      </h3>
+                      <p className="font-inter text-sm" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
+                        Esto cambia cada 6 meses. Tú no te quedas atrás.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <div className="text-center">
+                    <button
+                      onClick={() => {
+                        closePrecioPage();
+                        setTimeout(() => setShowSignup(true), 350);
+                      }}
+                      className="font-inter text-lg font-semibold px-10 py-3 rounded-lg transition-all duration-300"
+                      style={{
+                        backgroundColor: '#FE4629',
+                        color: '#FAEBD7',
+                        border: '2px solid #FE4629',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = '#FE4629';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#FE4629';
+                        e.currentTarget.style.color = '#FAEBD7';
+                      }}
+                    >
+                      Solicita tu plaza
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

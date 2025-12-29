@@ -1,0 +1,10 @@
+# Don't upload these to Vercel
+node_modules
+.next
+.env*.local
+.git
+*.md
+CLAUDE.md
+PRODUCTION_CHECKLIST.md
+.DS_Store
+*.log
