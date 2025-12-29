@@ -85,16 +85,6 @@ export default function HomePage() {
     language: "en",
   })
   
-  // Estado para controlar la transición a Weekly Builds
-  const [showWeeklyBuilds, setShowWeeklyBuilds] = useState(false)
-  const [logoTransitioned, setLogoTransitioned] = useState(false)
-  const [showWeeklyBuildsContent, setShowWeeklyBuildsContent] = useState(false)
-  const [isExitingWeeklyBuilds, setIsExitingWeeklyBuilds] = useState(false)
-  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
-  const [isTop3Entering, setIsTop3Entering] = useState(false)
-  
-  // New: Environment variable to control "The Weekly Builds" button visibility
-  const showWeeklyBuildsButton = process.env.NEXT_PUBLIC_SHOW_WEEKLY_BUILDS === 'true';
   
   // Estados para la animación de inicio
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
@@ -103,7 +93,18 @@ export default function HomePage() {
   
   // Estado para el hover de productos
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null)
-  
+
+  // Estados para Weekly Builds
+  const [showWeeklyBuilds, setShowWeeklyBuilds] = useState(false)
+  const [showWeeklyBuildsContent, setShowWeeklyBuildsContent] = useState(false)
+  const [logoTransitioned, setLogoTransitioned] = useState(false)
+  const [isExitingWeeklyBuilds, setIsExitingWeeklyBuilds] = useState(false)
+  const [isTop3Entering, setIsTop3Entering] = useState(false)
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
+
+  // Feature flag para Weekly Builds
+  const showWeeklyBuildsButton = process.env.NEXT_PUBLIC_SHOW_WEEKLY_BUILDS === 'true'
+
   const containerRef = useRef<HTMLDivElement>(null)
   const cursorRef = useRef<HTMLDivElement>(null)
   const textElementsRef = useRef<(HTMLDivElement | null)[]>([])
@@ -140,7 +141,12 @@ export default function HomePage() {
           setTimeout(() => {
             setIntroStage(3) // Cambio de fondo
             setTimeout(() => {
-              setShowMainContent(true) // Terminar animación y mostrar contenido principal
+              // Primero el logo sube
+              setLogoTransitioned(true)
+              // Después de que el logo termine de subir, aparece el contenido
+              setTimeout(() => {
+                setShowMainContent(true)
+              }, 1000) // Esperar a que el logo termine de subir (800ms transition + 200ms buffer)
             }, 1500) // Más tiempo para que el cambio de fondo se complete
           }, 800)
         }, 1000)
@@ -355,157 +361,180 @@ export default function HomePage() {
 
 
               {/* Logo único que hace la animación y luego permanece */}
-        <div 
-          className={`${logoTransitioned ? 'fixed' : 'absolute'} inset-0 flex items-center justify-center ${logoTransitioned ? 'z-10' : 'z-20'} ${showWeeklyBuildsContent ? 'pointer-events-none' : ''}`}
+        <div
+          className="fixed z-20"
           style={{
-            transform: logoTransitioned ? 'translateY(calc(55vh - 10px))' : 'translateY(0)',
-            transition: 'transform 1.2s ease-in-out'
+            top: logoTransitioned ? '2rem' : '50%',
+            left: '50%',
+            transform: logoTransitioned ? 'translateX(-50%)' : 'translate(-50%, -50%)',
+            transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+            pointerEvents: showWeeklyBuildsContent ? 'none' : 'auto'
           }}
         >
-          <div className="text-center animate-scale-in">
-            <div className="flex justify-center items-center mb-8">
-              <img 
-                                   src={mounted && introStage === 0 ? "/Bombeta_intro.svg" : "/Bombeta_white.svg"}
-                alt="Bombeta" 
-                className="w-[500px] h-auto cursor-pointer transition-all duration-1000 ease-in-out"
-                onMouseEnter={() => handleSimpleHover("Bombeta", "bg-orange-400")}
-                onMouseLeave={handleSimpleLeave}
-                style={{
-                  transform: mounted && introStage === 2 ? 'scale(1.05)' : logoTransitioned ? 'scale(0.4)' : 'scale(1)',
-                  transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : logoTransitioned ? 'transform 1.2s ease-in-out' : 'all 1s ease-in-out',
-                  opacity: mounted ? 1 : 0
-                }}
-              />
+          <img
+            src={mounted && introStage === 0 ? "/javigil_white.svg" : "/javigil.svg"}
+            alt="javigil"
+            className="cursor-pointer"
+            onMouseEnter={() => handleSimpleHover("javigil", "bg-orange-400")}
+            onMouseLeave={handleSimpleLeave}
+            style={{
+              width: '500px',
+              height: 'auto',
+              transform: mounted && introStage === 2 ? 'scale(1.05)' : logoTransitioned ? 'scale(0.3)' : 'scale(1)',
+              transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease-in-out',
+              opacity: mounted ? 1 : 0
+            }}
+          />
+        </div>
+
+        {/* Contenido principal (texto, botón) - separado del logo */}
+        <div className="absolute inset-0 flex items-center justify-center z-5">
+          <div className="text-center">
+            {/* Subtítulo */}
+            <div
+              className="mb-2"
+              style={{
+                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+                transition: 'opacity 0.8s ease-out, visibility 0s, transform 0.8s ease-out',
+                transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
+              }}
+            >
+              <h2 className="font-inter text-2xl font-light tracking-tighter" style={{ color: 'rgba(254, 70, 41, 0.7)' }}>
+                Beyond the Hype
+              </h2>
             </div>
 
-                                <div
-            className="font-inter text-2xl leading-relaxed max-w-3xl mx-auto mb-8"
-            style={{ 
-              color: 'rgba(254, 70, 41, 0.9)',
-              opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
-              visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
-              transition: 'opacity 0.8s ease-out, visibility 0s, transform 0.8s ease-out',
-              transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
-            }}
-          >
-          <div>
-            Empowering <span 
-              className="font-newsreader italic text-3xl transition-all duration-300 cursor-pointer"
-              style={{ color: '#FE4629' }}
-              onMouseEnter={() => handleSimpleHover("Founders", "bg-orange-400")}
-              onMouseLeave={handleSimpleLeave}
+            {/* Título del curso */}
+            <div
+              className="mb-6"
+              style={{
+                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+                transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
+                transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
+              }}
             >
-              founders
-            </span>{" "}<span className="font-inter text-2xl" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>to build the future</span>
+              <h1 className="font-inter text-5xl font-bold tracking-tight" style={{ color: '#FE4629' }}>
+                THE <span style={{ textShadow: '0 0 20px rgba(254, 70, 41, 0.6)' }}>AI</span> PLAYBOOK
+              </h1>
+            </div>
+
+            {/* Descripción */}
+            <div
+              className="font-inter text-xl leading-relaxed max-w-2xl mx-auto mb-8"
+              style={{
+                color: 'rgba(254, 70, 41, 0.9)',
+                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+                transition: 'opacity 0.8s ease-out 0.2s, visibility 0s, transform 0.8s ease-out 0.2s',
+                transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
+              }}
+            >
+              No es un curso de prompts. Es el{" "}
+              <span
+                className="font-newsreader italic text-2xl transition-all duration-300 cursor-pointer"
+                style={{ color: '#FE4629' }}
+                onMouseEnter={() => handleSimpleHover("Sistema Operativo", "bg-orange-400")}
+                onMouseLeave={handleSimpleLeave}
+              >
+                sistema operativo
+              </span>{" "}
+              del ejecutivo moderno.
+            </div>
+
+            <button
+              onClick={() => setShowSignup(true)}
+              className="px-12 py-4 font-inter text-lg font-semibold rounded-lg animate-fade-in-up"
+              style={{
+                backgroundColor: '#FE4629',
+                color: '#4B0A23',
+                border: '2px solid #FE4629',
+                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+                transition: 'all 0.3s ease, opacity 0.8s ease-out 0.2s, visibility 0s, transform 0.8s ease-out 0.2s',
+                transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#FE4629';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#FE4629';
+                e.currentTarget.style.color = '#4B0A23';
+              }}
+            >
+              Solicita tu plaza
+            </button>
+
+            {/* Info ediciones */}
+            <div
+              className="font-inter text-sm mt-4 animate-fade-in-up"
+              style={{
+                color: 'rgba(254, 70, 41, 0.7)',
+                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+                transition: 'opacity 0.8s ease-out 0.4s, visibility 0s, transform 0.8s ease-out 0.4s',
+                transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
+              }}
+            >
+              2 ediciones al mes · Plazas limitadas
+            </div>
           </div>
         </div>
 
-        <button
-          onClick={() => setShowSignup(true)}
-          className="px-12 py-4 font-inter text-lg font-semibold rounded-lg animate-fade-in-up"
-          style={{ 
-            backgroundColor: '#FE4629',
-            color: '#4B0A23',
-            border: '2px solid #FE4629',
-            opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
-            visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
-            transition: 'all 0.3s ease, opacity 0.8s ease-out 0.2s, visibility 0s, transform 0.8s ease-out 0.2s',
-            transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent';
-            e.currentTarget.style.color = '#FE4629';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#FE4629';
-            e.currentTarget.style.color = '#4B0A23';
-          }}
-        >
-          Secure My Spot Now
-        </button>
-
-                {/* Schedule info */}
-        <div
-          className="font-inter text-sm mt-4 animate-fade-in-up"
-          style={{ 
-            color: 'rgba(254, 70, 41, 0.7)',
-            opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
-            visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
-            transition: 'opacity 0.8s ease-out 0.4s, visibility 0s, transform 0.8s ease-out 0.4s',
-            transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
-          }}
-        >
-          Every Tuesday 11:00 am
-        </div>
-        </div>
-      </div>
-
-                 {/* Newsletter Header */}
+           {/* The Weekly Builds Button */}
+           {showWeeklyBuildsButton && (
            <div
-             className="fixed top-4 left-0 w-full z-30"
+             className="fixed top-8 left-8 z-30"
              style={{
                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
                transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
-               transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)',
-               height: '60px'
+               transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)'
              }}
            >
-
-
-             {/* Center - Newsletter Brand */}
-             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-               <div className="text-center">
-                 <span className="font-inter text-sm font-normal text-[#FE4629]/60 tracking-wider uppercase">The</span>
-                 <div className="font-inter text-xl font-bold text-[#FE4629] tracking-wider mt-1">NEWSLETTER</div>
-               </div>
-             </div>
-
-                          {/* Left - The Weekly Builds Button */}
-             {showWeeklyBuildsButton && (
-             <div className="absolute top-1/2 left-8 transform -translate-y-1/2">
-               <button
-                 onClick={() => {
-                   setShowWeeklyBuilds(true);
-                   // Transición del logo después de que el contenido se desvanezca
+             <button
+               onClick={() => {
+                 setShowWeeklyBuilds(true);
+                 // Transición del logo después de que el contenido se desvanezca
+                 setTimeout(() => {
+                   setLogoTransitioned(true);
+                   // Mostrar el contenido de Weekly Builds después de que el logo se posicione
                    setTimeout(() => {
-                     setLogoTransitioned(true);
-                     // Mostrar el contenido de Weekly Builds después de que el logo se posicione
+                     setShowWeeklyBuildsContent(true);
+                     // Activar animación de entrada del TOP 3
                      setTimeout(() => {
-                       setShowWeeklyBuildsContent(true);
-                       // Activar animación de entrada del TOP 3
+                       setIsTop3Entering(true);
+                       // Mantener isTop3Entering en true después de la animación
                        setTimeout(() => {
-                         setIsTop3Entering(true);
-                         // Mantener isTop3Entering en true después de la animación
-                         setTimeout(() => {
-                           // No resetear isTop3Entering, mantenerlo en true
-                         }, 1000); // Tiempo suficiente para que se complete la animación
-                       }, 300); // Pequeño delay para que el contenido se renderice
-                     }, 1200); // Delay para que coincida con la duración de la transición del logo
-                   }, 800); // Delay para que coincida con la duración de las transiciones
-                 }}
-                 className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer"
-                 style={{ 
-                   backgroundColor: 'transparent',
-                   color: '#FE4629',
-                   border: '2px solid #FE4629'
-                 }}
-                 onMouseEnter={(e) => {
-                   e.currentTarget.style.backgroundColor = '#FE4629';
-                   e.currentTarget.style.color = '#4B0A23';
-                   handleSimpleHover("The Weekly Builds", "bg-orange-400");
-                 }}
-                 onMouseLeave={(e) => {
-                   e.currentTarget.style.backgroundColor = 'transparent';
-                   e.currentTarget.style.color = '#FE4629';
-                   handleSimpleLeave();
-                 }}
-               >
-                 THE WEEKLY BUILDS
-               </button>
-             </div>
-             )}
+                         // No resetear isTop3Entering, mantenerlo en true
+                       }, 1000); // Tiempo suficiente para que se complete la animación
+                     }, 300); // Pequeño delay para que el contenido se renderice
+                   }, 1200); // Delay para que coincida con la duración de la transición del logo
+                 }, 800); // Delay para que coincida con la duración de las transiciones
+               }}
+               className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer"
+               style={{
+                 backgroundColor: 'transparent',
+                 color: '#FE4629',
+                 border: '2px solid #FE4629'
+               }}
+               onMouseEnter={(e) => {
+                 e.currentTarget.style.backgroundColor = '#FE4629';
+                 e.currentTarget.style.color = '#4B0A23';
+                 handleSimpleHover("The Weekly Builds", "bg-orange-400");
+               }}
+               onMouseLeave={(e) => {
+                 e.currentTarget.style.backgroundColor = 'transparent';
+                 e.currentTarget.style.color = '#FE4629';
+                 handleSimpleLeave();
+               }}
+             >
+               THE WEEKLY BUILDS
+             </button>
            </div>
+           )}
 
            {/* Footer */}
            <div
@@ -548,7 +577,7 @@ export default function HomePage() {
             </button>
 
             <h2 className="font-inter text-2xl mb-2 text-center animate-slide-up flex items-center justify-center gap-2" style={{ color: '#FE4629' }}>
-              Join <img src="/Bombeta_white.svg" alt="Bombeta" className="h-8 w-auto" />
+              Join <img src="/javigil.svg" alt="javigil" className="h-8 w-auto" />
             </h2>
 
             <p className="font-inter text-sm mb-6 text-center animate-slide-up" style={{animationDelay: "0.1s", color: 'rgba(254, 70, 41, 0.7)' }}>
@@ -639,7 +668,7 @@ export default function HomePage() {
                   e.currentTarget.style.color = '#4B0A23';
                 }}
               >
-                Join Bombeta
+                Join THE AI PLAYBOOK
               </button>
             </form>
           </div>

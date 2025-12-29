@@ -14,9 +14,9 @@ const newsreader = Newsreader({
 })
 
 export const metadata: Metadata = {
-  title: "Bombeta - Newsletter for Founders",
-  description: "The first newsletter for founders who want to build products that actually matter",
-    generator: 'v0.dev'
+  title: "javigil - THE AI PLAYBOOK",
+  description: "THE AI PLAYBOOK - Beyond the Hype",
+    generator: 'javigil'
 }
 
 export default function RootLayout({
