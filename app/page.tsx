@@ -451,14 +451,14 @@ export default function HomePage() {
               style={{ color: 'rgba(254, 70, 41, 0.8)' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = '#FE4629';
-                handleSimpleHover("About", "bg-orange-400");
+                handleSimpleHover("Misión", "bg-orange-400");
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
                 handleSimpleLeave();
               }}
             >
-              About
+              Misión
             </a>
             <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
             <a
@@ -808,7 +808,7 @@ export default function HomePage() {
                   e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
                 }}
               >
-                About
+                Misión
               </a>
               <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
               <a
