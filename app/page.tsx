@@ -486,7 +486,7 @@ export default function HomePage() {
           <img
             src={mounted && introStage === 0 ? "/javigil_white.svg" : "/javigil.svg"}
             alt="javigil"
-            className="cursor-pointer w-[250px] md:w-[500px]"
+            className="cursor-pointer w-[400px] md:w-[500px]"
             onMouseEnter={() => handleSimpleHover("javigil", "bg-orange-400")}
             onMouseLeave={handleSimpleLeave}
             style={{
@@ -568,8 +568,8 @@ export default function HomePage() {
         </div>
 
         {/* Contenido principal (texto, botón) - separado del logo */}
-        <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 5, pointerEvents: 'none' }}>
-          <div className="text-center" style={{ pointerEvents: 'auto' }}>
+        <div className="absolute inset-0 flex items-center justify-center px-4" style={{ zIndex: 5, pointerEvents: 'none' }}>
+          <div className="text-center max-w-4xl" style={{ pointerEvents: 'auto' }}>
             {/* Subtítulo */}
             <div
               className="mb-2"
@@ -580,7 +580,7 @@ export default function HomePage() {
                 transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
             >
-              <h2 className="font-inter text-2xl font-light tracking-tighter" style={{ color: 'rgba(254, 70, 41, 0.7)' }}>
+              <h2 className="font-inter text-lg md:text-2xl font-light tracking-tighter" style={{ color: 'rgba(254, 70, 41, 0.7)' }}>
                 Beyond the Hype
               </h2>
             </div>
@@ -595,14 +595,14 @@ export default function HomePage() {
                 transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
             >
-              <h1 className="font-inter text-5xl font-bold tracking-tight" style={{ color: '#FE4629' }}>
+              <h1 className="font-inter text-3xl md:text-5xl font-bold tracking-tight" style={{ color: '#FE4629' }}>
                 THE <span style={{ textShadow: '0 0 20px rgba(254, 70, 41, 0.6)' }}>AI</span> PLAYBOOK
               </h1>
             </div>
 
             {/* Descripción */}
             <div
-              className="font-inter text-xl leading-relaxed max-w-2xl mx-auto mb-8"
+              className="font-inter text-base md:text-xl leading-relaxed max-w-2xl mx-auto mb-8 px-2"
               style={{
                 color: 'rgba(254, 70, 41, 0.9)',
                 opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
@@ -613,7 +613,7 @@ export default function HomePage() {
             >
               No es un curso de prompts. Es el{" "}
               <span
-                className="font-newsreader italic text-2xl transition-all duration-300 cursor-pointer"
+                className="font-newsreader italic text-xl md:text-2xl transition-all duration-300 cursor-pointer"
                 style={{ color: '#FE4629' }}
                 onMouseEnter={() => handleSimpleHover("Sistema Operativo", "bg-orange-400")}
                 onMouseLeave={handleSimpleLeave}
@@ -625,7 +625,7 @@ export default function HomePage() {
 
             <button
               onClick={() => setShowSignup(true)}
-              className="px-12 py-4 font-inter text-lg font-semibold rounded-lg animate-fade-in-up"
+              className="px-8 md:px-12 py-3 md:py-4 font-inter text-base md:text-lg font-semibold rounded-lg animate-fade-in-up"
               style={{
                 backgroundColor: '#FE4629',
                 color: '#4B0A23',
