@@ -4,6 +4,7 @@ import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import MomentumLogo from "../components/momentum-logo"
 import { Clock, FileText, GitBranch, RefreshCw } from "lucide-react"
+import { sendFormEmail } from "./actions/send-email"
 // Eliminar la importación de MomentumLogoHot
 
 // Componente de gráfica de tendencia minimalista
@@ -86,8 +87,11 @@ export default function HomePage() {
     position: "",
     language: "en",
   })
-  
-  
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [formSubmitted, setFormSubmitted] = useState(false)
+
+
   // Estados para la animación de inicio
   const [introStage, setIntroStage] = useState(0) // 0: negro, 1: naranja, 2: muelle, 3: cambio fondo
   const [introTextComplete, setIntroTextComplete] = useState(false)
@@ -315,11 +319,32 @@ export default function HomePage() {
     return dateString
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form submitted:", formData)
+  const handleCloseSignupModal = () => {
     setShowSignup(false)
     setFormData({ name: "", email: "", position: "", language: "en" })
+    setSubmitMessage(null)
+    setFormSubmitted(false)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitMessage(null)
+
+    try {
+      const result = await sendFormEmail(formData)
+
+      if (result.success) {
+        setFormSubmitted(true)
+      } else {
+        setSubmitMessage({ type: 'error', text: result.error || 'Error al enviar la solicitud' })
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setSubmitMessage({ type: 'error', text: 'Error inesperado. Por favor, inténtalo de nuevo.' })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const renderTypedText = (text: string) => {
@@ -722,7 +747,7 @@ export default function HomePage() {
               onClick={() => {
                 setSignupAnimating(true)
                 setTimeout(() => {
-                  setShowSignup(false)
+                  handleCloseSignupModal()
                   setSignupAnimating(false)
                 }, 300)
               }}
@@ -732,20 +757,80 @@ export default function HomePage() {
               ×
             </button>
 
-            {/* Logo javigil centrado */}
-            <div className="flex justify-center mb-6 animate-slide-up">
-              <img src="/javigil.svg" alt="javigil" className="h-12 w-auto" />
-            </div>
+            {formSubmitted ? (
+              // Thank you message view
+              <div className="py-8">
+                {/* Logo javigil centrado */}
+                <div className="flex justify-center mb-8 animate-slide-up">
+                  <img src="/javigil.svg" alt="javigil" className="h-12 w-auto" />
+                </div>
 
-            <h2 className="font-inter text-3xl font-bold mb-2 text-center animate-slide-up" style={{ animationDelay: "0.1s", color: '#FE4629' }}>
-              Solicita tu plaza
-            </h2>
+                {/* Icono de éxito */}
+                <div className="flex justify-center mb-6 animate-scale-in-modal">
+                  <div className="rounded-full p-4" style={{ backgroundColor: 'rgba(254, 70, 41, 0.1)', border: '2px solid rgba(254, 70, 41, 0.3)' }}>
+                    <svg className="w-12 h-12" fill="none" stroke="#FE4629" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
 
-            <p className="font-inter text-sm mb-8 text-center animate-slide-up" style={{animationDelay: "0.15s", color: 'rgba(254, 70, 41, 0.7)' }}>
-              Plazas limitadas · Respuesta en 48h
-            </p>
+                <h2 className="font-inter text-3xl font-bold mb-4 text-center animate-slide-up" style={{ animationDelay: "0.1s", color: '#FE4629' }}>
+                  ¡Gracias por tu solicitud!
+                </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+                <p className="font-inter text-base mb-6 text-center animate-slide-up leading-relaxed" style={{animationDelay: "0.15s", color: 'rgba(254, 70, 41, 0.85)' }}>
+                  Hemos recibido tu solicitud correctamente. Nuestro equipo la revisará y nos pondremos en contacto contigo en menos de <span className="font-semibold" style={{ color: '#FE4629' }}>48 horas</span>.
+                </p>
+
+                <p className="font-inter text-sm mb-8 text-center animate-slide-up" style={{animationDelay: "0.2s", color: 'rgba(254, 70, 41, 0.6)' }}>
+                  Mientras tanto, revisa tu email por si llegamos antes 😉
+                </p>
+
+                <button
+                  onClick={() => {
+                    setSignupAnimating(true)
+                    setTimeout(() => {
+                      handleCloseSignupModal()
+                      setSignupAnimating(false)
+                    }, 300)
+                  }}
+                  className="w-full py-4 font-inter font-semibold rounded-lg animate-slide-up"
+                  style={{
+                    animationDelay: "0.3s",
+                    backgroundColor: '#FE4629',
+                    color: '#4B0A23',
+                    border: '2px solid #FE4629',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#FE4629';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#FE4629';
+                    e.currentTarget.style.color = '#4B0A23';
+                  }}
+                >
+                  Cerrar
+                </button>
+              </div>
+            ) : (
+              // Original form view
+              <>
+                {/* Logo javigil centrado */}
+                <div className="flex justify-center mb-6 animate-slide-up">
+                  <img src="/javigil.svg" alt="javigil" className="h-12 w-auto" />
+                </div>
+
+                <h2 className="font-inter text-3xl font-bold mb-2 text-center animate-slide-up" style={{ animationDelay: "0.1s", color: '#FE4629' }}>
+                  Solicita tu plaza
+                </h2>
+
+                <p className="font-inter text-sm mb-8 text-center animate-slide-up" style={{animationDelay: "0.15s", color: 'rgba(254, 70, 41, 0.7)' }}>
+                  Plazas limitadas · Respuesta en 48h
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-5">
               <div className="animate-slide-up" style={{animationDelay: "0.2s"}}>
                 <label className="block font-inter text-sm font-medium mb-2" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>Nombre</label>
                 <input
@@ -797,28 +882,47 @@ export default function HomePage() {
                 />
               </div>
 
+              {submitMessage && (
+                <div
+                  className={`mt-4 p-3 rounded-lg font-inter text-sm text-center animate-slide-up ${
+                    submitMessage.type === 'success'
+                      ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+                      : 'bg-red-500/10 border border-red-500/20 text-red-400'
+                  }`}
+                >
+                  {submitMessage.text}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="w-full py-4 font-inter font-semibold rounded-lg mt-6 animate-slide-up"
+                disabled={isSubmitting}
+                className="w-full py-4 font-inter font-semibold rounded-lg mt-6 animate-slide-up disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   animationDelay: "0.5s",
-                  backgroundColor: '#FE4629',
+                  backgroundColor: isSubmitting ? 'rgba(254, 70, 41, 0.5)' : '#FE4629',
                   color: '#4B0A23',
                   border: '2px solid #FE4629',
                   transition: 'all 0.3s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FE4629';
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#FE4629';
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FE4629';
-                  e.currentTarget.style.color = '#4B0A23';
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor = '#FE4629';
+                    e.currentTarget.style.color = '#4B0A23';
+                  }
                 }}
               >
-                Enviar solicitud
+                {isSubmitting ? 'Enviando...' : 'Enviar solicitud'}
               </button>
             </form>
+              </>
+            )}
           </div>
         </div>
       )}
