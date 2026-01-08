@@ -486,12 +486,12 @@ export default function HomePage() {
           <img
             src={mounted && introStage === 0 ? "/javigil_white.svg" : "/javigil.svg"}
             alt="javigil"
-            className="cursor-pointer w-[400px] md:w-[500px]"
+            className="cursor-pointer w-[500px]"
             onMouseEnter={() => handleSimpleHover("javigil", "bg-orange-400")}
             onMouseLeave={handleSimpleLeave}
             style={{
               height: 'auto',
-              transform: mounted && introStage === 2 ? 'scale(1.05)' : logoTransitioned ? 'scale(0.3)' : 'scale(1)',
+              transform: mounted && introStage === 2 ? 'scale(1.05)' : logoTransitioned ? 'scale(0.35)' : 'scale(1)',
               transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease-in-out',
               opacity: mounted ? 1 : 0
             }}
@@ -499,9 +499,9 @@ export default function HomePage() {
 
           {/* Links de navegación - dentro del contenedor del logo */}
           <div
-            className="font-inter text-sm"
+            className="font-inter text-xs md:text-sm"
             style={{
-              marginTop: logoTransitioned ? '-1.5rem' : '1rem',
+              marginTop: logoTransitioned ? '-0.5rem' : '1rem',
               opacity: logoTransitioned ? 1 : 0,
               visibility: logoTransitioned ? 'visible' : 'hidden',
               transition: 'all 0.8s ease-out 1s, visibility 0s 1s'
