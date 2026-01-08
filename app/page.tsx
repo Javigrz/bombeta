@@ -486,11 +486,10 @@ export default function HomePage() {
           <img
             src={mounted && introStage === 0 ? "/javigil_white.svg" : "/javigil.svg"}
             alt="javigil"
-            className="cursor-pointer"
+            className="cursor-pointer w-[250px] md:w-[500px]"
             onMouseEnter={() => handleSimpleHover("javigil", "bg-orange-400")}
             onMouseLeave={handleSimpleLeave}
             style={{
-              width: '500px',
               height: 'auto',
               transform: mounted && introStage === 2 ? 'scale(1.05)' : logoTransitioned ? 'scale(0.3)' : 'scale(1)',
               transition: introStage === 2 ? 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)' : 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease-in-out',
@@ -1018,20 +1017,20 @@ export default function HomePage() {
           {/* Contenido con scroll */}
           <div className="pt-32 pb-16">
             {/* Título principal */}
-            <div className="px-8 text-center mb-32">
-              <h1 className="font-inter text-6xl font-bold mb-6 mt-12" style={{ color: '#FE4629' }}>
+            <div className="px-4 md:px-8 text-center mb-32">
+              <h1 className="font-inter text-4xl md:text-6xl font-bold mb-6 mt-12" style={{ color: '#FE4629' }}>
                 THE AI PLAYBOOK
               </h1>
-              <p className="font-inter text-2xl mb-16" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>
+              <p className="font-inter text-lg md:text-2xl mb-16" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>
                 El <span className="font-newsreader italic">sistema operativo</span> del ejecutivo moderno
               </p>
 
               {/* One to one */}
               <div className="max-w-5xl mx-auto">
-                <h2 className="font-inter text-5xl font-bold mb-8" style={{ color: '#FE4629' }}>
+                <h2 className="font-inter text-3xl md:text-5xl font-bold mb-8" style={{ color: '#FE4629' }}>
                   One to one
                 </h2>
-                <p className="font-inter text-xl mb-12" style={{ color: 'rgba(254, 70, 41, 0.75)' }}>
+                <p className="font-inter text-base md:text-xl mb-12" style={{ color: 'rgba(254, 70, 41, 0.75)' }}>
                   20 horas para dominar lo que importa
                 </p>
 
@@ -1060,12 +1059,12 @@ export default function HomePage() {
               {/* Secciones de ancho completo alternando colores */}
 
             {/* ENTIENDES - Fondo crema */}
-            <div className="w-full py-16 px-8" style={{ backgroundColor: '#FAEBD7' }}>
-              <div className="max-w-5xl ml-[20%] mr-auto">
-                <h3 className="font-inter text-4xl font-bold mb-8 text-left" style={{ color: '#4B0A23' }}>
+            <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#FAEBD7' }}>
+              <div className="max-w-5xl mx-auto md:ml-[20%] md:mr-auto">
+                <h3 className="font-inter text-3xl md:text-4xl font-bold mb-8 text-center md:text-left" style={{ color: '#4B0A23' }}>
                   ENTIENDES
                 </h3>
-                <div className="space-y-6 font-inter text-lg text-left" style={{ color: 'rgba(75, 10, 35, 0.9)' }}>
+                <div className="space-y-6 font-inter text-base md:text-lg text-center md:text-left" style={{ color: 'rgba(75, 10, 35, 0.9)' }}>
                   <p>Sabrás qué es IA realmente, no el marketing, no el hype, y por qué "inteligencia" es la palabra más engañosa del siglo.</p>
                   <p>Entenderás qué hace tu equipo técnico sin depender de que te lo traduzcan.</p>
                   <p>Distinguirás ML de IA Generativa y sabrás cuándo usar cada una (y cuándo ninguna).</p>
@@ -1074,12 +1073,12 @@ export default function HomePage() {
             </div>
 
             {/* CONTROLAS - Fondo burdeos */}
-            <div className="w-full py-16 px-8" style={{ backgroundColor: '#4B0A23' }}>
-              <div className="max-w-5xl ml-auto mr-[20%]">
-                <h3 className="font-inter text-4xl font-bold mb-8 text-right" style={{ color: '#FE4629' }}>
+            <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-5xl mx-auto md:ml-auto md:mr-[20%]">
+                <h3 className="font-inter text-3xl md:text-4xl font-bold mb-8 text-center md:text-right" style={{ color: '#FE4629' }}>
                   CONTROLAS
                 </h3>
-                <div className="space-y-6 font-inter text-lg text-right" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
+                <div className="space-y-6 font-inter text-base md:text-lg text-center md:text-right" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
                   <p>Detectarás humo en cualquier propuesta en los primeros 5 minutos.</p>
                   <p>Sabrás qué preguntar para evaluar proyectos, proveedores y candidatos técnicos.</p>
                   <p>Supervisarás implementaciones sin que te cuenten lo que quieren que sepas.</p>
@@ -1089,12 +1088,12 @@ export default function HomePage() {
             </div>
 
             {/* EJECUTAS - Fondo crema */}
-            <div className="w-full py-16 px-8" style={{ backgroundColor: '#FAEBD7' }}>
-              <div className="max-w-5xl ml-[20%] mr-auto">
-                <h3 className="font-inter text-4xl font-bold mb-8 text-left" style={{ color: '#4B0A23' }}>
+            <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#FAEBD7' }}>
+              <div className="max-w-5xl mx-auto md:ml-[20%] md:mr-auto">
+                <h3 className="font-inter text-3xl md:text-4xl font-bold mb-8 text-center md:text-left" style={{ color: '#4B0A23' }}>
                   EJECUTAS
                 </h3>
-                <div className="space-y-6 font-inter text-lg text-left" style={{ color: 'rgba(75, 10, 35, 0.9)' }}>
+                <div className="space-y-6 font-inter text-base md:text-lg text-center md:text-left" style={{ color: 'rgba(75, 10, 35, 0.9)' }}>
                   <p>Usarás IA para hacer en 1 hora lo que antes te llevaba un día.</p>
                   <p>Optimizarás tu trabajo y el de tu equipo con herramientas que ya existen.</p>
                   <p>Automatizarás tareas repetitivas que hoy te roban tiempo.</p>
@@ -1103,12 +1102,12 @@ export default function HomePage() {
             </div>
 
             {/* LIDERAS - Fondo burdeos */}
-            <div className="w-full py-16 px-8" style={{ backgroundColor: '#4B0A23' }}>
-              <div className="max-w-5xl ml-auto mr-[20%]">
-                <h3 className="font-inter text-4xl font-bold mb-8 text-right" style={{ color: '#FE4629' }}>
+            <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-5xl mx-auto md:ml-auto md:mr-[20%]">
+                <h3 className="font-inter text-3xl md:text-4xl font-bold mb-8 text-center md:text-right" style={{ color: '#FE4629' }}>
                   LIDERAS
                 </h3>
-                <div className="space-y-6 font-inter text-lg text-right" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
+                <div className="space-y-6 font-inter text-base md:text-lg text-center md:text-right" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
                   <p>Serás el que guía conversaciones de IA, no el que asiente sin entender.</p>
                   <p>Contratarás talento técnico sabiendo quién sabe realmente y quién vende humo.</p>
                   <p>Estarás donde hay que estar mientras el mundo se transforma.</p>
@@ -1117,9 +1116,9 @@ export default function HomePage() {
             </div>
 
             {/* QUÉ TE LLEVAS - Recuadro crema centrado */}
-            <div className="w-full py-16 px-8 flex justify-center">
-              <div className="max-w-6xl w-full p-16 rounded-3xl" style={{ backgroundColor: '#FAEBD7' }}>
-                <h2 className="font-inter text-4xl font-bold text-center mb-16" style={{ color: '#4B0A23' }}>
+            <div className="w-full py-16 px-4 md:px-8 flex justify-center">
+              <div className="max-w-6xl w-full p-6 md:p-16 rounded-3xl" style={{ backgroundColor: '#FAEBD7' }}>
+                <h2 className="font-inter text-3xl md:text-4xl font-bold text-center mb-16" style={{ color: '#4B0A23' }}>
                   QUÉ TE LLEVAS
                 </h2>
 
@@ -1303,17 +1302,17 @@ export default function HomePage() {
           {/* Contenido con scroll */}
           <div className="pt-24 pb-16">
             {/* SECCIÓN MISIÓN */}
-            <div className="w-full py-12 px-8">
+            <div className="w-full py-12 px-4 md:px-8">
               <div className="max-w-4xl mx-auto">
                 {/* Layout con foto y contenido */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-0 items-center mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-16">
                   {/* Foto */}
                   <div className="flex justify-center md:justify-start">
                     <div className="relative">
                       <img
                         src="/foto_javigil.jpg"
                         alt="Javi Gil"
-                        className="w-80 h-80 object-cover rounded-2xl"
+                        className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-2xl"
                         style={{ filter: 'grayscale(100%)' }}
                       />
                     </div>
@@ -1321,7 +1320,7 @@ export default function HomePage() {
 
                   {/* Contenido */}
                   <div>
-                    <p className="font-newsreader text-xl font-semibold mb-8 leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
+                    <p className="font-newsreader text-lg md:text-xl font-semibold mb-8 leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
                       Lidero en un banco tier-1. <br></br>
                       Y tengo mis propias empresas. De IA, claro
                     </p>
@@ -1494,13 +1493,13 @@ export default function HomePage() {
           {/* Contenido con scroll */}
           <div className="pt-40 pb-8">
             {/* SECCIÓN PRECIO */}
-            <div className="w-full px-8">
+            <div className="w-full px-4 md:px-8">
               <div className="max-w-2xl mx-auto">
                 {/* Card de Precio */}
-                <div className="px-10 py-10 rounded-3xl" style={{ backgroundColor: '#FAEBD7' }}>
+                <div className="px-6 md:px-10 py-10 rounded-3xl" style={{ backgroundColor: '#FAEBD7' }}>
                   {/* Precio */}
                   <div className="text-center mb-8">
-                    <h1 className="font-inter text-6xl font-bold mb-2" style={{ color: '#4B0A23' }}>
+                    <h1 className="font-inter text-4xl md:text-6xl font-bold mb-2" style={{ color: '#4B0A23' }}>
                       1.890€
                     </h1>
                     <p className="font-inter text-base" style={{ color: 'rgba(75, 10, 35, 0.7)' }}>
@@ -1594,7 +1593,7 @@ export default function HomePage() {
             transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : 'all 0.3s ease-out'
           }}>
             {/* Left - Join Newsletter Button */}
-            <div className={`fixed top-1/2 left-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{
+            <div className={`hidden md:block fixed top-1/2 left-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{
               opacity: isExitingWeeklyBuilds ? 0 : (!isHeaderVisible ? 0 : 1),
               transform: isExitingWeeklyBuilds ? 'translateY(-20px)' : 'translateY(-50%)',
               transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : 'all 0.3s ease-out'
@@ -1636,7 +1635,7 @@ export default function HomePage() {
             </div>
 
             {/* Right - The Newsletter Button */}
-            <div className={`fixed top-1/2 right-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{
+            <div className={`hidden md:block fixed top-1/2 right-8 transform -translate-y-1/2 z-50 transition-all duration-300 ease-out ${!isHeaderVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={{
               opacity: isExitingWeeklyBuilds ? 0 : (!isHeaderVisible ? 0 : 1),
               transform: isExitingWeeklyBuilds ? 'translateY(-20px)' : 'translateY(-50%)',
               transition: isExitingWeeklyBuilds ? 'all 0.2s ease-out' : 'all 0.3s ease-out'
@@ -1680,7 +1679,7 @@ export default function HomePage() {
           </div>
 
           {/* Weekly Builds Content - Scrollable */}
-          <div className="min-h-screen pt-32 pb-20 px-8 max-w-6xl mx-auto overflow-y-auto">
+          <div className="min-h-screen pt-32 pb-20 px-4 md:px-8 max-w-6xl mx-auto overflow-y-auto">
             {/* TOP 3 BUILDS */}
             <div className="mb-16 transition-all duration-1000 ease-out" style={{ 
               opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 

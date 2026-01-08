@@ -32,9 +32,9 @@ export async function sendFormEmail(formData: FormData) {
 
     // Send email using Resend
     const { data, error } = await resend.emails.send({
-      from: 'Bombeta Course <onboarding@resend.dev>', // You'll need to verify your domain to use a custom email
+      from: 'Javi Gil <onboarding@resend.dev>', // You'll need to verify your domain to use a custom email
       to: ['javiergilrodriguez@icloud.com'],
-      subject: '🎯 Nueva solicitud de plaza - Bombeta Course',
+      subject: '🎯 Nueva solicitud de plaza - THE AI PLAYBOOK',
       html: `
         <!DOCTYPE html>
         <html>
