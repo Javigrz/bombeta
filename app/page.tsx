@@ -1060,7 +1060,7 @@ export default function HomePage() {
 
             {/* ENTIENDES - Fondo crema */}
             <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#FAEBD7' }}>
-              <div className="max-w-5xl mx-auto md:ml-[20%] md:mr-auto">
+              <div className="max-w-5xl mx-4 md:mx-0 md:ml-[20%] md:mr-auto">
                 <h3 className="font-inter text-3xl md:text-4xl font-bold mb-8 text-center md:text-left" style={{ color: '#4B0A23' }}>
                   ENTIENDES
                 </h3>
@@ -1074,7 +1074,7 @@ export default function HomePage() {
 
             {/* CONTROLAS - Fondo burdeos */}
             <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#4B0A23' }}>
-              <div className="max-w-5xl mx-auto md:ml-auto md:mr-[20%]">
+              <div className="max-w-5xl mx-4 md:mx-0 md:ml-auto md:mr-[20%]">
                 <h3 className="font-inter text-3xl md:text-4xl font-bold mb-8 text-center md:text-right" style={{ color: '#FE4629' }}>
                   CONTROLAS
                 </h3>
@@ -1089,7 +1089,7 @@ export default function HomePage() {
 
             {/* EJECUTAS - Fondo crema */}
             <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#FAEBD7' }}>
-              <div className="max-w-5xl mx-auto md:ml-[20%] md:mr-auto">
+              <div className="max-w-5xl mx-4 md:mx-0 md:ml-[20%] md:mr-auto">
                 <h3 className="font-inter text-3xl md:text-4xl font-bold mb-8 text-center md:text-left" style={{ color: '#4B0A23' }}>
                   EJECUTAS
                 </h3>
@@ -1103,7 +1103,7 @@ export default function HomePage() {
 
             {/* LIDERAS - Fondo burdeos */}
             <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#4B0A23' }}>
-              <div className="max-w-5xl mx-auto md:ml-auto md:mr-[20%]">
+              <div className="max-w-5xl mx-4 md:mx-0 md:ml-auto md:mr-[20%]">
                 <h3 className="font-inter text-3xl md:text-4xl font-bold mb-8 text-center md:text-right" style={{ color: '#FE4629' }}>
                   LIDERAS
                 </h3>
