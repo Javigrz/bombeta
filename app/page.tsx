@@ -1304,8 +1304,13 @@ export default function HomePage() {
             {/* SECCIÓN MISIÓN */}
             <div className="w-full py-12 px-4 md:px-8">
               <div className="max-w-4xl mx-auto">
+                {/* Headline centrado */}
+                <h1 className="font-inter text-3xl md:text-5xl font-bold text-center mb-16 leading-tight" style={{ color: '#FE4629' }}>
+                  He visto la IA desde todos los lados. Estoy aquí para que la uses.
+                </h1>
+
                 {/* Layout con foto y contenido */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-16">
                   {/* Foto */}
                   <div className="flex justify-center md:justify-start">
                     <div className="relative">
@@ -1318,53 +1323,18 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  {/* Contenido */}
+                  {/* Narrativa */}
                   <div>
-                    <p className="font-newsreader text-lg md:text-xl font-semibold mb-8 leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
-                      Lidero en un banco tier-1. <br></br>
-                      Y tengo mis propias empresas. De IA, claro
+                    <p className="font-inter text-base md:text-lg leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                      Monté mi propia consultora de IA cuando nadie hablaba de esto. Después me dediqué a programar y crear departamentos de inteligencia artificial desde cero en algunas de las empresas más grandes del mundo. Hoy lidero la IA de préstamos de un banco europeo para dos países enteros. Todo, mientras sigo con mis empresas, de IA claro.
                     </p>
-
-                    {/* Background */}
-                    <div className="space-y-2">
-                      <div className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
-                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
-                          Monté mi primera empresa de IA antes de que ChatGPT existiera
-                        </p>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
-                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
-                          Pasé por Big Four, monté departamentos de IA desde cero
-                        </p>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
-                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
-                          Diseñé y desarrollé sistemas de más de 75 agentes de IA
-                        </p>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
-                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
-                          Hoy lidero la parte de préstamos en BBVA para Italia y Alemania
-                        </p>
-                      </div>
-                      <div className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full mt-2" style={{ backgroundColor: '#FE4629' }}></div>
-                        <p className="font-inter text-base leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
-                          Mientras sigo con mis empresas
-                        </p>
-                      </div>
-                    </div>
                   </div>
                 </div>
 
                 {/* Quote destacada */}
                 <div className="max-w-4xl mx-auto px-8 py-12 rounded-2xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.05)' }}>
-                  <p className="font-newsreader italic text-2xl leading-relaxed" style={{ color: '#FE4629' }}>
-                    "Podría quedarme en mi carril. Pero llevo años viendo lo mismo: ejecutivos brillantes tomando decisiones de IA a ciegas. Y me frustra. Porque cuando una empresa usa bien la IA, crece. Y cuando las empresas crecen, la rueda gira para todos. Ese es mi por qué. Este curso es el cómo."
+                  <p className="font-newsreader italic text-xl leading-relaxed" style={{ color: '#FE4629' }}>
+                    "Podría quedarme en mi carril. Pero llevo años viendo lo mismo: gente con talento que no sabe cómo aprovechar la IA, o que cree que ya lo hace porque usa ChatGPT. Y me frustra. Porque cuando alguien aprende a usar bien la IA, crece. Y cuando la gente crece, la rueda gira para todos. Ese es mi por qué. Este curso es el cómo."
                   </p>
                 </div>
               </div>
