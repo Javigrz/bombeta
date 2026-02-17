@@ -2,8 +2,10 @@
 
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
+
+const STRIPE_URL = "https://buy.stripe.com/00weV5bp38dq7v4dph9EI01"
 import MomentumLogo from "../components/momentum-logo"
-import { Clock, FileText, GitBranch, RefreshCw } from "lucide-react"
+import { Clock, FileText, GitBranch, RefreshCw, Instagram } from "lucide-react"
 import { sendFormEmail } from "./actions/send-email"
 // Eliminar la importación de MomentumLogoHot
 
@@ -398,7 +400,7 @@ export default function HomePage() {
     <div
       ref={containerRef}
       className={`w-full relative transition-all duration-1000 ease-in-out cursor-auto ${
-        showWeeklyBuildsContent ? 'min-h-screen overflow-y-auto' : 'h-screen overflow-hidden'
+        (showWeeklyBuildsContent || showMainContent) ? 'min-h-screen overflow-y-auto' : 'h-screen overflow-hidden'
       }`}
       style={{
         backgroundColor: mounted && introStage === 3 ? '#4B0A23' : '#000000',
@@ -486,7 +488,7 @@ export default function HomePage() {
           <img
             src={mounted && introStage === 0 ? "/javigil_white.svg" : "/javigil.svg"}
             alt="javigil"
-            className="cursor-pointer w-[500px]"
+            className="cursor-pointer w-[260px] sm:w-[350px] md:w-[500px]"
             onMouseEnter={() => handleSimpleHover("javigil", "bg-orange-400")}
             onMouseLeave={handleSimpleLeave}
             style={{
@@ -510,25 +512,6 @@ export default function HomePage() {
             <a
               onClick={(e) => {
                 e.preventDefault();
-                setShowPlaybookPage(true);
-              }}
-              className="transition-all duration-300 cursor-pointer"
-              style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#FE4629';
-                handleSimpleHover("El Programa", "bg-orange-400");
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                handleSimpleLeave();
-              }}
-            >
-              El Programa
-            </a>
-            <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
-            <a
-              onClick={(e) => {
-                e.preventDefault();
                 setShowMisionPage(true);
               }}
               className="transition-all duration-300 cursor-pointer"
@@ -544,50 +527,15 @@ export default function HomePage() {
             >
               Misión
             </a>
-            <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                console.log('Clicked Precio, setting showPrecioPage to true');
-                setShowPrecioPage(true);
-              }}
-              className="transition-all duration-300 cursor-pointer"
-              style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#FE4629';
-                handleSimpleHover("Precio", "bg-orange-400");
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                handleSimpleLeave();
-              }}
-            >
-              Precio
-            </a>
           </div>
         </div>
 
         {/* Contenido principal (texto, botón) - separado del logo */}
-        <div className="absolute inset-0 flex items-center justify-center px-4" style={{ zIndex: 5, pointerEvents: 'none' }}>
-          <div className="text-center max-w-4xl" style={{ pointerEvents: 'auto' }}>
-            {/* Subtítulo */}
-            <div
-              className="mb-2"
-              style={{
-                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
-                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
-                transition: 'opacity 0.8s ease-out, visibility 0s, transform 0.8s ease-out',
-                transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
-              }}
-            >
-              <h2 className="font-inter text-lg md:text-2xl font-light tracking-tighter" style={{ color: 'rgba(254, 70, 41, 0.7)' }}>
-                Beyond the Hype
-              </h2>
-            </div>
-
+        <div className="relative h-screen flex items-center justify-center px-4" style={{ zIndex: 5 }}>
+          <div className="text-center max-w-4xl w-full">
             {/* Título del curso */}
             <div
-              className="mb-6"
+              className="mb-4"
               style={{
                 opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
                 visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
@@ -600,9 +548,9 @@ export default function HomePage() {
               </h1>
             </div>
 
-            {/* Descripción */}
+            {/* Tagline */}
             <div
-              className="font-inter text-base md:text-xl leading-relaxed max-w-2xl mx-auto mb-8 px-2"
+              className="font-inter text-base md:text-xl leading-relaxed max-w-2xl mx-auto mb-3 px-2"
               style={{
                 color: 'rgba(254, 70, 41, 0.9)',
                 opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
@@ -611,57 +559,394 @@ export default function HomePage() {
                 transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
             >
-              No es un curso de prompts. Es el{" "}
+              Aprende a{" "}
               <span
-                className="font-newsreader italic text-xl md:text-2xl transition-all duration-300 cursor-pointer"
+                className="font-newsreader italic text-xl md:text-2xl"
                 style={{ color: '#FE4629' }}
-                onMouseEnter={() => handleSimpleHover("Sistema Operativo", "bg-orange-400")}
-                onMouseLeave={handleSimpleLeave}
               >
-                sistema operativo
+                construir
               </span>{" "}
-              del ejecutivo moderno.
+              con IA para{" "}
+              <span
+                className="font-newsreader italic text-xl md:text-2xl"
+                style={{ color: '#FE4629' }}
+              >
+                vivir
+              </span>{" "}
+              de ello.
             </div>
 
-            <button
-              onClick={() => setShowSignup(true)}
-              className="px-8 md:px-12 py-3 md:py-4 font-inter text-base md:text-lg font-semibold rounded-lg animate-fade-in-up"
+            {/* Stats */}
+            <div
+              className="flex flex-wrap gap-2 justify-center mb-8"
               style={{
-                backgroundColor: '#FE4629',
-                color: '#4B0A23',
-                border: '2px solid #FE4629',
                 opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
                 visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
-                transition: 'all 0.3s ease, opacity 0.8s ease-out 0.2s, visibility 0s, transform 0.8s ease-out 0.2s',
+                transition: 'opacity 0.8s ease-out 0.25s, visibility 0s, transform 0.8s ease-out 0.25s',
                 transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#FE4629';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#FE4629';
-                e.currentTarget.style.color = '#4B0A23';
+            >
+              <span
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-inter text-sm"
+                style={{ backgroundColor: 'rgba(254, 70, 41, 0.07)', color: 'rgba(254, 70, 41, 0.6)', border: '1px solid rgba(254, 70, 41, 0.15)' }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                </svg>
+                En directo · Videollamada
+              </span>
+              <span
+                className="px-3 py-1.5 rounded-full font-inter text-sm"
+                style={{ backgroundColor: 'rgba(254, 70, 41, 0.07)', color: 'rgba(254, 70, 41, 0.6)', border: '1px solid rgba(254, 70, 41, 0.15)' }}
+              >
+                8 sesiones · 16h
+              </span>
+              <span
+                className="px-3 py-1.5 rounded-full font-inter text-sm"
+                style={{ backgroundColor: 'rgba(254, 70, 41, 0.07)', color: 'rgba(254, 70, 41, 0.6)', border: '1px solid rgba(254, 70, 41, 0.15)' }}
+              >
+                4 semanas
+              </span>
+            </div>
+
+            {/* Botones */}
+            <div
+              className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-6"
+              style={{
+                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+                transition: 'opacity 0.8s ease-out 0.3s, visibility 0s, transform 0.8s ease-out 0.3s',
+                transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
             >
-              Solicita tu plaza
-            </button>
+              <button
+                onClick={() => window.open(STRIPE_URL, '_blank')}
+                className="px-8 md:px-12 py-3 md:py-4 font-inter text-base md:text-lg font-semibold rounded-lg"
+                style={{
+                  backgroundColor: '#FE4629',
+                  color: '#4B0A23',
+                  border: '2px solid #FE4629',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FE4629';
+                  e.currentTarget.style.color = '#4B0A23';
+                }}
+              >
+                Reserva tu plaza
+              </button>
+              <button
+                onClick={() => document.getElementById('course-content')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-8 md:px-12 py-3 md:py-4 font-inter text-base md:text-lg font-semibold rounded-lg"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: '#FE4629',
+                  border: '2px solid rgba(254, 70, 41, 0.4)',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#FE4629';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(254, 70, 41, 0.4)';
+                }}
+              >
+                Más información
+              </button>
+            </div>
 
-            {/* Info ediciones */}
+            {/* Próxima edición + precio */}
             <div
-              className="font-inter text-sm mt-4 animate-fade-in-up"
+              className="font-inter text-sm animate-fade-in-up"
               style={{
-                color: 'rgba(254, 70, 41, 0.7)',
                 opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
                 visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
                 transition: 'opacity 0.8s ease-out 0.4s, visibility 0s, transform 0.8s ease-out 0.4s',
                 transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
             >
-              Formación de IA uno a uno.
+              <span style={{ color: 'rgba(254, 70, 41, 0.55)' }}>Próxima edición: <b>9 marzo</b> · 15 plazas · </span>
+              <span style={{ color: 'rgba(254, 70, 41, 0.45)', textDecoration: 'line-through' }}>490€</span>
+              <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
+              <span style={{ color: 'rgba(254, 70, 41, 0.45)' }}> · Código </span>
+              <span
+                className="font-mono font-bold tracking-widest px-2 py-0.5 rounded"
+                style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}
+              >
+                EARLY
+              </span>
             </div>
           </div>
+
+          {/* Scroll indicator */}
+          {showMainContent && !showWeeklyBuilds && (
+            <div
+              className="absolute bottom-20 left-1/2"
+              style={{ transform: 'translateX(-50%)', zIndex: 10 }}
+            >
+              <style>{`
+                @keyframes bounce-down {
+                  0%, 100% { transform: translateY(0); opacity: 0.4; }
+                  50% { transform: translateY(8px); opacity: 0.9; }
+                }
+              `}</style>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FE4629"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ animation: 'bounce-down 1.6s ease-in-out infinite' }}
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+          )}
         </div>
+
+        {/* Secciones de contenido del curso — scroll */}
+        {showMainContent && !showWeeklyBuilds && (
+          <>
+            {/* INTRO / CONTEXTO */}
+            <div id="course-content" className="w-full py-24 px-4 md:px-16" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-3xl mx-auto">
+                <p className="font-inter text-xl md:text-2xl leading-relaxed mb-8 font-medium" style={{ color: 'rgba(254, 70, 41, 0.95)' }}>
+                  La IA no es el futuro. Es el presente. Y la mayoría de la gente sigue usándola para pedirle recetas a ChatGPT.
+                </p>
+                <div className="space-y-6 font-inter text-base md:text-lg leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.7)' }}>
+                  <p>Cuando apareció la imprenta, los monjes copiaban tres libros en toda su vida. De repente, podías imprimir esos mismos libros en minutos. Con el ordenador pasó lo mismo. "Me va a quitar el trabajo." Sí, arrasó con trabajos. Pero creó millones que nadie podía ni imaginar.</p>
+                  <p>Con la IA está pasando exactamente igual. Los que estén ahí, los que entiendan las herramientas, vean las oportunidades y actúen, se llevan todo. Los demás llegarán tarde.</p>
+                  <p className="font-semibold text-lg" style={{ color: '#FE4629' }}>Este curso te pone ahí.</p>
+                </div>
+                <div className="mt-12 mb-12">
+                  <img
+                    src="/Diffusion-Innovation-Curve.png"
+                    alt="Curva de difusión de innovación"
+                    className="w-full max-w-xl mx-auto block rounded-xl"
+                    style={{ opacity: 0.9 }}
+                  />
+                </div>
+                <div className="p-6 rounded-2xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.06)', border: '1px solid rgba(254, 70, 41, 0.15)' }}>
+                  <p className="font-inter text-base" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>
+                    Ahora mismo estamos en la fase de <span className="font-semibold" style={{ color: '#FE4629' }}>early adopters</span>. La ventana para posicionarte está abierta, pero se cierra rápido. La pregunta no es si la IA va a cambiar las reglas — es si tú vas a estar preparado cuando lo haga.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* LOS 3 BLOQUES — header */}
+            <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#FAEBD7' }}>
+              <div className="max-w-3xl mx-auto text-center">
+                <p className="font-inter text-xs font-semibold tracking-widest mb-4 uppercase" style={{ color: 'rgba(75, 10, 35, 0.4)' }}>El programa</p>
+                <h2 className="font-inter text-4xl md:text-5xl font-bold mb-3" style={{ color: '#4B0A23' }}>Los 3 bloques</h2>
+                <p className="font-inter text-base" style={{ color: 'rgba(75, 10, 35, 0.6)' }}>16h · 8 sesiones · 4 semanas</p>
+                <div className="flex justify-center mt-4">
+                  <span
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-inter text-sm font-semibold"
+                    style={{ backgroundColor: 'rgba(75, 10, 35, 0.08)', color: '#4B0A23', border: '1px solid rgba(75, 10, 35, 0.2)' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                    </svg>
+                    Todas las sesiones en directo, por videollamada
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 01 · ENTIENDE */}
+            <div className="w-full py-16 px-4 md:px-16" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-3xl mx-auto">
+                <div className="mb-6">
+                  <span className="font-inter text-xs font-bold tracking-widest" style={{ color: 'rgba(254, 70, 41, 0.4)' }}>01</span>
+                  <h3 className="font-inter text-3xl md:text-4xl font-bold mt-1" style={{ color: '#FE4629' }}>ENTIENDE</h3>
+                  <p className="font-inter text-sm mt-2" style={{ color: 'rgba(254, 70, 41, 0.45)' }}>Semana 1 · 2h · 1 sesión</p>
+                </div>
+                <p className="font-inter text-base md:text-lg mb-8 leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                  Qué es IA, cómo funciona de verdad, y por qué todo lo que lees en redes es la mitad de la historia. No hace falta que seas ingeniero. Pero sí necesitas entender qué hay debajo del capó.
+                </p>
+                <div className="space-y-3 font-inter text-sm md:text-base" style={{ color: 'rgba(254, 70, 41, 0.65)' }}>
+                  <p>- Qué es un modelo de lenguaje, por qué a veces la IA se inventa cosas, qué puede hacer hoy y qué todavía no.</p>
+                  <p>- Por qué esto está cambiando más rápido de lo que parece.</p>
+                  <p>- Sin tecnicismos innecesarios, sin hype. Lo justo para tener criterio propio.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 02 · USA */}
+            <div className="w-full py-16 px-4 md:px-16" style={{ backgroundColor: '#FAEBD7' }}>
+              <div className="max-w-3xl mx-auto">
+                <div className="mb-6">
+                  <span className="font-inter text-xs font-bold tracking-widest" style={{ color: 'rgba(75, 10, 35, 0.35)' }}>02</span>
+                  <h3 className="font-inter text-3xl md:text-4xl font-bold mt-1" style={{ color: '#4B0A23' }}>USA</h3>
+                  <p className="font-inter text-sm mt-2" style={{ color: 'rgba(75, 10, 35, 0.45)' }}>Semana 2 · 4h · 2 sesiones</p>
+                </div>
+                <p className="font-inter text-base md:text-lg mb-8 leading-relaxed" style={{ color: 'rgba(75, 10, 35, 0.85)' }}>
+                  Las herramientas, los modelos, y qué usar para cada cosa. La parte práctica donde aprendes a usar la IA de verdad.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    'Modelos: ChatGPT, Claude, Gemini, Deepseek, Kimi. Cuál usar para qué',
+                    'Prompting: plantillas que te llevas para siempre',
+                    'Imágenes con IA: sin ser diseñador',
+                    'Vídeo con IA: contenido, marketing, presentaciones',
+                    'No-code y automatización: n8n',
+                    'Vibecoding: webs y apps sin escribir código',
+                    'Marketing con IA: copy, contenido, campañas',
+                    'Productividad: Excel, emails, informes, análisis de datos',
+                  ].map((item, i) => (
+                    <div key={i} className="p-3 rounded-xl" style={{ backgroundColor: 'rgba(75, 10, 35, 0.05)', border: '1px solid rgba(75, 10, 35, 0.08)' }}>
+                      <p className="font-inter text-sm leading-snug" style={{ color: 'rgba(75, 10, 35, 0.75)' }}>{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 03 · CREA */}
+            <div className="w-full py-16 px-4 md:px-16" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-3xl mx-auto">
+                <div className="mb-6">
+                  <span className="font-inter text-xs font-bold tracking-widest" style={{ color: 'rgba(254, 70, 41, 0.4)' }}>03</span>
+                  <h3 className="font-inter text-3xl md:text-4xl font-bold mt-1" style={{ color: '#FE4629' }}>CREA</h3>
+                  <p className="font-inter text-sm mt-2" style={{ color: 'rgba(254, 70, 41, 0.45)' }}>Semanas 3 y 4 · 10h · 5 sesiones</p>
+                </div>
+                <p className="font-inter text-base md:text-lg mb-8 leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                  Aquí es donde todo lo anterior cobra sentido. Aquí montas tu negocio.
+                </p>
+                <div className="space-y-4 font-inter text-sm md:text-base" style={{ color: 'rgba(254, 70, 41, 0.7)' }}>
+                  <ul>
+                    <li>Ideas de negocio con IA que funcionan ahora mismo. Casos de éxito reales de gente que está facturando con esto.</li>
+                    <li>Tú decides qué quieres construir. Y lo construyes. Con asesoramiento personalizado en cada sesión.</li>
+                    <li>El objetivo: un MVP real que funciona y que puedes empezar a vender al día siguiente.</li>
+                  </ul>
+                </div>
+                {/* Shark Tank card */}
+                <div className="mt-8 p-6 rounded-2xl" style={{
+                  backgroundColor: 'rgba(254, 70, 41, 0.1)',
+                  border: '2px solid rgba(254, 70, 41, 0.45)',
+                }}>
+                  <div className="flex flex-col sm:flex-row items-start gap-5">
+                    <div className="flex-shrink-0 rounded-xl p-2" style={{ border: '1.5px solid rgba(254, 70, 41, 0.3)' }}>
+                      <img
+                        src="/shark_tank.png"
+                        alt="Shark Tank"
+                        className="rounded-lg block w-[140px] sm:w-[200px]"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-inter text-xs font-bold tracking-widest uppercase mb-3"
+                        style={{ color: 'rgba(254, 70, 41, 0.5)' }}>Sesión final</p>
+                      <p className="font-inter text-2xl font-bold mb-3" style={{ color: '#FE4629' }}>
+                        Shark Tank
+                      </p>
+                      <p className="font-inter text-sm md:text-base leading-relaxed"
+                        style={{ color: 'rgba(254, 70, 41, 0.75)' }}>
+                        Presentas tu proyecto como si estuvieras levantando una ronda. Feedback directo, sin filtros. El momento de la verdad.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* QUÉ TE LLEVAS */}
+            <div className="w-full py-16 px-4 md:px-16" style={{ backgroundColor: '#FAEBD7' }}>
+              <div className="max-w-3xl mx-auto">
+                <h2 className="font-inter text-3xl md:text-4xl font-bold mb-10 text-center" style={{ color: '#4B0A23' }}>Qué te llevas</h2>
+                <div className="space-y-4">
+                  {[
+                    { title: '8 clases en directo, grabadas para siempre', desc: 'Si te pierdes una, la ves cuando quieras. Si quieres repasar, ahí están.' },
+                    { title: 'Cheatsheets y resúmenes de cada sesión', desc: 'Todo lo que hacemos en clase, simplificado en documentos para consultar cuando quieras.' },
+                    { title: 'Tu MVP terminado', desc: 'No un ejercicio teórico. Un producto real que puedes empezar a vender.' },
+                    { title: 'Red de contactos', desc: 'Gente que está exactamente en el mismo punto que tú. Las mejores oportunidades salen de ahí.' },
+                    { title: 'Acceso al club The AI Playbook', desc: 'Actualizaciones por correo para que nunca te quedes atrás. Esto cambia cada 6 meses. Tú sigues al día.' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex gap-4 p-4 rounded-xl" style={{ backgroundColor: 'rgba(75, 10, 35, 0.05)', border: '1px solid rgba(75, 10, 35, 0.08)' }}>
+                      <div className="flex-shrink-0 mt-0.5">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                          <path d="M3 9l4 4L15 4" stroke="#FE4629" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-inter text-base font-semibold mb-1" style={{ color: '#4B0A23' }}>{item.title}</p>
+                        <p className="font-inter text-sm leading-relaxed" style={{ color: 'rgba(75, 10, 35, 0.65)' }}>{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* SECCIÓN EJECUTIVOS */}
+            <div className="w-full py-16 px-4 md:px-16" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-3xl mx-auto">
+                <div className="p-8 md:p-10 rounded-3xl" style={{ border: '1px solid rgba(254, 70, 41, 0.2)', backgroundColor: 'rgba(254, 70, 41, 0.04)' }}>
+                  <p className="font-inter text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: 'rgba(254, 70, 41, 0.45)' }}>Para directivos y ejecutivos</p>
+                  <h3 className="font-inter text-2xl md:text-3xl font-bold mb-4" style={{ color: '#FE4629' }}>¿Lideras una empresa?</h3>
+                  <p className="font-inter text-base md:text-lg mb-8 leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.75)' }}>
+                    THE AI PLAYBOOK tiene una versión one-to-one diseñada para ejecutivos y directivos. 20 horas contigo, a tu ritmo, centrado en las decisiones que afectan a tu empresa. Rellena el formulario y contactamos contigo.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                    <button
+                      onClick={() => setShowSignup(true)}
+                      className="px-8 py-3 font-inter text-base font-semibold rounded-lg transition-all duration-300"
+                      style={{ backgroundColor: '#FE4629', color: '#4B0A23', border: '2px solid #FE4629' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FE4629'; e.currentTarget.style.color = '#4B0A23'; }}
+                    >
+                      Solicita tu plaza
+                    </button>
+                    <button
+                      onClick={() => setShowPlaybookPage(true)}
+                      className="px-8 py-3 font-inter text-base font-semibold rounded-lg transition-all duration-300"
+                      style={{ backgroundColor: 'transparent', color: 'rgba(254, 70, 41, 0.7)', border: '2px solid rgba(254, 70, 41, 0.25)' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.color = '#FE4629'; e.currentTarget.style.borderColor = 'rgba(254, 70, 41, 0.6)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(254, 70, 41, 0.7)'; e.currentTarget.style.borderColor = 'rgba(254, 70, 41, 0.25)'; }}
+                    >
+                      Ver el programa
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA FINAL */}
+            <div className="w-full py-24 px-4 md:px-8 text-center" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-2xl mx-auto">
+                <p className="font-inter text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: 'rgba(254, 70, 41, 0.4)' }}>Próxima edición</p>
+                <h2 className="font-inter text-4xl md:text-6xl font-bold mb-2" style={{ color: '#FE4629' }}>9 de marzo</h2>
+                <p className="font-inter text-base mb-10" style={{ color: 'rgba(254, 70, 41, 0.5)' }}>Plazas limitadas · descuento de "early adopter"</p>
+                <button
+                  onClick={() => window.open(STRIPE_URL, '_blank')}
+                  className="px-12 py-4 font-inter text-lg font-semibold rounded-lg mb-6 transition-all duration-300"
+                  style={{ backgroundColor: '#FE4629', color: '#4B0A23', border: '2px solid #FE4629' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FE4629'; e.currentTarget.style.color = '#4B0A23'; }}
+                >
+                  Reserva tu plaza
+                </button>
+                <div className="font-inter text-base" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
+                  <span style={{ textDecoration: 'line-through' }}>490€</span>
+                  <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
+                  <span style={{ color: 'rgba(254, 70, 41, 0.4)' }}> · Código </span>
+                  <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>EARLY</span>
+                  <span style={{ color: 'rgba(254, 70, 41, 0.4)' }}> al pagar</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Spacer final */}
+            <div className="h-20" style={{ backgroundColor: '#4B0A23' }} />
+          </>
+        )}
 
            {/* The Weekly Builds Button */}
            {showWeeklyBuildsButton && (
@@ -726,9 +1011,31 @@ export default function HomePage() {
                transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)'
              }}
            >
+             {/* Left - Instagram */}
+             <div className="absolute bottom-0 left-4 md:left-8">
+               <a
+                 href="https://www.instagram.com/javiggil/"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="transition-opacity duration-200 hover:opacity-70"
+                 style={{ color: '#FE4629' }}
+               >
+                 <Instagram size={16} />
+               </a>
+             </div>
+             {/* Center - Contact */}
+             <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
+               <a
+                 href="mailto:contact@javiggil.com"
+                 className="font-inter text-xs transition-opacity duration-200 hover:opacity-70"
+                 style={{ color: '#FE4629' }}
+               >
+                 <span className="hidden sm:inline">¿Tienes alguna duda? Escríbenos → </span>contact@javiggil.com
+               </a>
+             </div>
              {/* Right - Live Time */}
-             <div className="absolute bottom-0 right-8">
-               <span 
+             <div className="absolute bottom-0 right-4 md:right-8">
+               <span
                  className="font-inter text-base font-normal text-[#FE4629] font-mono"
                >
                  {currentTime ? formatTimeWithHighlight(currentTime) : '--:--:--'}
@@ -740,7 +1047,7 @@ export default function HomePage() {
 
       {/* Enhanced Signup Modal */}
       {showSignup && (
-        <div className={`fixed inset-0 flex items-center justify-center z-50 cursor-auto ${signupAnimating ? 'animate-fade-out' : 'animate-fade-in'}`} style={{ backgroundColor: '#4B0A23' }}>
+        <div className={`fixed inset-0 flex items-center justify-center z-\[100\] cursor-auto ${signupAnimating ? 'animate-fade-out' : 'animate-fade-in'}`} style={{ backgroundColor: '#4B0A23' }}>
           <div className={`border rounded-2xl p-8 max-w-md w-full mx-4 relative ${signupAnimating ? 'animate-scale-out-modal' : 'animate-scale-in-modal'}`} style={{ backgroundColor: '#4B0A23', borderColor: 'rgba(254, 70, 41, 0.2)', boxShadow: '0 25px 50px -12px rgba(254, 70, 41, 0.1)' }}>
             <button
               onClick={() => {
@@ -967,50 +1274,6 @@ export default function HomePage() {
               >
                 Home
               </a>
-              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsExitingPlaybook(true);
-                  setShowMisionPage(true);
-                  setTimeout(() => {
-                    setShowPlaybookPage(false);
-                    setIsExitingPlaybook(false);
-                  }, 300);
-                }}
-                className="transition-all duration-300 cursor-pointer"
-                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                }}
-              >
-                Misión
-              </a>
-              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsExitingPlaybook(true);
-                  setShowPrecioPage(true);
-                  setTimeout(() => {
-                    setShowPlaybookPage(false);
-                    setIsExitingPlaybook(false);
-                  }, 300);
-                }}
-                className="transition-all duration-300 cursor-pointer"
-                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                }}
-              >
-                Precio
-              </a>
             </div>
           </div>
 
@@ -1179,33 +1442,25 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* CTA Final - fuera del recuadro blanco */}
-            <div className="text-center mt-12">
-              <button
-                onClick={() => {
-                  closePlaybookPage();
-                  setTimeout(() => setShowSignup(true), 350);
-                }}
-                className="font-inter text-xl font-semibold px-12 py-4 rounded-lg mb-4 transition-all duration-300"
-                style={{
-                  backgroundColor: '#FE4629',
-                  color: '#4B0A23',
-                  border: '2px solid #FE4629',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FE4629';
-                  e.currentTarget.style.color = '#4B0A23';
-                }}
-              >
-                Solicita tu plaza
-              </button>
-              <p className="font-inter text-sm" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
-                Formación de IA uno a uno.
-              </p>
+            {/* CTA Final - precio + botón */}
+            <div className="w-full py-16 px-4 md:px-8 flex justify-center">
+              <div className="max-w-md w-full px-8 py-10 rounded-3xl text-center" style={{ backgroundColor: '#FAEBD7' }}>
+                <p className="font-inter text-xs font-semibold tracking-widest mb-4 uppercase" style={{ color: 'rgba(75, 10, 35, 0.4)' }}>Inversión</p>
+                <h2 className="font-inter text-5xl md:text-6xl font-bold mb-1" style={{ color: '#4B0A23' }}>1.890€</h2>
+                <p className="font-inter text-sm mb-8" style={{ color: 'rgba(75, 10, 35, 0.5)' }}>IVA incluido · One to one · 20h</p>
+                <button
+                  onClick={() => setShowSignup(true)}
+                  className="w-full py-3 font-inter text-base font-semibold rounded-lg transition-all duration-300 mb-3"
+                  style={{ backgroundColor: '#FE4629', color: '#FAEBD7', border: '2px solid #FE4629' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FE4629'; e.currentTarget.style.color = '#FAEBD7'; }}
+                >
+                  Solicita tu plaza
+                </button>
+                <p className="font-inter text-xs" style={{ color: 'rgba(75, 10, 35, 0.45)' }}>
+                  Plazas limitadas · Te contactamos en menos de 48h
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -1251,50 +1506,6 @@ export default function HomePage() {
                 }}
               >
                 Home
-              </a>
-              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsExitingMision(true);
-                  setShowPlaybookPage(true);
-                  setTimeout(() => {
-                    setShowMisionPage(false);
-                    setIsExitingMision(false);
-                  }, 300);
-                }}
-                className="transition-all duration-300 cursor-pointer"
-                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                }}
-              >
-                El Programa
-              </a>
-              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsExitingMision(true);
-                  setShowPrecioPage(true);
-                  setTimeout(() => {
-                    setShowMisionPage(false);
-                    setIsExitingMision(false);
-                  }, 300);
-                }}
-                className="transition-all duration-300 cursor-pointer"
-                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                }}
-              >
-                Precio
               </a>
             </div>
           </div>
@@ -1343,11 +1554,8 @@ export default function HomePage() {
             {/* CTA Final */}
             <div className="text-center mt-4">
               <button
-                onClick={() => {
-                  closeMisionPage();
-                  setTimeout(() => setShowSignup(true), 350);
-                }}
-                className="font-inter text-xl font-semibold px-12 py-4 rounded-lg mb-4 transition-all duration-300"
+                onClick={() => window.open(STRIPE_URL, '_blank')}
+                className="font-inter text-xl font-semibold w-full sm:w-auto px-8 sm:px-12 py-4 rounded-lg mb-4 transition-all duration-300"
                 style={{
                   backgroundColor: '#FE4629',
                   color: '#4B0A23',
@@ -1362,10 +1570,19 @@ export default function HomePage() {
                   e.currentTarget.style.color = '#4B0A23';
                 }}
               >
-                Solicita tu plaza
+                Reserva tu plaza
               </button>
-              <p className="font-inter text-sm" style={{ color: 'rgba(254, 70, 41, 0.9)' }}>
-                Formación de IA uno a uno.
+              <p className="font-inter text-sm mb-1" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
+                <b>9 marzo</b> · Plazas limitadas ·{' '}
+                <span style={{ textDecoration: 'line-through' }}>490€</span>
+                <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
+              </p>
+              <p className="font-inter text-xs" style={{ color: 'rgba(254, 70, 41, 0.6)' }}>
+                Código{' '}
+                <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>
+                  EARLY
+                </span>
+                {' '}al pagar
               </p>
             </div>
           </div>
@@ -1523,11 +1740,8 @@ export default function HomePage() {
                   {/* CTA */}
                   <div className="text-center">
                     <button
-                      onClick={() => {
-                        closePrecioPage();
-                        setTimeout(() => setShowSignup(true), 350);
-                      }}
-                      className="font-inter text-lg font-semibold px-10 py-3 rounded-lg transition-all duration-300"
+                      onClick={() => window.open(STRIPE_URL, '_blank')}
+                      className="font-inter text-lg font-semibold px-10 py-3 rounded-lg transition-all duration-300 mb-3"
                       style={{
                         backgroundColor: '#FE4629',
                         color: '#FAEBD7',
@@ -1542,8 +1756,20 @@ export default function HomePage() {
                         e.currentTarget.style.color = '#FAEBD7';
                       }}
                     >
-                      Solicita tu plaza
+                      Reserva tu plaza
                     </button>
+                    <p className="font-inter text-sm mb-1" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
+                      <b>9 marzo</b> · Plazas limitadas ·{' '}
+                      <span style={{ textDecoration: 'line-through' }}>490€</span>
+                      <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
+                    </p>
+                    <p className="font-inter text-xs" style={{ color: 'rgba(254, 70, 41, 0.6)' }}>
+                      Código{' '}
+                      <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>
+                        EARLY
+                      </span>
+                      {' '}al pagar
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1674,8 +1900,8 @@ export default function HomePage() {
               {/* Top 3 Horizontal Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
                 {/* 1st Place - Released */}
-                                                 <div 
-                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                                                 <div
+                  className={`border border-[#FE4629]/20 rounded-lg p-6 md:p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
                     opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
                     transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
@@ -1728,8 +1954,8 @@ export default function HomePage() {
                 </div>
 
                 {/* 2nd Place - Lero */}
-                                                 <div 
-                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                                                 <div
+                  className={`border border-[#FE4629]/20 rounded-lg p-6 md:p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
                     opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
                     transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
@@ -1782,8 +2008,8 @@ export default function HomePage() {
                 </div>
 
                 {/* 3rd Place - MindDump */}
-                                                 <div 
-                  className={`border border-[#FE4629]/20 rounded-lg p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
+                                                 <div
+                  className={`border border-[#FE4629]/20 rounded-lg p-6 md:p-12 bg-transparent relative cursor-pointer smooth-hover top3-entry-exit hover:border-[#FE4629]/40 hover:bg-[#FE4629]/5 hover:transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#FE4629]/10`} 
                   style={{ 
                     opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
                     transform: isExitingWeeklyBuilds ? 'translateY(30px) scale(0.92) rotateX(5deg)' : (isTop3Entering ? 'translateY(0) scale(1) rotateX(0deg)' : 'translateY(40px) scale(0.9) rotateX(10deg)'),
@@ -2005,7 +2231,7 @@ export default function HomePage() {
           </div>
 
           {/* Footer - Live Time */}
-          <div className={`fixed bottom-4 right-8 z-40 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>
+          <div className={`fixed bottom-4 right-4 md:right-8 z-40 ${isExitingWeeklyBuilds ? 'animate-fade-out' : 'animate-fade-in-up'}`} style={{ animationDelay: isExitingWeeklyBuilds ? '0.1s' : '0.1s' }}>
             <span 
               className="font-inter text-base font-normal text-[#FE4629] font-mono"
             >
