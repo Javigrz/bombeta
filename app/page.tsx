@@ -821,13 +821,11 @@ export default function HomePage() {
                 <p className="font-inter text-base md:text-lg mb-8 leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
                   Aquí es donde todo lo anterior cobra sentido. Aquí montas tu negocio.
                 </p>
-                <div className="space-y-4 font-inter text-sm md:text-base" style={{ color: 'rgba(254, 70, 41, 0.7)' }}>
-                  <ul>
-                    <li>Ideas de negocio con IA que funcionan ahora mismo. Casos de éxito reales de gente que está facturando con esto.</li>
-                    <li>Tú decides qué quieres construir. Y lo construyes. Con asesoramiento personalizado en cada sesión.</li>
-                    <li>El objetivo: un MVP real que funciona y que puedes empezar a vender al día siguiente.</li>
-                  </ul>
-                </div>
+                <ul className="list-disc list-inside space-y-3 font-inter text-sm md:text-base" style={{ color: 'rgba(254, 70, 41, 0.7)' }}>
+                  <li>Ideas de negocio con IA que funcionan ahora mismo. Casos de éxito reales de gente que está facturando con esto.</li>
+                  <li>Tú decides qué quieres construir. Y lo construyes. Con asesoramiento personalizado en cada sesión.</li>
+                  <li>El objetivo: un MVP real que funciona y que puedes empezar a vender al día siguiente.</li>
+                </ul>
                 {/* Shark Tank card */}
                 <div className="mt-8 p-6 rounded-2xl" style={{
                   backgroundColor: 'rgba(254, 70, 41, 0.1)',
