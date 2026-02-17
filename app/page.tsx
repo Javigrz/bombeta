@@ -669,7 +669,7 @@ export default function HomePage() {
                 transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
             >
-              <span style={{ color: 'rgba(254, 70, 41, 0.55)' }}>Próxima edición: <b>9 marzo</b> · 15 plazas · </span>
+              <span style={{ color: 'rgba(254, 70, 41, 0.55)' }}>Próxima edición: <b>9 marzo</b> · Plazas limitadas · </span>
               <span style={{ color: 'rgba(254, 70, 41, 0.45)', textDecoration: 'line-through' }}>490€</span>
               <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
               <span style={{ color: 'rgba(254, 70, 41, 0.45)' }}> · Código </span>

@@ -39,6 +39,8 @@ export default function GraciasPage() {
           <p className="font-inter text-base text-[#FAF5EB]/60 leading-relaxed">
             No tienes que hacer nada más. Nosotros nos ponemos en contacto contigo
             cuando se acerque la fecha con toda la información y el enlace a la videollamada.
+
+            Te hemos enviado un correo de confirmación. Si no lo tienes puedes revisar la carpeta de SPAM.
           </p>
         </div>
 
