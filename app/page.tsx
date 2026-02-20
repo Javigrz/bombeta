@@ -124,6 +124,9 @@ export default function HomePage() {
   const [showPrecioPage, setShowPrecioPage] = useState(false)
   const [isExitingPrecio, setIsExitingPrecio] = useState(false)
 
+  // Estado para el modal pre-checkout
+  const [showPreCheckoutModal, setShowPreCheckoutModal] = useState(false)
+
   // Funciones para cerrar páginas con animación
   const closePlaybookPage = useCallback(() => {
     setIsExitingPlaybook(true)
@@ -620,7 +623,7 @@ export default function HomePage() {
               }}
             >
               <button
-                onClick={() => window.open(STRIPE_URL, '_blank')}
+                onClick={() => setShowPreCheckoutModal(true)}
                 className="px-8 md:px-12 py-3 md:py-4 font-inter text-base md:text-lg font-semibold rounded-lg"
                 style={{
                   backgroundColor: '#FE4629',
@@ -923,7 +926,7 @@ export default function HomePage() {
                 <h2 className="font-inter text-4xl md:text-6xl font-bold mb-2" style={{ color: '#FE4629' }}>9 de marzo</h2>
                 <p className="font-inter text-base mb-10" style={{ color: 'rgba(254, 70, 41, 0.5)' }}>Plazas limitadas · descuento de "early adopter"</p>
                 <button
-                  onClick={() => window.open(STRIPE_URL, '_blank')}
+                  onClick={() => setShowPreCheckoutModal(true)}
                   className="px-12 py-4 font-inter text-lg font-semibold rounded-lg mb-6 transition-all duration-300"
                   style={{ backgroundColor: '#FE4629', color: '#4B0A23', border: '2px solid #FE4629' }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
@@ -1552,7 +1555,7 @@ export default function HomePage() {
             {/* CTA Final */}
             <div className="text-center mt-4">
               <button
-                onClick={() => window.open(STRIPE_URL, '_blank')}
+                onClick={() => setShowPreCheckoutModal(true)}
                 className="font-inter text-xl font-semibold w-full sm:w-auto px-8 sm:px-12 py-4 rounded-lg mb-4 transition-all duration-300"
                 style={{
                   backgroundColor: '#FE4629',
@@ -1738,7 +1741,7 @@ export default function HomePage() {
                   {/* CTA */}
                   <div className="text-center">
                     <button
-                      onClick={() => window.open(STRIPE_URL, '_blank')}
+                      onClick={() => setShowPreCheckoutModal(true)}
                       className="font-inter text-lg font-semibold px-10 py-3 rounded-lg transition-all duration-300 mb-3"
                       style={{
                         backgroundColor: '#FE4629',
@@ -2690,6 +2693,85 @@ export default function HomePage() {
           animation: title-exit 800ms ease-out forwards;
         }
       `}</style>
+
+      {/* Modal pre-checkout */}
+      {showPreCheckoutModal && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)' }}
+          onClick={() => setShowPreCheckoutModal(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl p-8 relative"
+            style={{ backgroundColor: '#4B0A23', border: '1px solid rgba(254,70,41,0.2)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Cerrar */}
+            <button
+              onClick={() => setShowPreCheckoutModal(false)}
+              className="absolute top-4 right-4 font-inter text-sm"
+              style={{ color: 'rgba(254,70,41,0.5)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#FE4629' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(254,70,41,0.5)' }}
+            >
+              ✕
+            </button>
+
+            <p className="font-inter text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: 'rgba(254,70,41,0.45)' }}>
+              Antes de pagar
+            </p>
+            <h2 className="font-inter text-2xl font-bold mb-2" style={{ color: '#FE4629' }}>
+              ¿Tienes alguna duda?
+            </h2>
+            <p className="font-inter text-sm mb-8" style={{ color: 'rgba(254,70,41,0.55)' }}>
+              Puedes reservar 15 min conmigo para resolverlas, mandarme un correo, o apuntarte directamente si ya lo tienes claro.
+            </p>
+
+            <div className="flex flex-col gap-3">
+              {/* Opción 1: Sesión */}
+              <a
+                href="https://calendar.app.google/yYpUtkcX8qaCgnq28"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full px-6 py-4 rounded-xl font-inter text-sm font-semibold text-center transition-all duration-200 flex items-center gap-3"
+                style={{ backgroundColor: 'rgba(254,70,41,0.12)', color: '#FE4629', border: '1px solid rgba(254,70,41,0.25)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(254,70,41,0.2)'; e.currentTarget.style.borderColor = 'rgba(254,70,41,0.5)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(254,70,41,0.12)'; e.currentTarget.style.borderColor = 'rgba(254,70,41,0.25)'; }}
+              >
+                <div className="text-left">
+                  <div>Reservar 15 min conmigo</div>
+                  <div className="font-normal text-xs mt-0.5" style={{ color: 'rgba(254,70,41,0.55)' }}>Resuelvo tus dudas antes de que decidas</div>
+                </div>
+              </a>
+
+              {/* Opción 2: Email */}
+              <a
+                href="mailto:contact@javiggil.com?subject=Duda%20sobre%20el%20curso"
+                className="w-full px-6 py-4 rounded-xl font-inter text-sm font-semibold text-center transition-all duration-200 flex items-center gap-3"
+                style={{ backgroundColor: 'rgba(254,70,41,0.12)', color: '#FE4629', border: '1px solid rgba(254,70,41,0.25)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(254,70,41,0.2)'; e.currentTarget.style.borderColor = 'rgba(254,70,41,0.5)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(254,70,41,0.12)'; e.currentTarget.style.borderColor = 'rgba(254,70,41,0.25)'; }}
+              >
+                <div className="text-left">
+                  <div>Mandar un correo</div>
+                  <div className="font-normal text-xs mt-0.5" style={{ color: 'rgba(254,70,41,0.55)' }}>contact@javiggil.com</div>
+                </div>
+              </a>
+
+              {/* Opción 3: Pago directo */}
+              <button
+                onClick={() => { setShowPreCheckoutModal(false); window.open(STRIPE_URL, '_blank'); }}
+                className="w-full px-6 py-4 rounded-xl font-inter text-sm font-semibold transition-all duration-200"
+                style={{ backgroundColor: '#FE4629', color: '#4B0A23', border: '2px solid #FE4629' }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FE4629'; e.currentTarget.style.color = '#4B0A23'; }}
+              >
+                Apuntarme directamente
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
