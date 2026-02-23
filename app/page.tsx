@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 
-const STRIPE_URL = "https://buy.stripe.com/00weV5bp38dq7v4dph9EI01"
+const STRIPE_URL = "https://buy.stripe.com/7sYfZ9dxb79m3eOdph9EI02"
 import MomentumLogo from "../components/momentum-logo"
 import { Clock, FileText, GitBranch, RefreshCw, Instagram } from "lucide-react"
 import { sendFormEmail } from "./actions/send-email"
@@ -673,15 +673,15 @@ export default function HomePage() {
               }}
             >
               <span style={{ color: 'rgba(254, 70, 41, 0.55)' }}>Próxima edición: <b>9 marzo</b> · Plazas limitadas · </span>
-              <span style={{ color: 'rgba(254, 70, 41, 0.45)', textDecoration: 'line-through' }}>490€</span>
-              <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
+              <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
               <span style={{ color: 'rgba(254, 70, 41, 0.45)' }}> · Código </span>
               <span
                 className="font-mono font-bold tracking-widest px-2 py-0.5 rounded"
                 style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}
               >
-                EARLY
+                MISTERY
               </span>
+              <span style={{ color: 'rgba(254, 70, 41, 0.45)' }}> · descuento secreto</span>
             </div>
           </div>
 
@@ -924,7 +924,7 @@ export default function HomePage() {
               <div className="max-w-2xl mx-auto">
                 <p className="font-inter text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: 'rgba(254, 70, 41, 0.4)' }}>Próxima edición</p>
                 <h2 className="font-inter text-4xl md:text-6xl font-bold mb-2" style={{ color: '#FE4629' }}>9 de marzo</h2>
-                <p className="font-inter text-base mb-10" style={{ color: 'rgba(254, 70, 41, 0.5)' }}>Plazas limitadas · descuento de "early adopter"</p>
+                <p className="font-inter text-base mb-10" style={{ color: 'rgba(254, 70, 41, 0.5)' }}>Plazas limitadas · código MISTERY para descuento secreto</p>
                 <button
                   onClick={() => setShowPreCheckoutModal(true)}
                   className="px-12 py-4 font-inter text-lg font-semibold rounded-lg mb-6 transition-all duration-300"
@@ -935,11 +935,10 @@ export default function HomePage() {
                   Reserva tu plaza
                 </button>
                 <div className="font-inter text-base" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
-                  <span style={{ textDecoration: 'line-through' }}>490€</span>
-                  <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
+                  <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
                   <span style={{ color: 'rgba(254, 70, 41, 0.4)' }}> · Código </span>
-                  <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>EARLY</span>
-                  <span style={{ color: 'rgba(254, 70, 41, 0.4)' }}> al pagar</span>
+                  <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>MISTERY</span>
+                  <span style={{ color: 'rgba(254, 70, 41, 0.4)' }}> · descuento secreto al pagar</span>
                 </div>
               </div>
             </div>
@@ -1575,15 +1574,14 @@ export default function HomePage() {
               </button>
               <p className="font-inter text-sm mb-1" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
                 <b>9 marzo</b> · Plazas limitadas ·{' '}
-                <span style={{ textDecoration: 'line-through' }}>490€</span>
-                <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
+                <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
               </p>
               <p className="font-inter text-xs" style={{ color: 'rgba(254, 70, 41, 0.6)' }}>
                 Código{' '}
                 <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>
-                  EARLY
+                  MISTERY
                 </span>
-                {' '}al pagar
+                {' '}· descuento secreto al pagar
               </p>
             </div>
           </div>
@@ -1761,15 +1759,14 @@ export default function HomePage() {
                     </button>
                     <p className="font-inter text-sm mb-1" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
                       <b>9 marzo</b> · Plazas limitadas ·{' '}
-                      <span style={{ textDecoration: 'line-through' }}>490€</span>
-                      <span style={{ color: '#FE4629', fontWeight: 700 }}> 390€</span>
+                      <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
                     </p>
                     <p className="font-inter text-xs" style={{ color: 'rgba(254, 70, 41, 0.6)' }}>
                       Código{' '}
                       <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>
-                        EARLY
+                        MISTERY
                       </span>
-                      {' '}al pagar
+                      {' '}· descuento secreto al pagar
                     </p>
                   </div>
                 </div>
