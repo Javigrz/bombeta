@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 const STRIPE_URL = "https://buy.stripe.com/7sYfZ9dxb79m3eOdph9EI02"
 import MomentumLogo from "../components/momentum-logo"
 import { Clock, FileText, GitBranch, RefreshCw, Instagram } from "lucide-react"
-import { sendFormEmail } from "./actions/send-email"
+import { sendFormEmail, sendGroupReservationEmails } from "./actions/send-email"
 // Eliminar la importación de MomentumLogoHot
 
 // Componente de gráfica de tendencia minimalista
@@ -116,16 +116,16 @@ export default function HomePage() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
 
-  // Estado para la página de Misión
-  const [showMisionPage, setShowMisionPage] = useState(false)
-  const [isExitingMision, setIsExitingMision] = useState(false)
-
   // Estado para la página de Precio
   const [showPrecioPage, setShowPrecioPage] = useState(false)
   const [isExitingPrecio, setIsExitingPrecio] = useState(false)
 
-  // Estado para el modal pre-checkout
-  const [showPreCheckoutModal, setShowPreCheckoutModal] = useState(false)
+  // Estados para el modal de reserva grupal
+  const [showGroupModal, setShowGroupModal] = useState(false)
+  const [groupFormData, setGroupFormData] = useState({ name: "", email: "" })
+  const [groupFormSubmitted, setGroupFormSubmitted] = useState(false)
+  const [groupIsSubmitting, setGroupIsSubmitting] = useState(false)
+  const [groupSubmitMessage, setGroupSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
   // Funciones para cerrar páginas con animación
   const closePlaybookPage = useCallback(() => {
@@ -133,14 +133,6 @@ export default function HomePage() {
     setTimeout(() => {
       setShowPlaybookPage(false)
       setIsExitingPlaybook(false)
-    }, 300)
-  }, [])
-
-  const closeMisionPage = useCallback(() => {
-    setIsExitingMision(true)
-    setTimeout(() => {
-      setShowMisionPage(false)
-      setIsExitingMision(false)
     }, 300)
   }, [])
 
@@ -352,6 +344,21 @@ export default function HomePage() {
     }
   }
 
+  const handleGroupSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setGroupIsSubmitting(true)
+    setGroupSubmitMessage(null)
+    try {
+      const result = await sendGroupReservationEmails(groupFormData)
+      if (result.success) setGroupFormSubmitted(true)
+      else setGroupSubmitMessage({ type: 'error', text: result.error || 'Error al enviar' })
+    } catch {
+      setGroupSubmitMessage({ type: 'error', text: 'Error inesperado. Inténtalo de nuevo.' })
+    } finally {
+      setGroupIsSubmitting(false)
+    }
+  }
+
   const renderTypedText = (text: string) => {
     const words = text.split(" ")
 
@@ -502,35 +509,6 @@ export default function HomePage() {
             }}
           />
 
-          {/* Links de navegación - dentro del contenedor del logo */}
-          <div
-            className="font-inter text-xs md:text-sm"
-            style={{
-              marginTop: logoTransitioned ? '-0.5rem' : '1rem',
-              opacity: logoTransitioned ? 1 : 0,
-              visibility: logoTransitioned ? 'visible' : 'hidden',
-              transition: 'all 0.8s ease-out 1s, visibility 0s 1s'
-            }}
-          >
-            <a
-              onClick={(e) => {
-                e.preventDefault();
-                setShowMisionPage(true);
-              }}
-              className="transition-all duration-300 cursor-pointer"
-              style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#FE4629';
-                handleSimpleHover("Misión", "bg-orange-400");
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                handleSimpleLeave();
-              }}
-            >
-              Misión
-            </a>
-          </div>
         </div>
 
         {/* Contenido principal (texto, botón) - separado del logo */}
@@ -623,7 +601,7 @@ export default function HomePage() {
               }}
             >
               <button
-                onClick={() => setShowPreCheckoutModal(true)}
+                onClick={() => setShowGroupModal(true)}
                 className="px-8 md:px-12 py-3 md:py-4 font-inter text-base md:text-lg font-semibold rounded-lg"
                 style={{
                   backgroundColor: '#FE4629',
@@ -642,24 +620,6 @@ export default function HomePage() {
               >
                 Reserva tu plaza
               </button>
-              <button
-                onClick={() => document.getElementById('course-content')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 md:px-12 py-3 md:py-4 font-inter text-base md:text-lg font-semibold rounded-lg"
-                style={{
-                  backgroundColor: 'transparent',
-                  color: '#FE4629',
-                  border: '2px solid rgba(254, 70, 41, 0.4)',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(254, 70, 41, 0.4)';
-                }}
-              >
-                Más información
-              </button>
             </div>
 
             {/* Próxima edición + precio */}
@@ -674,14 +634,6 @@ export default function HomePage() {
             >
               <span style={{ color: 'rgba(254, 70, 41, 0.55)' }}>Próxima edición: <b>9 marzo</b> · Plazas limitadas · </span>
               <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
-              <span style={{ color: 'rgba(254, 70, 41, 0.45)' }}> · Código </span>
-              <span
-                className="font-mono font-bold tracking-widest px-2 py-0.5 rounded"
-                style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}
-              >
-                MISTERY
-              </span>
-              <span style={{ color: 'rgba(254, 70, 41, 0.45)' }}> · descuento secreto</span>
             </div>
           </div>
 
@@ -717,6 +669,45 @@ export default function HomePage() {
         {/* Secciones de contenido del curso — scroll */}
         {showMainContent && !showWeeklyBuilds && (
           <>
+            {/* MISIÓN / CREDIBILIDAD */}
+            <div className="w-full py-12 px-4 md:px-8" style={{ backgroundColor: '#4B0A23' }}>
+              <div className="max-w-4xl mx-auto">
+                {/* Headline centrado */}
+                <h1 className="font-inter text-3xl md:text-5xl font-bold text-center mb-16 leading-tight" style={{ color: '#FE4629' }}>
+                  He visto la IA desde todos los lados. Estoy aquí para que la uses.
+                </h1>
+
+                {/* Layout con foto y contenido */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-16">
+                  {/* Foto */}
+                  <div className="flex justify-center md:justify-start">
+                    <div className="relative">
+                      <img
+                        src="/foto_javigil.jpg"
+                        alt="Javi Gil"
+                        className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-2xl"
+                        style={{ filter: 'grayscale(100%)' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Narrativa */}
+                  <div>
+                    <p className="font-inter text-base md:text-lg leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
+                      Monté mi propia consultora de IA cuando nadie hablaba de esto. Después me dediqué a programar y crear departamentos de inteligencia artificial desde cero en algunas de las empresas más grandes del mundo. Hoy lidero la IA de préstamos de un banco europeo para dos países enteros. Todo, mientras sigo con mis empresas, de IA claro.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Quote destacada */}
+                <div className="max-w-4xl mx-auto px-8 py-12 rounded-2xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.05)' }}>
+                  <p className="font-newsreader italic text-xl leading-relaxed" style={{ color: '#FE4629' }}>
+                    "Podría quedarme en mi carril. Pero llevo años viendo lo mismo: gente con talento que no sabe cómo aprovechar la IA, o que cree que ya lo hace porque usa ChatGPT. Y me frustra. Porque cuando alguien aprende a usar bien la IA, crece. Y cuando la gente crece, la rueda gira para todos. Ese es mi por qué. Este curso es el cómo."
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* INTRO / CONTEXTO */}
             <div id="course-content" className="w-full py-24 px-4 md:px-16" style={{ backgroundColor: '#4B0A23' }}>
               <div className="max-w-3xl mx-auto">
@@ -924,9 +915,9 @@ export default function HomePage() {
               <div className="max-w-2xl mx-auto">
                 <p className="font-inter text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: 'rgba(254, 70, 41, 0.4)' }}>Próxima edición</p>
                 <h2 className="font-inter text-4xl md:text-6xl font-bold mb-2" style={{ color: '#FE4629' }}>9 de marzo</h2>
-                <p className="font-inter text-base mb-10" style={{ color: 'rgba(254, 70, 41, 0.5)' }}>Plazas limitadas · código MISTERY para descuento secreto</p>
+                <p className="font-inter text-base mb-10" style={{ color: 'rgba(254, 70, 41, 0.5)' }}>Plazas limitadas</p>
                 <button
-                  onClick={() => setShowPreCheckoutModal(true)}
+                  onClick={() => setShowGroupModal(true)}
                   className="px-12 py-4 font-inter text-lg font-semibold rounded-lg mb-6 transition-all duration-300"
                   style={{ backgroundColor: '#FE4629', color: '#4B0A23', border: '2px solid #FE4629' }}
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
@@ -936,9 +927,6 @@ export default function HomePage() {
                 </button>
                 <div className="font-inter text-base" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
                   <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
-                  <span style={{ color: 'rgba(254, 70, 41, 0.4)' }}> · Código </span>
-                  <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>MISTERY</span>
-                  <span style={{ color: 'rgba(254, 70, 41, 0.4)' }}> · descuento secreto al pagar</span>
                 </div>
               </div>
             </div>
@@ -1466,127 +1454,6 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Página completa de Misión */}
-      {showMisionPage && (
-        <div
-          className="fixed inset-0 overflow-y-auto"
-          style={{
-            backgroundColor: '#4B0A23',
-            animation: isExitingMision ? 'stackOutPage 0.3s cubic-bezier(0.4, 0, 0.6, 1)' : 'stackInPage 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            zIndex: isExitingMision ? 60 : 50
-          }}
-        >
-          {/* Logo y menú de navegación */}
-          <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center" style={{ backgroundColor: 'transparent' }}>
-            <img
-              src="/javigil.svg"
-              alt="javigil"
-              onClick={() => closeMisionPage()}
-              className="cursor-pointer"
-              style={{
-                width: '150px',
-                height: 'auto',
-              }}
-            />
-
-            {/* Menú de navegación debajo del logo */}
-            <div className="font-inter text-sm mt-2">
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  closeMisionPage();
-                }}
-                className="transition-all duration-300 cursor-pointer"
-                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                }}
-              >
-                Home
-              </a>
-            </div>
-          </div>
-
-          {/* Contenido con scroll */}
-          <div className="pt-24 pb-16">
-            {/* SECCIÓN MISIÓN */}
-            <div className="w-full py-12 px-4 md:px-8">
-              <div className="max-w-4xl mx-auto">
-                {/* Headline centrado */}
-                <h1 className="font-inter text-3xl md:text-5xl font-bold text-center mb-16 leading-tight" style={{ color: '#FE4629' }}>
-                  He visto la IA desde todos los lados. Estoy aquí para que la uses.
-                </h1>
-
-                {/* Layout con foto y contenido */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-16">
-                  {/* Foto */}
-                  <div className="flex justify-center md:justify-start">
-                    <div className="relative">
-                      <img
-                        src="/foto_javigil.jpg"
-                        alt="Javi Gil"
-                        className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-2xl"
-                        style={{ filter: 'grayscale(100%)' }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Narrativa */}
-                  <div>
-                    <p className="font-inter text-base md:text-lg leading-relaxed" style={{ color: 'rgba(254, 70, 41, 0.85)' }}>
-                      Monté mi propia consultora de IA cuando nadie hablaba de esto. Después me dediqué a programar y crear departamentos de inteligencia artificial desde cero en algunas de las empresas más grandes del mundo. Hoy lidero la IA de préstamos de un banco europeo para dos países enteros. Todo, mientras sigo con mis empresas, de IA claro.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Quote destacada */}
-                <div className="max-w-4xl mx-auto px-8 py-12 rounded-2xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.05)' }}>
-                  <p className="font-newsreader italic text-xl leading-relaxed" style={{ color: '#FE4629' }}>
-                    "Podría quedarme en mi carril. Pero llevo años viendo lo mismo: gente con talento que no sabe cómo aprovechar la IA, o que cree que ya lo hace porque usa ChatGPT. Y me frustra. Porque cuando alguien aprende a usar bien la IA, crece. Y cuando la gente crece, la rueda gira para todos. Ese es mi por qué. Este curso es el cómo."
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Final */}
-            <div className="text-center mt-4">
-              <button
-                onClick={() => setShowPreCheckoutModal(true)}
-                className="font-inter text-xl font-semibold w-full sm:w-auto px-8 sm:px-12 py-4 rounded-lg mb-4 transition-all duration-300"
-                style={{
-                  backgroundColor: '#FE4629',
-                  color: '#4B0A23',
-                  border: '2px solid #FE4629',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FE4629';
-                  e.currentTarget.style.color = '#4B0A23';
-                }}
-              >
-                Reserva tu plaza
-              </button>
-              <p className="font-inter text-sm mb-1" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
-                <b>9 marzo</b> · Plazas limitadas ·{' '}
-                <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
-              </p>
-              <p className="font-inter text-xs" style={{ color: 'rgba(254, 70, 41, 0.6)' }}>
-                Código{' '}
-                <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>
-                  MISTERY
-                </span>
-                {' '}· descuento secreto al pagar
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Página completa de Precio */}
       {showPrecioPage && (
@@ -1650,28 +1517,6 @@ export default function HomePage() {
                 }}
               >
                 El Programa
-              </a>
-              <span style={{ color: 'rgba(254, 70, 41, 0.8)' }}> · </span>
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsExitingPrecio(true);
-                  setShowMisionPage(true);
-                  setTimeout(() => {
-                    setShowPrecioPage(false);
-                    setIsExitingPrecio(false);
-                  }, 300);
-                }}
-                className="transition-all duration-300 cursor-pointer"
-                style={{ color: 'rgba(254, 70, 41, 0.8)' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FE4629';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'rgba(254, 70, 41, 0.8)';
-                }}
-              >
-                Misión
               </a>
             </div>
           </div>
@@ -1739,7 +1584,7 @@ export default function HomePage() {
                   {/* CTA */}
                   <div className="text-center">
                     <button
-                      onClick={() => setShowPreCheckoutModal(true)}
+                      onClick={() => setShowGroupModal(true)}
                       className="font-inter text-lg font-semibold px-10 py-3 rounded-lg transition-all duration-300 mb-3"
                       style={{
                         backgroundColor: '#FE4629',
@@ -1760,13 +1605,6 @@ export default function HomePage() {
                     <p className="font-inter text-sm mb-1" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
                       <b>9 marzo</b> · Plazas limitadas ·{' '}
                       <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
-                    </p>
-                    <p className="font-inter text-xs" style={{ color: 'rgba(254, 70, 41, 0.6)' }}>
-                      Código{' '}
-                      <span className="font-mono font-bold tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: 'rgba(254, 70, 41, 0.15)', color: '#FE4629' }}>
-                        MISTERY
-                      </span>
-                      {' '}· descuento secreto al pagar
                     </p>
                   </div>
                 </div>
@@ -2691,12 +2529,12 @@ export default function HomePage() {
         }
       `}</style>
 
-      {/* Modal pre-checkout */}
-      {showPreCheckoutModal && (
+      {/* Modal de reserva grupal */}
+      {showGroupModal && (
         <div
           className="fixed inset-0 z-[200] flex items-center justify-center p-4"
           style={{ backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)' }}
-          onClick={() => setShowPreCheckoutModal(false)}
+          onClick={() => { setShowGroupModal(false); setGroupFormSubmitted(false); setGroupSubmitMessage(null); }}
         >
           <div
             className="w-full max-w-md rounded-2xl p-8 relative"
@@ -2705,7 +2543,7 @@ export default function HomePage() {
           >
             {/* Cerrar */}
             <button
-              onClick={() => setShowPreCheckoutModal(false)}
+              onClick={() => { setShowGroupModal(false); setGroupFormSubmitted(false); setGroupSubmitMessage(null); }}
               className="absolute top-4 right-4 font-inter text-sm"
               style={{ color: 'rgba(254,70,41,0.5)' }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#FE4629' }}
@@ -2714,58 +2552,112 @@ export default function HomePage() {
               ✕
             </button>
 
-            <p className="font-inter text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: 'rgba(254,70,41,0.45)' }}>
-              Antes de pagar
-            </p>
-            <h2 className="font-inter text-2xl font-bold mb-2" style={{ color: '#FE4629' }}>
-              ¿Tienes alguna duda?
-            </h2>
-            <p className="font-inter text-sm mb-8" style={{ color: 'rgba(254,70,41,0.55)' }}>
-              Puedes reservar 15 min conmigo para resolverlas, mandarme un correo, o apuntarte directamente si ya lo tienes claro.
-            </p>
-
-            <div className="flex flex-col gap-3">
-              {/* Opción 1: Sesión */}
-              <a
-                href="https://calendar.app.google/yYpUtkcX8qaCgnq28"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full px-6 py-4 rounded-xl font-inter text-sm font-semibold text-center transition-all duration-200 flex items-center gap-3"
-                style={{ backgroundColor: 'rgba(254,70,41,0.12)', color: '#FE4629', border: '1px solid rgba(254,70,41,0.25)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(254,70,41,0.2)'; e.currentTarget.style.borderColor = 'rgba(254,70,41,0.5)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(254,70,41,0.12)'; e.currentTarget.style.borderColor = 'rgba(254,70,41,0.25)'; }}
-              >
-                <div className="text-left">
-                  <div>Reservar 15 min conmigo</div>
-                  <div className="font-normal text-xs mt-0.5" style={{ color: 'rgba(254,70,41,0.55)' }}>Resuelvo tus dudas antes de que decidas</div>
+            {groupFormSubmitted ? (
+              <div className="py-4">
+                {/* Logo centrado */}
+                <div className="flex justify-center mb-6">
+                  <img src="/javigil.svg" alt="javigil" className="h-10 w-auto" />
                 </div>
-              </a>
 
-              {/* Opción 2: Email */}
-              <a
-                href="mailto:contact@javiggil.com?subject=Duda%20sobre%20el%20curso"
-                className="w-full px-6 py-4 rounded-xl font-inter text-sm font-semibold text-center transition-all duration-200 flex items-center gap-3"
-                style={{ backgroundColor: 'rgba(254,70,41,0.12)', color: '#FE4629', border: '1px solid rgba(254,70,41,0.25)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(254,70,41,0.2)'; e.currentTarget.style.borderColor = 'rgba(254,70,41,0.5)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(254,70,41,0.12)'; e.currentTarget.style.borderColor = 'rgba(254,70,41,0.25)'; }}
-              >
-                <div className="text-left">
-                  <div>Mandar un correo</div>
-                  <div className="font-normal text-xs mt-0.5" style={{ color: 'rgba(254,70,41,0.55)' }}>contact@javiggil.com</div>
+                {/* Icono éxito */}
+                <div className="flex justify-center mb-5">
+                  <div className="rounded-full p-4" style={{ backgroundColor: 'rgba(254,70,41,0.1)', border: '2px solid rgba(254,70,41,0.3)' }}>
+                    <svg className="w-10 h-10" fill="none" stroke="#FE4629" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
                 </div>
-              </a>
 
-              {/* Opción 3: Pago directo */}
-              <button
-                onClick={() => { setShowPreCheckoutModal(false); window.open(STRIPE_URL, '_blank'); }}
-                className="w-full px-6 py-4 rounded-xl font-inter text-sm font-semibold transition-all duration-200"
-                style={{ backgroundColor: '#FE4629', color: '#4B0A23', border: '2px solid #FE4629' }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FE4629'; e.currentTarget.style.color = '#4B0A23'; }}
-              >
-                Apuntarme directamente
-              </button>
-            </div>
+                <h2 className="font-inter text-2xl font-bold mb-4 text-center" style={{ color: '#FE4629' }}>
+                  Tu plaza está pre-reservada.
+                </h2>
+
+                <p className="font-inter text-base mb-3 text-center leading-relaxed" style={{ color: 'rgba(254,70,41,0.85)' }}>
+                  Te he enviado un email con todos los detalles del curso y cómo confirmar tu plaza.
+                </p>
+
+                <p className="font-inter text-base mb-6 text-center font-bold" style={{ color: '#FE4629' }}>
+                  Las plazas se confirman por orden de pago.
+                </p>
+
+                <div className="rounded-xl px-4 py-3 mb-6 flex items-start gap-2" style={{ backgroundColor: 'rgba(254,70,41,0.07)', border: '1px solid rgba(254,70,41,0.15)' }}>
+                  <span className="text-base mt-0.5">⚠️</span>
+                  <p className="font-inter text-xs leading-relaxed" style={{ color: 'rgba(254,70,41,0.65)' }}>
+                    Si no ves el email en unos minutos, revisa la carpeta de spam o promociones.
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => { setShowGroupModal(false); setGroupFormSubmitted(false); }}
+                  className="w-full py-3 font-inter font-semibold rounded-lg"
+                  style={{ backgroundColor: '#FE4629', color: '#4B0A23', border: '2px solid #FE4629', transition: 'all 0.3s ease' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FE4629'; e.currentTarget.style.color = '#4B0A23'; }}
+                >
+                  Cerrar
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Logo centrado */}
+                <div className="flex justify-center mb-5">
+                  <img src="/javigil.svg" alt="javigil" className="h-10 w-auto" />
+                </div>
+
+                <h2 className="font-inter text-2xl font-bold mb-1 text-center" style={{ color: '#FE4629' }}>
+                  Reserva tu plaza
+                </h2>
+                <p className="font-inter text-sm mb-7 text-center" style={{ color: 'rgba(254,70,41,0.6)' }}>
+                  9 marzo · Plazas limitadas · 390€
+                </p>
+
+                <style>{`.group-input::placeholder { color: rgba(254,70,41,0.35); }`}</style>
+                <form onSubmit={handleGroupSubmit} className="space-y-4">
+                  <div>
+                    <label className="block font-inter text-sm font-medium mb-2" style={{ color: 'rgba(254,70,41,0.9)' }}>Nombre</label>
+                    <input
+                      type="text"
+                      value={groupFormData.name}
+                      onChange={(e) => setGroupFormData({ ...groupFormData, name: e.target.value })}
+                      className="group-input w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300"
+                      style={{ backgroundColor: 'rgba(254,70,41,0.05)', border: '1px solid rgba(254,70,41,0.2)', color: '#FE4629' }}
+                      placeholder="Tu nombre"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-inter text-sm font-medium mb-2" style={{ color: 'rgba(254,70,41,0.9)' }}>Email</label>
+                    <input
+                      type="email"
+                      value={groupFormData.email}
+                      onChange={(e) => setGroupFormData({ ...groupFormData, email: e.target.value })}
+                      className="group-input w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300"
+                      style={{ backgroundColor: 'rgba(254,70,41,0.05)', border: '1px solid rgba(254,70,41,0.2)', color: '#FE4629' }}
+                      placeholder="tu@email.com"
+                      required
+                    />
+                  </div>
+
+                  {groupSubmitMessage && (
+                    <div className={`p-3 rounded-lg font-inter text-sm text-center ${groupSubmitMessage.type === 'error' ? 'bg-red-500/10 border border-red-500/20 text-red-400' : ''}`}>
+                      {groupSubmitMessage.text}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={groupIsSubmitting}
+                    className="w-full py-4 font-inter font-semibold rounded-lg mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: groupIsSubmitting ? 'rgba(254,70,41,0.5)' : '#FE4629', color: '#4B0A23', border: '2px solid #FE4629', transition: 'all 0.3s ease' }}
+                    onMouseEnter={(e) => { if (!groupIsSubmitting) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; } }}
+                    onMouseLeave={(e) => { if (!groupIsSubmitting) { e.currentTarget.style.backgroundColor = '#FE4629'; e.currentTarget.style.color = '#4B0A23'; } }}
+                  >
+                    {groupIsSubmitting ? 'Enviando...' : 'Quiero saber más y reservar mi sitio'}
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       )}
