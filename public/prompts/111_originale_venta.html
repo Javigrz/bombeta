@@ -25,7 +25,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ============ HERO ============ */
 /* ============ NAV ============ */
 .top-nav {
   position: fixed;
@@ -54,6 +53,7 @@ body {
 
 .nav-home:hover { color: var(--red); }
 
+/* ============ HERO ============ */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -171,7 +171,41 @@ body {
   margin-bottom: 16px;
 }
 
-/* ============ FREE PROMPTS ============ */
+/* ============ CREDENCIALES ============ */
+.cred-section {
+  padding: 80px 0;
+}
+
+.cred-section h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 32px;
+}
+
+.cred-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.cred-photo {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 16px;
+  filter: grayscale(100%);
+}
+
+.cred-text {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--dark);
+}
+
+/* ============ FREE / HUMANIZADOR ============ */
 .free-section {
   padding: 80px 0;
 }
@@ -194,59 +228,6 @@ body {
   max-width: 520px;
 }
 
-.how-it-works {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin-top: 32px;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.how-step {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--card);
-  border: 1px solid rgba(75,10,35,0.08);
-  border-radius: 10px;
-  padding: 10px 16px;
-}
-
-.how-step-num {
-  width: 22px;
-  height: 22px;
-  background: var(--red);
-  color: white;
-  border-radius: 50%;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.how-step-text {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--dark);
-}
-
-.how-arrow {
-  color: var(--muted);
-  font-size: 14px;
-  padding: 0 2px;
-}
-
-.preview-desc {
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.5;
-  margin-top: 6px;
-  max-width: 560px;
-}
-
 /* Prompt Card */
 .preview-card {
   background: var(--card);
@@ -259,9 +240,8 @@ body {
 .preview-header {
   padding: 20px 24px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -288,29 +268,27 @@ body {
   font-weight: 600;
 }
 
-/* preview-desc defined below in free-intro styles */
-
-.preview-toggle {
-  flex-shrink: 0;
-  padding: 7px 14px;
-  border-radius: 100px;
-  border: 1.5px solid var(--dark);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  color: var(--dark);
-  background: transparent;
-  white-space: nowrap;
-  transition: all 0.2s;
+.preview-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
 }
 
-.preview-header:hover .preview-toggle {
-  background: var(--dark);
-  color: var(--cream);
+.preview-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: all 0.3s;
 }
 
 .preview-card.open .preview-toggle {
+  transform: rotate(45deg);
   background: var(--dark);
   color: var(--cream);
 }
@@ -377,125 +355,248 @@ body {
   background: #2d8a4e;
 }
 
-/* ============ TRANSITION ============ */
-.transition-band {
-  padding: 80px 0;
+/* ============ BEFORE / AFTER COMPARE ============ */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.compare-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.compare-label.before { color: var(--muted); }
+.compare-label.after { color: var(--red); }
+
+.compare-img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  cursor: zoom-in;
+  box-shadow: 0 4px 24px rgba(75,10,35,0.10);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.compare-img:hover {
+  transform: scale(1.015);
+  box-shadow: 0 8px 32px rgba(75,10,35,0.18);
+}
+
+/* ============ LIGHTBOX ============ */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  padding: 24px;
+}
+
+.lightbox.show { display: flex; }
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 10px;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* ============ EXTRA PROMPTS (comprimidos) ============ */
+.prompts-bridge {
+  margin-bottom: 24px;
+  padding-top: 8px;
+}
+
+.prompts-bridge p {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.prompts-bridge strong {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.preview-card--sm .preview-header {
+  padding: 14px 20px;
+}
+
+.preview-card--sm .preview-title {
+  font-size: 15px;
+}
+
+.preview-card--sm .preview-num {
+  font-size: 11px;
+}
+
+.preview-card--sm .preview-desc {
+  font-size: 12px;
+}
+
+/* ============ MINI CTA ============ */
+.mini-cta {
+  background: var(--cream);
+  color: var(--dark);
+  padding: 48px 0;
   text-align: center;
+  border-top: 1px solid rgba(75,10,35,0.08);
+  border-bottom: 1px solid rgba(75,10,35,0.08);
+}
+
+.mini-cta-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.mini-cta h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(26px, 5vw, 40px);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.mini-cta p {
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+
+/* ============ TESTIMONIOS (MARQUEE) ============ */
+.testimonios-section {
+  padding: 80px 0 88px;
+  background: var(--dark);
+  overflow: hidden;
   position: relative;
 }
 
-.transition-band h2 {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(32px, 6vw, 56px);
-  font-weight: 400;
-  line-height: 1.1;
-  margin-bottom: 16px;
+.testimonios-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(254,70,41,0.05) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-.transition-band h2 em {
+.testi-head {
+  text-align: center;
+  padding: 0 24px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.testi-head .section-label {
+  color: rgba(254,70,41,0.85);
+}
+
+.testi-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(52px, 10vw, 96px);
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 0.95;
+  margin-top: 12px;
+  letter-spacing: -1px;
+}
+
+.testi-title em {
   font-style: italic;
   color: var(--red);
 }
 
-.transition-band p {
-  color: var(--muted);
-  font-size: 17px;
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-/* ============ COLLECTION OVERVIEW ============ */
-.collection {
-  padding: 0 0 80px;
-}
-
-.sec-card {
-  background: var(--card);
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 16px;
-  border: 1px solid rgba(75,10,35,0.05);
-}
-
-.sec-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  font-weight: 600;
-  font-size: 15px;
-  border-bottom: 1px solid rgba(75,10,35,0.05);
-}
-
-.sec-icon { font-size: 18px; }
-
-.sec-name { flex: 1; }
-
-.sec-count {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--red);
-  font-weight: 600;
-  background: rgba(254,70,41,0.08);
-  padding: 4px 10px;
-  border-radius: 100px;
-}
-
-.sec-titles {
-  padding: 8px 20px 12px;
-}
-
-.title-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 8px 0;
-  font-size: 14px;
-  border-bottom: 1px solid rgba(75,10,35,0.04);
-}
-
-.title-row:last-child { border-bottom: none; }
-
-.title-icon {
-  font-size: 12px;
-  flex-shrink: 0;
-  width: 18px;
-  text-align: center;
-  margin-top: 2px;
-}
-
-.title-content {
+.marquee-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 14px;
+  position: relative;
 }
 
-.title-text {
-  color: var(--dark);
-  font-weight: 500;
-  line-height: 1.3;
+.marquee-wrapper::before,
+.marquee-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.title-desc {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.5;
-  font-weight: 400;
+.marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--dark) 15%, transparent);
 }
 
-.title-row.locked {
-  opacity: 0.5;
+.marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--dark) 15%, transparent);
 }
 
-.title-text-blur {
-  filter: blur(3px);
-  user-select: none;
-  color: var(--dark);
+.marquee-track {
+  overflow: hidden;
 }
 
-.title-row.locked .title-icon {
-  filter: none;
-  opacity: 0.7;
+.marquee-track:hover .marquee-inner {
+  animation-play-state: paused;
+}
+
+.marquee-inner {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  will-change: transform;
+}
+
+.marquee-left {
+  animation: marqueeLeft 42s linear infinite;
+}
+
+.marquee-right {
+  animation: marqueeRight 42s linear infinite;
+}
+
+@keyframes marqueeLeft {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeRight {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.marquee-img {
+  height: 256px;
+  width: auto;
+  border-radius: 12px;
+  display: block;
+  cursor: zoom-in;
+  flex-shrink: 0;
+  border: 1px solid rgba(250,245,235,0.07);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.marquee-img:hover {
+  transform: scale(1.07) translateY(-8px);
+  box-shadow: 0 28px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(254,70,41,0.35);
+  border-color: rgba(254,70,41,0.4);
+  position: relative;
+  z-index: 3;
 }
 
 /* ============ BOOKS CREDIBILITY ============ */
@@ -547,6 +648,115 @@ body {
   font-weight: 500;
   color: rgba(250,245,235,0.75);
   white-space: nowrap;
+}
+
+/* ============ CTA INTERMEDIO ============ */
+.cta-mid {
+  background: var(--cream);
+  color: var(--dark);
+  padding: 80px 0;
+  text-align: center;
+  border-top: 1px solid rgba(75,10,35,0.08);
+  border-bottom: 1px solid rgba(75,10,35,0.08);
+}
+
+.cta-mid h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.cta-mid p {
+  color: var(--muted);
+  margin-bottom: 32px;
+  font-size: 16px;
+}
+
+/* ============ COLLECTION OVERVIEW ============ */
+.collection {
+  padding: 80px 0;
+}
+
+.collection .section-label {
+  margin-bottom: 24px;
+}
+
+.sec-card {
+  background: var(--card);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid rgba(75,10,35,0.05);
+}
+
+.sec-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(75,10,35,0.05);
+}
+
+.sec-icon { font-size: 18px; }
+
+.sec-name { flex: 1; }
+
+.sec-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--red);
+  font-weight: 600;
+  background: rgba(254,70,41,0.08);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.sec-titles {
+  padding: 8px 20px 12px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 14px;
+}
+
+.title-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+}
+
+.title-text { color: var(--dark); }
+
+.title-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.title-row.locked {
+  opacity: 0.5;
+}
+
+.title-text-blur {
+  filter: blur(3px);
+  user-select: none;
+  color: var(--dark);
+}
+
+.title-row.locked .title-icon {
+  filter: none;
+  opacity: 0.7;
 }
 
 /* ============ PRICING ============ */
@@ -641,6 +851,28 @@ body {
   box-shadow: 0 8px 24px rgba(254,70,41,0.3);
 }
 
+.cta-buy-btn {
+  display: inline-block;
+  padding: 18px 40px;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  text-align: center;
+}
+
+.cta-buy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(254,70,41,0.35);
+}
+
 /* ============ FOOTER ============ */
 .footer {
   padding: 40px 24px;
@@ -673,13 +905,7 @@ body {
   color: var(--cream);
   font-weight: 600;
   font-size: 15px;
-}
-
-.sticky-price small {
-  display: block;
-  font-size: 11px;
-  color: rgba(250,245,235,0.5);
-  font-weight: 400;
+  letter-spacing: 0.5px;
 }
 
 .sticky-btn {
@@ -704,10 +930,18 @@ body {
 @media (max-width: 640px) {
   .hero { min-height: 85vh; padding: 90px 20px 32px; }
   .section-wrap { padding: 0 20px; }
+  .cred-section { padding: 60px 0; }
+  .cred-grid { grid-template-columns: 1fr; }
+  .cred-photo { width: 140px; height: 140px; margin: 0 auto; display: block; }
   .free-section { padding: 60px 0; }
-  .transition-band { padding: 60px 0; }
-  .collection { padding: 0 0 60px; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .testimonios-section { padding: 60px 0 72px; }
+  .testi-head { padding: 0 20px 40px; }
+  .marquee-img { height: 180px; }
+  .marquee-wrapper::before, .marquee-wrapper::after { width: 48px; }
   .books-section { padding: 60px 0; }
+  .cta-mid { padding: 60px 0; }
+  .collection { padding: 60px 0; }
   .pricing { padding: 60px 0; }
   .price-card { padding: 32px 28px; }
   .price-amount { font-size: 52px; }
@@ -715,6 +949,11 @@ body {
   .prompt-code { font-size: 12px; padding: 16px; }
   .sec-header { padding: 14px 16px; font-size: 14px; }
   .sec-titles { padding: 6px 16px 10px; }
+  .cta-buy-btn { width: 100%; padding: 16px 24px; }
+}
+
+@media (min-width: 641px) {
+  .reviews-carousel { display: none; }
 }
 </style>
 </head>
@@ -729,48 +968,45 @@ body {
 </nav>
 
 <!-- HERO -->
-<div class="hero">
+<div class="hero" id="hero">
   <div class="hero-bg">
     <img src="/111.svg" alt="" style="width: clamp(300px, 60vw, 800px); height: auto; opacity: 0.05;" />
   </div>
   <img src="/111_originale.svg" alt="111 Originale" class="hero-product-logo" />
   <h1>111 prompts que<br><em>realmente</em> funcionan</h1>
   <p class="hero-sub">No son prompts genéricos. Son sistemas completos, basados en +25 de los mejores libros de negocios, productividad y finanzas del mundo.</p>
-  <a href="#free" class="hero-arrow">↓</a>
+  <a href="#humanizador" class="hero-arrow">↓</a>
 </div>
 
-<!-- FREE PROMPTS -->
-<div class="free-section" id="free">
+<!-- CREDENCIALES -->
+<div class="cred-section" id="credenciales">
+  <div class="section-wrap">
+    <span class="section-label">Quién hay detrás</span>
+    <div class="cred-grid">
+      <img src="/foto_javigil.jpg" alt="Javi Gil" class="cred-photo" />
+      <p class="cred-text">Monté mi propia consultora de IA cuando nadie hablaba de esto. Después me dediqué a programar y crear departamentos de inteligencia artificial desde cero en algunas de las empresas más grandes del mundo. Hoy lidero la IA de préstamos de un banco europeo para dos países enteros. Todo, mientras sigo con mis empresas, de IA claro.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO DEL HUMANIZADOR -->
+<div class="free-section" id="humanizador">
   <div class="section-wrap">
     <div class="free-intro">
-      <span class="section-label">Pruébalos ahora, gratis</span>
-      <h2>Abre tu IA. Copia.<br>Pega. <em>Ya.</em></h2>
-      <p>No hay que configurar nada, no hay curva de aprendizaje. Cada prompt es un sistema completo: lo copias, lo pegas en ChatGPT, Claude o cualquier IA, y obtienes algo que de verdad sirve.</p>
-      <div class="how-it-works">
-        <div class="how-step">
-          <div class="how-step-num">1</div>
-          <span class="how-step-text">Elige el prompt</span>
-        </div>
-        <div class="how-step">
-          <div class="how-step-num">2</div>
-          <span class="how-step-text">Cópialo y pégalo en tu IA</span>
-        </div>
-        <div class="how-step">
-          <div class="how-step-num">3</div>
-          <span class="how-step-text">Obtén el resultado</span>
-        </div>
-      </div>
+      <span class="section-label">Prueba este gratis</span>
+      <h2>Humaniza tu IA</h2>
+      <p>El prompt que elimina el tono robótico de tu IA de golpe. Cópialo y pégalo al principio de cualquier conversación.</p>
     </div>
 
-    <!-- PROMPT 001 -->
-    <div class="preview-card" id="pc001">
+    <!-- PROMPT 001 — abierto por defecto -->
+    <div class="preview-card open" id="pc001">
       <div class="preview-header" onclick="togglePreview('pc001')">
         <div class="preview-meta">
           <span class="preview-num">PROMPT 001</span>
           <span class="preview-title">Humaniza tu IA</span>
-          <span class="preview-desc">Dale a tu IA una personalidad real: directa, honesta, sin validaciones vacías ni guiones corporativos. La IA que siempre quisiste tener. Pégalo una vez y cambia todas tus conversaciones para siempre.</span>
+          <span class="preview-desc">Habla como una persona real. Sin emojis, sin guiones largos (—), sin "¡Qué gran pregunta!". Directo, honesto, y que te desafíe cuando te lo mereces.</span>
         </div>
-        <div class="preview-toggle">Ver prompt completo ↓</div>
+        <div class="preview-toggle">+</div>
       </div>
       <div class="preview-body">
         <div class="preview-content">
@@ -999,15 +1235,38 @@ con la información que tienes y luego, si quieres, matiza.
       </div>
     </div>
 
+    <!-- BEFORE / AFTER -->
+    <div class="compare-grid">
+      <div>
+        <div class="compare-label before">Sin el prompt</div>
+        <img src="/humanizador/antes_humanizar.png" alt="Sin el prompt humanizador" class="compare-img" onclick="openLightbox(this.src)" />
+      </div>
+      <div>
+        <div class="compare-label after">Con el prompt</div>
+        <img src="/humanizador/despues_humanizar.png" alt="Con el prompt humanizador" class="compare-img" onclick="openLightbox(this.src)" />
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- OTROS DOS PROMPTS -->
+<div style="padding: 0 0 48px;">
+  <div class="section-wrap">
+
+    <div class="prompts-bridge">
+      <p>Aquí tienes <strong>otros dos más</strong> para que los pruebes ahora mismo.</p>
+    </div>
+
     <!-- PROMPT 008 -->
-    <div class="preview-card" id="pc008">
+    <div class="preview-card preview-card--sm" id="pc008">
       <div class="preview-header" onclick="togglePreview('pc008')">
         <div class="preview-meta">
           <span class="preview-num">PROMPT 008</span>
           <span class="preview-title">80/20 para Aprender Cualquier Cosa</span>
-          <span class="preview-desc">Dile qué quieres aprender y cuánto tiempo tienes. Te devuelve el camino más corto para ser funcional en días, no en meses. Sin planes académicos. Sin teoría. Solo lo que de verdad necesitas saber.</span>
+          <span class="preview-desc">Principio de Pareto · Tim Ferriss. El 20% del aprendizaje que te da el 80% del resultado.</span>
         </div>
-        <div class="preview-toggle">Ver prompt completo ↓</div>
+        <div class="preview-toggle">+</div>
       </div>
       <div class="preview-body">
         <div class="preview-content">
@@ -1081,14 +1340,14 @@ día 1, no leer teoría durante semanas.
     </div>
 
     <!-- PROMPT 046 -->
-    <div class="preview-card" id="pc046">
+    <div class="preview-card preview-card--sm" id="pc046">
       <div class="preview-header" onclick="togglePreview('pc046')">
         <div class="preview-meta">
           <span class="preview-num">PROMPT 046</span>
           <span class="preview-title">Storytelling que Vende sin Vender</span>
-          <span class="preview-desc">Genera guiones para vídeo, reel o post que convierten sin que parezca que estás vendiendo. Describes tu producto, tu audiencia y el formato, y la IA escribe la historia. La gente compra sin saber por qué.</span>
+          <span class="preview-desc">Fórmula ADP de Fer Miralles. Después-Antes-Puente. Venta invisible a través de storytelling.</span>
         </div>
-        <div class="preview-toggle">Ver prompt completo ↓</div>
+        <div class="preview-toggle">+</div>
       </div>
       <div class="preview-body">
         <div class="preview-content">
@@ -1240,18 +1499,92 @@ cerebro anticipe el resultado.
   </div>
 </div>
 
-<!-- TRANSITION -->
-<div class="transition-band">
+<!-- MINI CTA -->
+<div class="mini-cta">
   <div class="section-wrap">
-    <h2>Estos son 3 de <em><img src="/111.svg" alt="111" class="svg-111-inline" /></em></h2>
-    <p>La colección completa cubre productividad, finanzas, marketing, datos, creatividad y más. Mira lo que hay dentro.</p>
+    <p class="mini-cta-eyebrow">3 de 111</p>
+    <h3>Ya probaste 3. Los otros 108 también son así.</h3>
+    <p>Productividad, finanzas, marketing, creatividad y más. A 0,10€ el prompt.</p>
+    <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="cta-buy-btn">DESBLOQUEAR LOS 111 PROMPTS →</a>
   </div>
 </div>
 
-<!-- COLLECTION OVERVIEW -->
+<!-- TESTIMONIOS -->
+<section class="testimonios-section" id="testimonios">
+
+  <div class="testi-head">
+    <span class="section-label">Lo que dicen</span>
+    <h2 class="testi-title">Lo dicen <em>ellos.</em><br>No nosotros.</h2>
+  </div>
+
+  <div class="marquee-wrapper">
+    <!-- Fila 1: izquierda → -->
+    <div class="marquee-track">
+      <div class="marquee-inner marquee-left">
+        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <!-- duplicado para loop seamless -->
+        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+      </div>
+    </div>
+    <!-- Fila 2: ← derecha (offset) -->
+    <div class="marquee-track">
+      <div class="marquee-inner marquee-right">
+        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <!-- duplicado para loop seamless -->
+        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- CTA POST-TESTIMONIOS -->
+<div class="cta-mid" id="cta-post-testi">
+  <div class="section-wrap">
+    <h2>111 prompts. 11,1€.</h2>
+    <p>Un prompt cuesta menos que un café.</p>
+    <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="cta-buy-btn">DESBLOQUEAR LOS 111 PROMPTS</a>
+  </div>
+</div>
+
+<!-- LIBROS -->
+<div class="books-section">
+  <div class="section-wrap">
+    <span class="section-label">No son prompts inventados</span>
+    <h2>Basados en <em>+25 de los mejores libros</em> de negocios, productividad y finanzas</h2>
+    <div class="books-grid">
+      <span class="book-pill">Rich Dad Poor Dad</span><span class="book-pill">The Psychology of Money</span><span class="book-pill">I Will Teach You to Be Rich</span><span class="book-pill">The Intelligent Investor</span><span class="book-pill">Atomic Habits</span><span class="book-pill">Deep Work</span><span class="book-pill">The 7 Habits</span><span class="book-pill">Thinking Fast and Slow</span><span class="book-pill">Influence</span><span class="book-pill">$100M Offers</span><span class="book-pill">Never Split the Difference</span><span class="book-pill">The Lean Startup</span><span class="book-pill">Blue Ocean Strategy</span><span class="book-pill">Contagious</span><span class="book-pill">Building a StoryBrand</span><span class="book-pill">Ultralearning</span><span class="book-pill">Mindset</span><span class="book-pill">Grit</span><span class="book-pill">Peak</span><span class="book-pill">Range</span><span class="book-pill">Make It Stick</span><span class="book-pill">The Art of Learning</span><span class="book-pill">Steal Like an Artist</span><span class="book-pill">Antifragile</span><span class="book-pill">The 4-Hour Workweek</span><span class="book-pill">Essentialism</span><span class="book-pill">The ONE Thing</span><span class="book-pill">Eat That Frog</span><span class="book-pill">Getting Things Done</span>
+    </div>
+  </div>
+</div>
+
+<!-- CTA INTERMEDIO -->
+<div class="cta-mid" id="cta-mid">
+  <div class="section-wrap">
+    <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="cta-buy-btn">DESBLOQUEAR LOS 111 PROMPTS</a>
+  </div>
+</div>
+
+<!-- CATÁLOGO DE CATEGORÍAS -->
 <div class="collection">
   <div class="section-wrap">
-    <span class="section-label">La colección completa</span>
+    <span class="section-label">Mira lo que hay dentro</span>
       <div class="sec-card">
         <div class="sec-header">
           <span class="sec-icon">⚡</span>
@@ -1261,10 +1594,14 @@ cerebro anticipe el resultado.
         <div class="sec-titles">
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">Matriz Eisenhower</span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">Sprint de Trabajo Profundo</span></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Eat That Frog · Brian Tracy</span><span class="title-desc">La tarea más difícil primero. Dile cuál tienes pendiente y te da un plan para ejecutarla antes de que nada te distraiga.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Essentialism · Greg McKeown</span><span class="title-desc">Elimina lo que no importa. La IA analiza tu lista y te dice qué sobra, qué delegar y en qué concentrarte de verdad.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Constructor de Hábitos · James Clear</span><span class="title-desc">Diseña cualquier hábito con el sistema de Atomic Habits: señal, antojo, respuesta, recompensa. Sin fuerza de voluntad.</span></div></div>
-        <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 17 prompts más</span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Eat That Frog · Brian Tracy<span class="title-sub">Haz lo más difícil primero. El resto del día parece fácil después.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Essentialism · Greg McKeown<span class="title-sub">Haz menos, pero mucho mejor. Identifica lo único que importa de verdad y elimina todo lo que te distrae de ello.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Los 7 Hábitos de Covey<span class="title-sub">Los hábitos que tienen en común las personas más efectivas del mundo.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Negociador de Sueldo<span class="title-sub">Pide más dinero en tu trabajo sin incomodidad ni torpeza.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Constructor de Hábitos · James Clear<span class="title-sub">Crea o rompe cualquier hábito con el método exacto de Atomic Habits.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Antifragile · Nassim Taleb<span class="title-sub">Convierte la incertidumbre y los imprevistos en ventajas a tu favor.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">The 4-Hour Workweek · Tim Ferriss<span class="title-sub">Identifica qué te come el tiempo sin resultado y elimínalo.</span></span></div>
+        <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 13 prompts más</span></div>
         </div>
       </div>
       <div class="sec-card">
@@ -1274,10 +1611,16 @@ cerebro anticipe el resultado.
           <span class="sec-count">22</span>
         </div>
         <div class="sec-titles">
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Plan de Experto en 90 Días</span><span class="title-desc">Un plan de estudio intensivo para dominar cualquier habilidad en tres meses. Con hitos semanales y métricas de progreso reales.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Simulador de Entrevista</span><span class="title-desc">Prepara cualquier entrevista de trabajo con preguntas reales del sector y feedback honesto sobre tus respuestas.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Negociación FBI · Chris Voss</span><span class="title-desc">Practica negociaciones difíciles con las técnicas de Never Split the Difference. Sueldos, contratos, proveedores.</span></div></div>
-        <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 19 prompts más</span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Plan de Experto en 90 Días<span class="title-sub">Aprende cualquier habilidad hasta nivel avanzado en 3 meses con un plan claro.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Técnica Feynman<span class="title-sub">Si no puedes explicarlo de forma simple, es que aún no lo entiendes. Esto te ayuda a entenderlo de verdad.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Simulador de Entrevista<span class="title-sub">Practica entrevistas de trabajo con feedback honesto antes del día real.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Negociación FBI · Chris Voss<span class="title-sub">Consigue lo que quieres sin imponer. Las técnicas del principal negociador del FBI.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Ultralearning · Scott Young<span class="title-sub">Aprende más rápido que nadie con un método de aprendizaje intensivo y estructurado.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Mindset · Carol Dweck<span class="title-sub">Rompe la creencia de que eres como eres y punto. Todo se puede mejorar.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Grit · Angela Duckworth<span class="title-sub">Construye la resistencia mental que diferencia a los que llegan lejos de los que se rinden.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Peak: Práctica Deliberada<span class="title-sub">Mejora de verdad en cualquier cosa. No practicando más, sino practicando mejor.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Range · David Epstein<span class="title-sub">Por qué saber de muchas cosas te da ventaja en el mundo actual frente a los hiperespecialistas.</span></span></div>
+        <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 13 prompts más</span></div>
         </div>
       </div>
       <div class="sec-card">
@@ -1287,10 +1630,14 @@ cerebro anticipe el resultado.
           <span class="sec-count">16</span>
         </div>
         <div class="sec-titles">
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Activos vs Pasivos · Kiyosaki</span><span class="title-desc">Analiza tu situación financiera actual, separa activos de pasivos reales y obtén un plan para empezar a construir riqueza.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Automatiza tus Finanzas · Ramit Sethi</span><span class="title-desc">El sistema para pagar, ahorrar e invertir en automático. Sin disciplina diaria. Sin fuerza de voluntad. Solo sistema.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Plan de Salida del Trabajo</span><span class="title-desc">Diseña tu transición de empleado a independiente paso a paso. Con números reales, fechas y plan de contingencia.</span></div></div>
-        <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 13 prompts más</span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Activos vs Pasivos · Kiyosaki<span class="title-sub">Qué diferencia lo que te hace más rico de lo que solo te hace gastar más.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Psicología del Dinero · Morgan Housel<span class="title-sub">Las trampas mentales que te hacen tomar malas decisiones con el dinero sin darte cuenta.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Automatiza tus Finanzas · Ramit Sethi<span class="title-sub">Organiza tu dinero para que trabaje solo sin tener que pensar en ello cada mes.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Inversión en Valor · Benjamin Graham<span class="title-sub">Invierte en bolsa con criterio propio, no guiado por el miedo o la euforia del momento.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Lean Startup · Eric Ries<span class="title-sub">Valida tu idea de negocio antes de gastar meses de tiempo y dinero en ella.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Blue Ocean Strategy<span class="title-sub">Deja de competir en mercados saturados. Encuentra tu propio espacio donde no haya competencia.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Plan de Salida del Trabajo<span class="title-sub">Diseña tu transición de empleado a independiente paso a paso. Con números reales, fechas y plan de contingencia.</span></span></div>
+        <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 9 prompts más</span></div>
         </div>
       </div>
       <div class="sec-card">
@@ -1300,10 +1647,10 @@ cerebro anticipe el resultado.
           <span class="sec-count">10</span>
         </div>
         <div class="sec-titles">
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Los 6 Principios de Cialdini</span><span class="title-desc">Aplica reciprocidad, escasez, autoridad y los otros tres principios a tu comunicación. Persuasión ética que realmente funciona.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Oferta Irresistible · Alex Hormozi</span><span class="title-desc">Diseña una oferta tan buena que sería absurdo decir que no. El framework de $100M Offers adaptado a tu negocio concreto.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Contagious · Jonah Berger</span><span class="title-desc">Por qué algunas cosas se comparten y otras no. La IA analiza tu contenido y te dice cómo hacerlo viral de forma natural.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Framework StoryBrand · Donald Miller</span><span class="title-desc">Posiciona a tu cliente como el héroe y a tu marca como el guía. Copy que conecta y convierte desde el primer párrafo.</span></div></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Los 6 Principios de Cialdini<span class="title-sub">Aplica reciprocidad, escasez, autoridad y los otros tres principios a tu comunicación. Persuasión ética que realmente funciona.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Oferta Irresistible · Alex Hormozi<span class="title-sub">Diseña una oferta tan buena que la gente se sienta tonta si la rechaza.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Contagious · Jonah Berger<span class="title-sub">Por qué algunas ideas y productos se propagan solos y cómo conseguir que el tuyo también lo haga.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Framework StoryBrand · Donald Miller<span class="title-sub">Explica lo que vendes de forma clara para que la gente entienda de inmediato por qué lo necesita.</span></span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">Script de Ventas por DM</span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 5 prompts más</span></div>
         </div>
@@ -1317,8 +1664,8 @@ cerebro anticipe el resultado.
         <div class="sec-titles">
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">Fórmulas de Excel / Sheets</span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">Dashboard de KPIs</span></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Predictor de Tendencias</span><span class="title-desc">Analiza señales del mercado y comportamiento de usuarios para anticipar hacia dónde va tu industria antes que la competencia.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Calculadora de ROI</span><span class="title-desc">Introduce tus números y obtén un análisis claro del retorno de cualquier inversión, campaña o decisión de negocio.</span></div></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Predictor de Tendencias<span class="title-sub">Anticipa hacia dónde va tu sector antes que tu competencia.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Calculadora de ROI<span class="title-sub">Calcula si una inversión o acción realmente va a merecer la pena antes de hacerla.</span></span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 11 prompts más</span></div>
         </div>
       </div>
@@ -1329,9 +1676,9 @@ cerebro anticipe el resultado.
           <span class="sec-count">15</span>
         </div>
         <div class="sec-titles">
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Life Architect</span><span class="title-desc">Diseña tu vida ideal con estructura. Valores, objetivos, trade-offs y un plan para construirla de forma deliberada, no por accidente.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Personal Brand Builder</span><span class="title-desc">Define qué representas, a quién ayudas y cómo comunicarlo. Para destacar en tu industria sin sonar a todos los demás.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Steal Like an Artist · Austin Kleon</span><span class="title-desc">Encuentra tus influencias, combínalas de formas nuevas y desarrolla un estilo creativo que sea únicamente tuyo.</span></div></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Life Architect<span class="title-sub">Diseña tu vida ideal con criterio concreto, no con deseos vagos.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Personal Brand Builder<span class="title-sub">Construye una marca personal que abra puertas sin tener que buscarlas.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Steal Like an Artist · Austin Kleon<span class="title-sub">Cómo inspirarte en lo que ya existe y convertirlo en algo completamente tuyo.</span></span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">Brainstorm en Esteroides</span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 11 prompts más</span></div>
         </div>
@@ -1343,15 +1690,15 @@ cerebro anticipe el resultado.
           <span class="sec-count">7</span>
         </div>
         <div class="sec-titles">
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Generador de Hooks Virales</span><span class="title-desc">Los primeros 3 segundos que hacen que la gente se quede. Para cualquier tema, formato y plataforma. Listo para usar.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Guión para Reels / TikTok</span><span class="title-desc">Describe tu idea y obtienes un guión completo con hook, desarrollo y CTA. Listo para grabar en minutos.</span></div></div>
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">Repurposer: 1 Contenido → 10</span><span class="title-desc">Convierte un solo contenido largo en 10 piezas distintas para distintas plataformas. Sin repetirte. Sin trabajo extra.</span></div></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Generador de Hooks Virales<span class="title-sub">Crea los primeros 3 segundos que hacen que la gente se quede en lugar de pasar.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Guión para Reels / TikTok<span class="title-sub">Estructura un vídeo corto que enganche de principio a fin y llegue a más personas.</span></span></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">Repurposer: 1 Contenido → 10<span class="title-sub">Convierte una sola idea en 10 formatos de contenido distintos sin empezar de cero.</span></span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">Figura de Acción</span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">Estilo Ghibli</span></div>
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 2 prompts más</span></div>
         </div>
       </div>
-    
+
     <!-- Bonus -->
     <div class="sec-card">
       <div class="sec-header">
@@ -1360,19 +1707,8 @@ cerebro anticipe el resultado.
         <span class="sec-count">1</span>
       </div>
       <div class="sec-titles">
-        <div class="title-row"><span class="title-icon">→</span><div class="title-content"><span class="title-text">El Prompt que Crea Prompts</span><span class="title-desc">El meta-prompt. Descríbele cualquier tarea y te genera el prompt perfecto para esa situación. Multiplica el valor de toda la colección.</span></div></div>
+        <div class="title-row"><span class="title-icon">→</span><span class="title-text">El Prompt que Crea Prompts<span class="title-sub">Un prompt que genera prompts personalizados para cualquier tarea que necesites.</span></span></div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- BOOKS CREDIBILITY -->
-<div class="books-section">
-  <div class="section-wrap">
-    <span class="section-label">No son prompts inventados</span>
-    <h2>Basados en <em>+25 de los mejores libros</em> de negocios, productividad y finanzas</h2>
-    <div class="books-grid">
-      <span class="book-pill">Rich Dad Poor Dad</span><span class="book-pill">The Psychology of Money</span><span class="book-pill">I Will Teach You to Be Rich</span><span class="book-pill">The Intelligent Investor</span><span class="book-pill">Atomic Habits</span><span class="book-pill">Deep Work</span><span class="book-pill">The 7 Habits</span><span class="book-pill">Thinking Fast and Slow</span><span class="book-pill">Influence</span><span class="book-pill">$100M Offers</span><span class="book-pill">Never Split the Difference</span><span class="book-pill">The Lean Startup</span><span class="book-pill">Blue Ocean Strategy</span><span class="book-pill">Contagious</span><span class="book-pill">Building a StoryBrand</span><span class="book-pill">Ultralearning</span><span class="book-pill">Mindset</span><span class="book-pill">Grit</span><span class="book-pill">Peak</span><span class="book-pill">Range</span><span class="book-pill">Make It Stick</span><span class="book-pill">The Art of Learning</span><span class="book-pill">Steal Like an Artist</span><span class="book-pill">Antifragile</span><span class="book-pill">The 4-Hour Workweek</span><span class="book-pill">Essentialism</span><span class="book-pill">The ONE Thing</span><span class="book-pill">Eat That Frog</span><span class="book-pill">Getting Things Done</span>
     </div>
   </div>
 </div>
@@ -1403,24 +1739,23 @@ cerebro anticipe el resultado.
   <a href="/" style="display: inline-block; margin-bottom: 14px; text-decoration: none;">
     <img src="/javigil.svg" alt="javigil" style="height: 20px; width: auto; opacity: 0.45;" />
   </a>
-  <p>© 2026 · <a href="https://www.instagram.com/javiggil/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">@javiggil</a></p>
+  <p>© 2026 · @javiggil</p>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="Imagen ampliada" />
 </div>
 
 <!-- STICKY CTA -->
 <div class="sticky-cta" id="stickyCta">
-  <div class="sticky-price">
-    11,1€
-    <small>0,1€ por prompt</small>
-  </div>
+  <div class="sticky-price">111 PROMPTS · 11,1€</div>
   <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="sticky-btn">DESBLOQUEAR TODO</a>
 </div>
 
 <script>
 function togglePreview(id) {
-  const card = document.getElementById(id);
-  card.classList.toggle('open');
-  const btn = card.querySelector('.preview-toggle');
-  btn.textContent = card.classList.contains('open') ? 'Cerrar ↑' : 'Ver prompt completo ↓';
+  document.getElementById(id).classList.toggle('open');
 }
 
 // Placeholders: borrar al hacer click, restaurar si se deja vacío
@@ -1460,20 +1795,33 @@ function copyText(btn, sourceId) {
   });
 }
 
-// Sticky CTA: show after scrolling past free prompts
-const freeSection = document.getElementById('free');
+// Lightbox
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  document.getElementById('lightbox-img').src = '';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// Sticky CTA: show after scrolling past hero, hide when pricing is visible
+const heroSection = document.getElementById('hero');
 const stickyCta = document.getElementById('stickyCta');
 const pricingSection = document.getElementById('pricing');
 
-const stickyObserver = new IntersectionObserver((entries) => {
-  // Show when free section is out of view
-}, { threshold: 0 });
-
 window.addEventListener('scroll', () => {
-  const freeBottom = freeSection.getBoundingClientRect().bottom;
+  const heroBottom = heroSection.getBoundingClientRect().bottom;
   const pricingTop = pricingSection.getBoundingClientRect().top;
-  
-  if (freeBottom < 0 && pricingTop > window.innerHeight) {
+
+  if (heroBottom < 0 && pricingTop > window.innerHeight) {
     stickyCta.classList.add('show');
   } else {
     stickyCta.classList.remove('show');

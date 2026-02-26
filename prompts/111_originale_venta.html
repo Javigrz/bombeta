@@ -25,7 +25,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ============ HERO ============ */
 /* ============ NAV ============ */
 .top-nav {
   position: fixed;
@@ -54,6 +53,7 @@ body {
 
 .nav-home:hover { color: var(--red); }
 
+/* ============ HERO ============ */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -171,7 +171,41 @@ body {
   margin-bottom: 16px;
 }
 
-/* ============ FREE PROMPTS ============ */
+/* ============ CREDENCIALES ============ */
+.cred-section {
+  padding: 80px 0;
+}
+
+.cred-section h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 32px;
+}
+
+.cred-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.cred-photo {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 16px;
+  filter: grayscale(100%);
+}
+
+.cred-text {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--dark);
+}
+
+/* ============ FREE / HUMANIZADOR ============ */
 .free-section {
   padding: 80px 0;
 }
@@ -321,113 +355,248 @@ body {
   background: #2d8a4e;
 }
 
-/* ============ TRANSITION ============ */
-.transition-band {
-  padding: 80px 0;
+/* ============ BEFORE / AFTER COMPARE ============ */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.compare-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.compare-label.before { color: var(--muted); }
+.compare-label.after { color: var(--red); }
+
+.compare-img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  cursor: zoom-in;
+  box-shadow: 0 4px 24px rgba(75,10,35,0.10);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.compare-img:hover {
+  transform: scale(1.015);
+  box-shadow: 0 8px 32px rgba(75,10,35,0.18);
+}
+
+/* ============ LIGHTBOX ============ */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  padding: 24px;
+}
+
+.lightbox.show { display: flex; }
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 10px;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* ============ EXTRA PROMPTS (comprimidos) ============ */
+.prompts-bridge {
+  margin-bottom: 24px;
+  padding-top: 8px;
+}
+
+.prompts-bridge p {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.prompts-bridge strong {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.preview-card--sm .preview-header {
+  padding: 14px 20px;
+}
+
+.preview-card--sm .preview-title {
+  font-size: 15px;
+}
+
+.preview-card--sm .preview-num {
+  font-size: 11px;
+}
+
+.preview-card--sm .preview-desc {
+  font-size: 12px;
+}
+
+/* ============ MINI CTA ============ */
+.mini-cta {
+  background: var(--cream);
+  color: var(--dark);
+  padding: 48px 0;
   text-align: center;
+  border-top: 1px solid rgba(75,10,35,0.08);
+  border-bottom: 1px solid rgba(75,10,35,0.08);
+}
+
+.mini-cta-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.mini-cta h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(26px, 5vw, 40px);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.mini-cta p {
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+
+/* ============ TESTIMONIOS (MARQUEE) ============ */
+.testimonios-section {
+  padding: 80px 0 88px;
+  background: var(--dark);
+  overflow: hidden;
   position: relative;
 }
 
-.transition-band h2 {
-  font-family: 'Instrument Serif', serif;
-  font-size: clamp(32px, 6vw, 56px);
-  font-weight: 400;
-  line-height: 1.1;
-  margin-bottom: 16px;
+.testimonios-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(254,70,41,0.05) 0%, transparent 70%);
+  pointer-events: none;
 }
 
-.transition-band h2 em {
+.testi-head {
+  text-align: center;
+  padding: 0 24px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.testi-head .section-label {
+  color: rgba(254,70,41,0.85);
+}
+
+.testi-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(52px, 10vw, 96px);
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 0.95;
+  margin-top: 12px;
+  letter-spacing: -1px;
+}
+
+.testi-title em {
   font-style: italic;
   color: var(--red);
 }
 
-.transition-band p {
-  color: var(--muted);
-  font-size: 17px;
-  max-width: 480px;
-  margin: 0 auto;
+.marquee-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
 }
 
-/* ============ COLLECTION OVERVIEW ============ */
-.collection {
-  padding: 0 0 80px;
+.marquee-wrapper::before,
+.marquee-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.sec-card {
-  background: var(--card);
-  border-radius: 14px;
+.marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--dark) 15%, transparent);
+}
+
+.marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--dark) 15%, transparent);
+}
+
+.marquee-track {
   overflow: hidden;
-  margin-bottom: 16px;
-  border: 1px solid rgba(75,10,35,0.05);
 }
 
-.sec-header {
+.marquee-track:hover .marquee-inner {
+  animation-play-state: paused;
+}
+
+.marquee-inner {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  font-weight: 600;
-  font-size: 15px;
-  border-bottom: 1px solid rgba(75,10,35,0.05);
+  gap: 14px;
+  width: max-content;
+  will-change: transform;
 }
 
-.sec-icon { font-size: 18px; }
-
-.sec-name { flex: 1; }
-
-.sec-count {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--red);
-  font-weight: 600;
-  background: rgba(254,70,41,0.08);
-  padding: 4px 10px;
-  border-radius: 100px;
+.marquee-left {
+  animation: marqueeLeft 42s linear infinite;
 }
 
-.sec-titles {
-  padding: 8px 20px 12px;
+.marquee-right {
+  animation: marqueeRight 42s linear infinite;
 }
 
-.title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px 0;
-  font-size: 14px;
+@keyframes marqueeLeft {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-.title-icon { 
-  font-size: 12px; 
-  flex-shrink: 0;
-  width: 18px;
-  text-align: center;
+@keyframes marqueeRight {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
 }
 
-.title-text { color: var(--dark); }
-
-.title-sub {
+.marquee-img {
+  height: 256px;
+  width: auto;
+  border-radius: 12px;
   display: block;
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 2px;
-  font-weight: 400;
-  line-height: 1.4;
+  cursor: zoom-in;
+  flex-shrink: 0;
+  border: 1px solid rgba(250,245,235,0.07);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease, border-color 0.4s ease;
 }
 
-.title-row.locked {
-  opacity: 0.5;
-}
-
-.title-text-blur {
-  filter: blur(3px);
-  user-select: none;
-  color: var(--dark);
-}
-
-.title-row.locked .title-icon {
-  filter: none;
-  opacity: 0.7;
+.marquee-img:hover {
+  transform: scale(1.07) translateY(-8px);
+  box-shadow: 0 28px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(254,70,41,0.35);
+  border-color: rgba(254,70,41,0.4);
+  position: relative;
+  z-index: 3;
 }
 
 /* ============ BOOKS CREDIBILITY ============ */
@@ -479,6 +648,115 @@ body {
   font-weight: 500;
   color: rgba(250,245,235,0.75);
   white-space: nowrap;
+}
+
+/* ============ CTA INTERMEDIO ============ */
+.cta-mid {
+  background: var(--cream);
+  color: var(--dark);
+  padding: 80px 0;
+  text-align: center;
+  border-top: 1px solid rgba(75,10,35,0.08);
+  border-bottom: 1px solid rgba(75,10,35,0.08);
+}
+
+.cta-mid h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.cta-mid p {
+  color: var(--muted);
+  margin-bottom: 32px;
+  font-size: 16px;
+}
+
+/* ============ COLLECTION OVERVIEW ============ */
+.collection {
+  padding: 80px 0;
+}
+
+.collection .section-label {
+  margin-bottom: 24px;
+}
+
+.sec-card {
+  background: var(--card);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid rgba(75,10,35,0.05);
+}
+
+.sec-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(75,10,35,0.05);
+}
+
+.sec-icon { font-size: 18px; }
+
+.sec-name { flex: 1; }
+
+.sec-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--red);
+  font-weight: 600;
+  background: rgba(254,70,41,0.08);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.sec-titles {
+  padding: 8px 20px 12px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 14px;
+}
+
+.title-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+}
+
+.title-text { color: var(--dark); }
+
+.title-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.title-row.locked {
+  opacity: 0.5;
+}
+
+.title-text-blur {
+  filter: blur(3px);
+  user-select: none;
+  color: var(--dark);
+}
+
+.title-row.locked .title-icon {
+  filter: none;
+  opacity: 0.7;
 }
 
 /* ============ PRICING ============ */
@@ -573,6 +851,28 @@ body {
   box-shadow: 0 8px 24px rgba(254,70,41,0.3);
 }
 
+.cta-buy-btn {
+  display: inline-block;
+  padding: 18px 40px;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  text-align: center;
+}
+
+.cta-buy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(254,70,41,0.35);
+}
+
 /* ============ FOOTER ============ */
 .footer {
   padding: 40px 24px;
@@ -605,13 +905,7 @@ body {
   color: var(--cream);
   font-weight: 600;
   font-size: 15px;
-}
-
-.sticky-price small {
-  display: block;
-  font-size: 11px;
-  color: rgba(250,245,235,0.5);
-  font-weight: 400;
+  letter-spacing: 0.5px;
 }
 
 .sticky-btn {
@@ -636,10 +930,18 @@ body {
 @media (max-width: 640px) {
   .hero { min-height: 85vh; padding: 90px 20px 32px; }
   .section-wrap { padding: 0 20px; }
+  .cred-section { padding: 60px 0; }
+  .cred-grid { grid-template-columns: 1fr; }
+  .cred-photo { width: 140px; height: 140px; margin: 0 auto; display: block; }
   .free-section { padding: 60px 0; }
-  .transition-band { padding: 60px 0; }
-  .collection { padding: 0 0 60px; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .testimonios-section { padding: 60px 0 72px; }
+  .testi-head { padding: 0 20px 40px; }
+  .marquee-img { height: 180px; }
+  .marquee-wrapper::before, .marquee-wrapper::after { width: 48px; }
   .books-section { padding: 60px 0; }
+  .cta-mid { padding: 60px 0; }
+  .collection { padding: 60px 0; }
   .pricing { padding: 60px 0; }
   .price-card { padding: 32px 28px; }
   .price-amount { font-size: 52px; }
@@ -647,6 +949,11 @@ body {
   .prompt-code { font-size: 12px; padding: 16px; }
   .sec-header { padding: 14px 16px; font-size: 14px; }
   .sec-titles { padding: 6px 16px 10px; }
+  .cta-buy-btn { width: 100%; padding: 16px 24px; }
+}
+
+@media (min-width: 641px) {
+  .reviews-carousel { display: none; }
 }
 </style>
 </head>
@@ -661,32 +968,43 @@ body {
 </nav>
 
 <!-- HERO -->
-<div class="hero">
+<div class="hero" id="hero">
   <div class="hero-bg">
     <img src="/111.svg" alt="" style="width: clamp(300px, 60vw, 800px); height: auto; opacity: 0.05;" />
   </div>
   <img src="/111_originale.svg" alt="111 Originale" class="hero-product-logo" />
   <h1>111 prompts que<br><em>realmente</em> funcionan</h1>
   <p class="hero-sub">No son prompts genéricos. Son sistemas completos, basados en +25 de los mejores libros de negocios, productividad y finanzas del mundo.</p>
-  <a href="#free" class="hero-arrow">↓</a>
+  <a href="#humanizador" class="hero-arrow">↓</a>
 </div>
 
-<!-- FREE PROMPTS -->
-<div class="free-section" id="free">
+<!-- CREDENCIALES -->
+<div class="cred-section" id="credenciales">
+  <div class="section-wrap">
+    <span class="section-label">Quién hay detrás</span>
+    <div class="cred-grid">
+      <img src="/foto_javigil.jpg" alt="Javi Gil" class="cred-photo" />
+      <p class="cred-text">Monté mi propia consultora de IA cuando nadie hablaba de esto. Después me dediqué a programar y crear departamentos de inteligencia artificial desde cero en algunas de las empresas más grandes del mundo. Hoy lidero la IA de préstamos de un banco europeo para dos países enteros. Todo, mientras sigo con mis empresas, de IA claro.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DEMO DEL HUMANIZADOR -->
+<div class="free-section" id="humanizador">
   <div class="section-wrap">
     <div class="free-intro">
-      <span class="section-label">Prueba 3 gratis</span>
-      <h2>Copia, pega, y compruébalo tú mismo</h2>
-      <p>Estos son 3 de los 111 prompts de la colección. Pruébalos ahora en ChatGPT, Claude o cualquier IA.</p>
+      <span class="section-label">Prueba este gratis</span>
+      <h2>Humaniza tu IA</h2>
+      <p>El prompt que elimina el tono robótico de tu IA de golpe. Cópialo y pégalo al principio de cualquier conversación.</p>
     </div>
 
-    <!-- PROMPT 001 -->
-    <div class="preview-card" id="pc001">
+    <!-- PROMPT 001 — abierto por defecto -->
+    <div class="preview-card open" id="pc001">
       <div class="preview-header" onclick="togglePreview('pc001')">
         <div class="preview-meta">
           <span class="preview-num">PROMPT 001</span>
           <span class="preview-title">Humaniza tu IA</span>
-          <span class="preview-desc">Humaniza tu IA. Ya no suena a robot.</span>
+          <span class="preview-desc">Habla como una persona real. Sin emojis, sin guiones largos (—), sin "¡Qué gran pregunta!". Directo, honesto, y que te desafíe cuando te lo mereces.</span>
         </div>
         <div class="preview-toggle">+</div>
       </div>
@@ -917,8 +1235,31 @@ con la información que tienes y luego, si quieres, matiza.
       </div>
     </div>
 
+    <!-- BEFORE / AFTER -->
+    <div class="compare-grid">
+      <div>
+        <div class="compare-label before">Sin el prompt</div>
+        <img src="/humanizador/antes_humanizar.png" alt="Sin el prompt humanizador" class="compare-img" onclick="openLightbox(this.src)" />
+      </div>
+      <div>
+        <div class="compare-label after">Con el prompt</div>
+        <img src="/humanizador/despues_humanizar.png" alt="Con el prompt humanizador" class="compare-img" onclick="openLightbox(this.src)" />
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- OTROS DOS PROMPTS -->
+<div style="padding: 0 0 48px;">
+  <div class="section-wrap">
+
+    <div class="prompts-bridge">
+      <p>Aquí tienes <strong>otros dos más</strong> para que los pruebes ahora mismo.</p>
+    </div>
+
     <!-- PROMPT 008 -->
-    <div class="preview-card" id="pc008">
+    <div class="preview-card preview-card--sm" id="pc008">
       <div class="preview-header" onclick="togglePreview('pc008')">
         <div class="preview-meta">
           <span class="preview-num">PROMPT 008</span>
@@ -999,7 +1340,7 @@ día 1, no leer teoría durante semanas.
     </div>
 
     <!-- PROMPT 046 -->
-    <div class="preview-card" id="pc046">
+    <div class="preview-card preview-card--sm" id="pc046">
       <div class="preview-header" onclick="togglePreview('pc046')">
         <div class="preview-meta">
           <span class="preview-num">PROMPT 046</span>
@@ -1158,18 +1499,92 @@ cerebro anticipe el resultado.
   </div>
 </div>
 
-<!-- TRANSITION -->
-<div class="transition-band">
+<!-- MINI CTA -->
+<div class="mini-cta">
   <div class="section-wrap">
-    <h2>Estos son 3 de <em><img src="/111.svg" alt="111" class="svg-111-inline" /></em></h2>
-    <p>La colección completa cubre productividad, finanzas, marketing, datos, creatividad y más. Mira lo que hay dentro.</p>
+    <p class="mini-cta-eyebrow">3 de 111</p>
+    <h3>Ya probaste 3. Los otros 108 también son así.</h3>
+    <p>Productividad, finanzas, marketing, creatividad y más. A 0,10€ el prompt.</p>
+    <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="cta-buy-btn">DESBLOQUEAR LOS 111 PROMPTS →</a>
   </div>
 </div>
 
-<!-- COLLECTION OVERVIEW -->
+<!-- TESTIMONIOS -->
+<section class="testimonios-section" id="testimonios">
+
+  <div class="testi-head">
+    <span class="section-label">Lo que dicen</span>
+    <h2 class="testi-title">Lo dicen <em>ellos.</em><br>No nosotros.</h2>
+  </div>
+
+  <div class="marquee-wrapper">
+    <!-- Fila 1: izquierda → -->
+    <div class="marquee-track">
+      <div class="marquee-inner marquee-left">
+        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <!-- duplicado para loop seamless -->
+        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+      </div>
+    </div>
+    <!-- Fila 2: ← derecha (offset) -->
+    <div class="marquee-track">
+      <div class="marquee-inner marquee-right">
+        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <!-- duplicado para loop seamless -->
+        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- CTA POST-TESTIMONIOS -->
+<div class="cta-mid" id="cta-post-testi">
+  <div class="section-wrap">
+    <h2>111 prompts. 11,1€.</h2>
+    <p>Un prompt cuesta menos que un café.</p>
+    <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="cta-buy-btn">DESBLOQUEAR LOS 111 PROMPTS</a>
+  </div>
+</div>
+
+<!-- LIBROS -->
+<div class="books-section">
+  <div class="section-wrap">
+    <span class="section-label">No son prompts inventados</span>
+    <h2>Basados en <em>+25 de los mejores libros</em> de negocios, productividad y finanzas</h2>
+    <div class="books-grid">
+      <span class="book-pill">Rich Dad Poor Dad</span><span class="book-pill">The Psychology of Money</span><span class="book-pill">I Will Teach You to Be Rich</span><span class="book-pill">The Intelligent Investor</span><span class="book-pill">Atomic Habits</span><span class="book-pill">Deep Work</span><span class="book-pill">The 7 Habits</span><span class="book-pill">Thinking Fast and Slow</span><span class="book-pill">Influence</span><span class="book-pill">$100M Offers</span><span class="book-pill">Never Split the Difference</span><span class="book-pill">The Lean Startup</span><span class="book-pill">Blue Ocean Strategy</span><span class="book-pill">Contagious</span><span class="book-pill">Building a StoryBrand</span><span class="book-pill">Ultralearning</span><span class="book-pill">Mindset</span><span class="book-pill">Grit</span><span class="book-pill">Peak</span><span class="book-pill">Range</span><span class="book-pill">Make It Stick</span><span class="book-pill">The Art of Learning</span><span class="book-pill">Steal Like an Artist</span><span class="book-pill">Antifragile</span><span class="book-pill">The 4-Hour Workweek</span><span class="book-pill">Essentialism</span><span class="book-pill">The ONE Thing</span><span class="book-pill">Eat That Frog</span><span class="book-pill">Getting Things Done</span>
+    </div>
+  </div>
+</div>
+
+<!-- CTA INTERMEDIO -->
+<div class="cta-mid" id="cta-mid">
+  <div class="section-wrap">
+    <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="cta-buy-btn">DESBLOQUEAR LOS 111 PROMPTS</a>
+  </div>
+</div>
+
+<!-- CATÁLOGO DE CATEGORÍAS -->
 <div class="collection">
   <div class="section-wrap">
-    <span class="section-label">La colección completa</span>
+    <span class="section-label">Mira lo que hay dentro</span>
       <div class="sec-card">
         <div class="sec-header">
           <span class="sec-icon">⚡</span>
@@ -1283,7 +1698,7 @@ cerebro anticipe el resultado.
         <div class="title-row locked"><span class="title-icon">🔒</span><span class="title-text-blur">+ 2 prompts más</span></div>
         </div>
       </div>
-    
+
     <!-- Bonus -->
     <div class="sec-card">
       <div class="sec-header">
@@ -1294,17 +1709,6 @@ cerebro anticipe el resultado.
       <div class="sec-titles">
         <div class="title-row"><span class="title-icon">→</span><span class="title-text">El Prompt que Crea Prompts<span class="title-sub">Un prompt que genera prompts personalizados para cualquier tarea que necesites.</span></span></div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- BOOKS CREDIBILITY -->
-<div class="books-section">
-  <div class="section-wrap">
-    <span class="section-label">No son prompts inventados</span>
-    <h2>Basados en <em>+25 de los mejores libros</em> de negocios, productividad y finanzas</h2>
-    <div class="books-grid">
-      <span class="book-pill">Rich Dad Poor Dad</span><span class="book-pill">The Psychology of Money</span><span class="book-pill">I Will Teach You to Be Rich</span><span class="book-pill">The Intelligent Investor</span><span class="book-pill">Atomic Habits</span><span class="book-pill">Deep Work</span><span class="book-pill">The 7 Habits</span><span class="book-pill">Thinking Fast and Slow</span><span class="book-pill">Influence</span><span class="book-pill">$100M Offers</span><span class="book-pill">Never Split the Difference</span><span class="book-pill">The Lean Startup</span><span class="book-pill">Blue Ocean Strategy</span><span class="book-pill">Contagious</span><span class="book-pill">Building a StoryBrand</span><span class="book-pill">Ultralearning</span><span class="book-pill">Mindset</span><span class="book-pill">Grit</span><span class="book-pill">Peak</span><span class="book-pill">Range</span><span class="book-pill">Make It Stick</span><span class="book-pill">The Art of Learning</span><span class="book-pill">Steal Like an Artist</span><span class="book-pill">Antifragile</span><span class="book-pill">The 4-Hour Workweek</span><span class="book-pill">Essentialism</span><span class="book-pill">The ONE Thing</span><span class="book-pill">Eat That Frog</span><span class="book-pill">Getting Things Done</span>
     </div>
   </div>
 </div>
@@ -1325,7 +1729,7 @@ cerebro anticipe el resultado.
         <div class="price-feature"><span class="check">✓</span> Funciona en ChatGPT, Claude, Gemini y cualquier IA</div>
         <div class="price-feature"><span class="check">✓</span> Descarga instantánea · Acceso para siempre</div>
       </div>
-      <a href="#" class="buy-btn" id="buyBtn">DESBLOQUEAR LOS 111 PROMPTS</a>
+      <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="buy-btn" id="buyBtn">DESBLOQUEAR LOS 111 PROMPTS</a>
     </div>
   </div>
 </div>
@@ -1338,13 +1742,15 @@ cerebro anticipe el resultado.
   <p>© 2026 · @javiggil</p>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="Imagen ampliada" />
+</div>
+
 <!-- STICKY CTA -->
 <div class="sticky-cta" id="stickyCta">
-  <div class="sticky-price">
-    11,1€
-    <small>0,1€ por prompt</small>
-  </div>
-  <a href="#pricing" class="sticky-btn">DESBLOQUEAR TODO</a>
+  <div class="sticky-price">111 PROMPTS · 11,1€</div>
+  <a href="https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03" class="sticky-btn">DESBLOQUEAR TODO</a>
 </div>
 
 <script>
@@ -1389,20 +1795,33 @@ function copyText(btn, sourceId) {
   });
 }
 
-// Sticky CTA: show after scrolling past free prompts
-const freeSection = document.getElementById('free');
+// Lightbox
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  document.getElementById('lightbox-img').src = '';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// Sticky CTA: show after scrolling past hero, hide when pricing is visible
+const heroSection = document.getElementById('hero');
 const stickyCta = document.getElementById('stickyCta');
 const pricingSection = document.getElementById('pricing');
 
-const stickyObserver = new IntersectionObserver((entries) => {
-  // Show when free section is out of view
-}, { threshold: 0 });
-
 window.addEventListener('scroll', () => {
-  const freeBottom = freeSection.getBoundingClientRect().bottom;
+  const heroBottom = heroSection.getBoundingClientRect().bottom;
   const pricingTop = pricingSection.getBoundingClientRect().top;
-  
-  if (freeBottom < 0 && pricingTop > window.innerHeight) {
+
+  if (heroBottom < 0 && pricingTop > window.innerHeight) {
     stickyCta.classList.add('show');
   } else {
     stickyCta.classList.remove('show');
