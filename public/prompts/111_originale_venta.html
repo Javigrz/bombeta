@@ -551,8 +551,11 @@ body {
   overflow: hidden;
 }
 
-.marquee-track:hover .marquee-inner {
-  animation-play-state: paused;
+/* pausa hover solo en dispositivos con puntero fino (ratón) */
+@media (hover: hover) and (pointer: fine) {
+  .marquee-track:hover .marquee-inner {
+    animation-play-state: paused;
+  }
 }
 
 .marquee-inner {
@@ -1827,34 +1830,6 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeLightbox();
 });
 
-// Marquee touch: pausa al tocar, reanuda al soltar, abre lightbox si es tap
-document.querySelectorAll('.marquee-track').forEach(track => {
-  const inner = track.querySelector('.marquee-inner');
-  let startX = 0, startY = 0, startTime = 0;
-
-  track.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    startTime = Date.now();
-    inner.style.animationPlayState = 'paused';
-  }, { passive: true });
-
-  track.addEventListener('touchend', (e) => {
-    const dx = Math.abs(e.changedTouches[0].clientX - startX);
-    const dy = Math.abs(e.changedTouches[0].clientY - startY);
-    const dt = Date.now() - startTime;
-    // Tap: poca distancia y poco tiempo → abrir lightbox
-    if (dx < 12 && dy < 12 && dt < 350) {
-      const img = e.target.closest('.marquee-img');
-      if (img) openLightbox(img.src);
-    }
-    inner.style.animationPlayState = 'running';
-  }, { passive: true });
-
-  track.addEventListener('touchcancel', () => {
-    inner.style.animationPlayState = 'running';
-  }, { passive: true });
-});
 
 // Sticky CTA: show after scrolling past hero, hide when pricing is visible
 const heroSection = document.getElementById('hero');
