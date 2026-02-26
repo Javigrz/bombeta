@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>¿Todo bien, [Nombre]?</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #f5f5f0; font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; -webkit-font-smoothing: antialiased; }
+    a { color: #FF5733; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Layout */
+    .wrapper { max-width: 600px; margin: 40px auto; padding: 0 16px; }
+    .card { background: #ffffff; border-radius: 4px; overflow: hidden; }
+
+    /* Header */
+    .header { padding: 40px 48px 32px; border-bottom: 1px solid #f0f0f0; }
+    .header-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #FF5733; margin-bottom: 16px; }
+    .header-title { font-size: 26px; line-height: 1.35; font-weight: 400; color: #111111; }
+
+    /* Body */
+    .body { padding: 40px 48px; }
+    .saludo { font-size: 16px; line-height: 1.7; color: #333; margin-bottom: 24px; }
+    p { font-size: 16px; line-height: 1.8; color: #333; margin-bottom: 20px; }
+
+    /* Options */
+    .options { margin: 28px 0; padding: 24px 28px; background: #fafaf8; border: 1px solid #eeeeea; border-radius: 4px; }
+    .option { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; font-size: 15px; line-height: 1.6; color: #333; }
+    .option:last-child { margin-bottom: 0; }
+    .option-arrow { color: #FF5733; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* CTA secondary */
+    .cta-secondary { margin: 28px 0; }
+    .cta-secondary a { font-size: 15px; color: #FF5733; text-decoration: underline; }
+
+    /* Sign-off */
+    .signoff { margin-top: 36px; }
+    .signoff p { margin-bottom: 4px; }
+    .ps { margin-top: 28px; padding-top: 20px; border-top: 1px solid #eeeeee; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; color: #666; line-height: 1.6; }
+
+    /* Footer */
+    .footer { padding: 24px 48px; background: #f9f9f9; border-top: 1px solid #eeeeee; }
+    .footer p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; color: #999; line-height: 1.6; margin-bottom: 0; }
+
+    @media (max-width: 640px) {
+      .wrapper { margin: 0; padding: 0; }
+      .header, .body, .footer { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="header-label">The AI Playbook &mdash; Día 9</div>
+        <h1 class="header-title">¿Todo bien, [Nombre]?</h1>
+      </div>
+
+      <!-- Body -->
+      <div class="body">
+        <p class="saludo">Hola [Nombre],</p>
+
+        <p>He visto que reservaste plaza en The AI Playbook pero todavía no la has confirmado.</p>
+
+        <p>Sin presión. Pero quiero asegurarme de que no es porque te ha quedado alguna duda sin resolver.</p>
+
+        <p>Si es una cuestión de timing, lo entiendo perfectamente. Si es una cuestión de dudas sobre el curso, hablemos. Puedes:</p>
+
+        <div class="options">
+          <div class="option"><span class="option-arrow">&rarr;</span><span>Responderme a este email con tu duda.</span></div>
+          <div class="option"><span class="option-arrow">&rarr;</span><span>Reservar 15 minutos conmigo y te lo cuento todo: <a href="#">[enlace Calendly]</a></span></div>
+        </div>
+
+        <p>Y si simplemente no es para ti, también lo entiendo. Sin resentimientos.</p>
+
+        <div class="signoff">
+          <p>Javi</p>
+        </div>
+
+        <div class="ps">
+          <strong>P.D.:</strong> Si finalmente decides entrar, tu plaza sigue disponible aquí: <a href="#">[enlace checkout]</a>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>Recibiste este email porque te registraste en The AI Playbook.<br />
+        Si no quieres recibir más emails, puedes <a href="#">darte de baja aquí</a>.</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

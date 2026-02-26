@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Lo que la mayoría se equivoca sobre la IA</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #f5f5f0; font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; -webkit-font-smoothing: antialiased; }
+    a { color: #FF5733; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Layout */
+    .wrapper { max-width: 600px; margin: 40px auto; padding: 0 16px; }
+    .card { background: #ffffff; border-radius: 4px; overflow: hidden; }
+
+    /* Header */
+    .header { padding: 40px 48px 32px; border-bottom: 1px solid #f0f0f0; }
+    .header-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #FF5733; margin-bottom: 16px; }
+    .header-title { font-size: 26px; line-height: 1.35; font-weight: 400; color: #111111; }
+
+    /* Body */
+    .body { padding: 40px 48px; }
+    .saludo { font-size: 16px; line-height: 1.7; color: #333; margin-bottom: 24px; }
+    p { font-size: 16px; line-height: 1.8; color: #333; margin-bottom: 20px; }
+
+    /* Pull quote */
+    .pullquote { margin: 32px 0; padding: 24px 28px; background: #fafaf8; border-left: 4px solid #FF5733; }
+    .pullquote p { font-size: 17px; line-height: 1.7; color: #222; margin-bottom: 0; font-style: italic; }
+
+    /* Rule */
+    .rule-box { margin: 28px 0; padding: 20px 24px; border: 1px solid #FF5733; border-radius: 3px; }
+    .rule-box p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; color: #333; margin-bottom: 0; }
+    .rule-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #FF5733; margin-bottom: 8px; }
+
+    /* CTA */
+    .cta-block { margin: 36px 0; text-align: center; }
+    .cta-btn { display: inline-block; background-color: #FF5733; color: #ffffff !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.02em; padding: 16px 36px; border-radius: 3px; text-decoration: none !important; }
+
+    /* Sign-off */
+    .signoff { margin-top: 36px; }
+    .signoff p { margin-bottom: 4px; }
+    .ps { margin-top: 28px; padding-top: 20px; border-top: 1px solid #eeeeee; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; color: #666; line-height: 1.6; }
+
+    /* Footer */
+    .footer { padding: 24px 48px; background: #f9f9f9; border-top: 1px solid #eeeeee; }
+    .footer p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; color: #999; line-height: 1.6; margin-bottom: 0; }
+
+    @media (max-width: 640px) {
+      .wrapper { margin: 0; padding: 0; }
+      .header, .body, .footer { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="header-label">The AI Playbook &mdash; Día 6</div>
+        <h1 class="header-title">Lo que la mayoría se equivoca sobre la IA</h1>
+      </div>
+
+      <!-- Body -->
+      <div class="body">
+        <p class="saludo">Hola [Nombre],</p>
+
+        <p>Te voy a decir algo que no vas a leer en ningún otro sitio:</p>
+
+        <div class="pullquote">
+          <p>El 90% de los cursos de IA te enseñan a escribir prompts. Y eso está bien como punto de partida. Pero es como enseñarte a encender un coche y decirte que ya sabes conducir.</p>
+        </div>
+
+        <p>Lo que yo he aprendido construyendo Released y Lero, y trabajando con IA en BBVA, es que la diferencia no está en el prompt. Está en la <strong>arquitectura</strong>. En saber diseñar el sistema antes de tocar una herramienta.</p>
+
+        <p>¿Recuerdas el caso de los grip socks que te conté? El chaval no empezó abriendo ChatGPT a ver qué pasaba. Empezó validando la demanda con datos. Luego analizó la competencia. Luego diseñó el producto. Y LUEGO usó la IA para ejecutar. Arquitectura primero, herramientas después.</p>
+
+        <div class="rule-box">
+          <div class="rule-label">Mi regla número 1</div>
+          <p>No avances al siguiente paso hasta que el anterior esté sólido.</p>
+        </div>
+
+        <p>En mi consultoría veo esto constantemente. Empresas que arrancan proyectos de IA sin validar primero. Agencias que empiezan a programar sin diseñar la arquitectura. Y luego el proyecto cuesta el triple y no funciona.</p>
+
+        <p>Mi método es diferente: un día de validación regulatoria, una semana de prueba técnica, y diseño completo ANTES de escribir una línea de código.</p>
+
+        <p>En el AI Playbook aplicamos esto literalmente. No pasas al módulo de construir (CREA) hasta que entiendas (ENTIENDE) y sepas usar las herramientas (USA). Es paso a paso, sin atajos.</p>
+
+        <p>Mañana te mando el último email antes de cerrar plazas. Va a tener el enlace de pago directo.</p>
+
+        <p>Si ya tienes claro que quieres entrar, no esperes:</p>
+
+        <div class="cta-block">
+          <a href="#" class="cta-btn">Confirmar mi plaza ahora &rarr;</a>
+        </div>
+
+        <div class="signoff">
+          <p>Javi</p>
+        </div>
+
+        <div class="ps">
+          <strong>P.D.:</strong> Todas las sesiones son en directo por videollamada. Si algún día no puedes, quedan grabadas. Pero te recomiendo venir en directo &mdash; la interacción es donde ocurre la magia.
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>Recibiste este email porque te registraste en The AI Playbook.<br />
+        Si no quieres recibir más emails, puedes <a href="#">darte de baja aquí</a>.</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

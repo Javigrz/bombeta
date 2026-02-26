@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2,7 millones en 30 días con IA. Sin saber programar.</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #f5f5f0; font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; -webkit-font-smoothing: antialiased; }
+    a { color: #FF5733; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Layout */
+    .wrapper { max-width: 600px; margin: 40px auto; padding: 0 16px; }
+    .card { background: #ffffff; border-radius: 4px; overflow: hidden; }
+
+    /* Header */
+    .header { padding: 40px 48px 32px; border-bottom: 1px solid #f0f0f0; }
+    .header-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #FF5733; margin-bottom: 16px; }
+    .header-title { font-size: 26px; line-height: 1.35; font-weight: 400; color: #111111; }
+
+    /* Body */
+    .body { padding: 40px 48px; }
+    .saludo { font-size: 16px; line-height: 1.7; color: #333; margin-bottom: 24px; }
+    p { font-size: 16px; line-height: 1.8; color: #333; margin-bottom: 20px; }
+
+    /* Steps */
+    .steps { margin: 28px 0; }
+    .step { display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start; }
+    .step-number { flex-shrink: 0; width: 28px; height: 28px; background-color: #FF5733; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .step-content { font-size: 16px; line-height: 1.75; color: #333; }
+    .step-content strong { color: #111; }
+
+    /* Module list */
+    .modules { background: #fafaf8; border: 1px solid #eeeeea; border-radius: 4px; padding: 24px 28px; margin: 28px 0; }
+    .modules p { margin-bottom: 12px; font-size: 15px; }
+    .modules p:last-child { margin-bottom: 0; }
+    .module-tag { display: inline-block; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: #FF5733; color: #fff; padding: 2px 8px; border-radius: 2px; margin-right: 6px; }
+
+    /* CTA */
+    .cta-block { margin: 36px 0; text-align: center; }
+    .cta-btn { display: inline-block; background-color: #FF5733; color: #ffffff !important; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.02em; padding: 16px 36px; border-radius: 3px; text-decoration: none !important; }
+
+    /* Sign-off */
+    .signoff { margin-top: 36px; }
+    .signoff p { margin-bottom: 4px; }
+    .ps { margin-top: 28px; padding-top: 20px; border-top: 1px solid #eeeeee; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 14px; color: #666; line-height: 1.6; }
+
+    /* Footer */
+    .footer { padding: 24px 48px; background: #f9f9f9; border-top: 1px solid #eeeeee; }
+    .footer p { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; color: #999; line-height: 1.6; margin-bottom: 0; }
+
+    @media (max-width: 640px) {
+      .wrapper { margin: 0; padding: 0; }
+      .header, .body, .footer { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="header-label">The AI Playbook &mdash; Día 4</div>
+        <h1 class="header-title">2,7 millones en 30 días con IA. Sin saber programar.</h1>
+      </div>
+
+      <!-- Body -->
+      <div class="body">
+        <p class="saludo">Hola [Nombre],</p>
+
+        <p>Te prometí un caso que te iba a volar la cabeza. Ahí va.</p>
+
+        <p>Un chico sin experiencia en moda ni en e-commerce usó ChatGPT, Google Trends y proveedores chinos para montar una marca de calcetines desde cero. Facturó <strong>2,7 millones de dólares en 30 días</strong>.</p>
+
+        <p>No es clickbait. Es método. Y es exactamente lo que enseño en el curso.</p>
+
+        <p>Te desgloso lo que hizo paso a paso:</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content"><strong>Detectó una tendencia.</strong> Pilates estaba creciendo un 10% al año en Google Trends. Eso es demanda validada con datos, no con intuición.</div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content"><strong>Usó IA para encontrar el producto.</strong> Scrapeó transcripciones de vídeos de YouTube de creadoras de Pilates, se las metió a ChatGPT y le preguntó: "¿qué producto mencionan todas una y otra vez?" La respuesta: grip socks (calcetines antideslizantes). Había demanda real, pero ninguna marca dominaba ese mercado.</div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content"><strong>No inventó nada.</strong> Usó IA para analizar qué estética, qué webs y qué visuales ya funcionaban en ese nicho. Copió lo que convertía y lo adaptó a su marca.</div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content"><strong>Contenido con método.</strong> Cada vídeo que publicaba tenía un pattern interrupt en los primeros 3 segundos que disparaba la retención. Cuando un vídeo se hacía viral, targeteaba publicidad directamente a la gente que había visto el vídeo completo. Audiencia caliente, que ya conoce tu producto, con un anuncio directo a compra.</div>
+          </div>
+        </div>
+
+        <p><strong>Resultado: 2,7 millones en un mes.</strong></p>
+
+        <p>¿Por qué te cuento esto?</p>
+
+        <p>Porque esto sigue una regla clásica: busca donde la demanda ya está validada pero la competencia todavía no ha llegado. La IA simplemente te permite encontrarlo antes que nadie.</p>
+
+        <p>Y esto es EXACTAMENTE lo que vamos a hacer en el AI Playbook:</p>
+
+        <div class="modules">
+          <p><span class="module-tag">Entiende</span> Aprendes a leer tendencias y validar demanda con datos reales, no con suposiciones.</p>
+          <p><span class="module-tag">Usa</span> Aprendes a usar las herramientas &mdash; ChatGPT, automatizaciones con n8n, scraping básico &mdash; para extraer información que otros no ven.</p>
+          <p><span class="module-tag">Crea</span> Construyes tu propio proyecto &mdash; tu versión de los grip socks &mdash; y lo presentas al grupo.</p>
+        </div>
+
+        <p>No necesitas saber programar. No necesitas tener una idea brillante. Necesitas método y las herramientas correctas. Eso es lo que te doy.</p>
+
+        <div class="cta-block">
+          <a href="#" class="cta-btn">Quiero aprender esto &mdash; Confirmar mi plaza &rarr;</a>
+        </div>
+
+        <div class="signoff">
+          <p>Javi</p>
+        </div>
+
+        <div class="ps">
+          <strong>P.D.:</strong> Te queda un email más antes de que abra las plazas al público general. Los que estáis en esta lista tenéis prioridad.
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>Recibiste este email porque te registraste en The AI Playbook.<br />
+        Si no quieres recibir más emails, puedes <a href="#">darte de baja aquí</a>.</p>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
