@@ -936,6 +936,39 @@ export default function HomePage() {
           </>
         )}
 
+           {/* 111 Originale Button */}
+           <div
+             className="fixed top-8 right-8 z-30"
+             style={{
+               opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
+               visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
+               transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
+               transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)'
+             }}
+           >
+             <a
+               href="/prompts/111_originale_venta.html"
+               className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer flex items-center gap-2"
+               style={{
+                 backgroundColor: 'transparent',
+                 color: '#FE4629',
+                 border: '2px solid #FE4629',
+                 textDecoration: 'none'
+               }}
+               onMouseEnter={(e) => {
+                 e.currentTarget.style.backgroundColor = '#FE4629';
+                 e.currentTarget.style.color = '#4B0A23';
+               }}
+               onMouseLeave={(e) => {
+                 e.currentTarget.style.backgroundColor = 'transparent';
+                 e.currentTarget.style.color = '#FE4629';
+               }}
+             >
+               <img src="/111.svg" alt="111" style={{ height: '14px', width: 'auto' }} />
+               <img src="/originale.svg" alt="Originale" style={{ height: '11px', width: 'auto' }} />
+             </a>
+           </div>
+
            {/* The Weekly Builds Button */}
            {showWeeklyBuildsButton && (
            <div
