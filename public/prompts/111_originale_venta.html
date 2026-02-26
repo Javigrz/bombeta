@@ -563,29 +563,36 @@ body {
   gap: 14px;
   width: max-content;
   will-change: transform;
-  /* fuerza capa GPU — crítico para iOS Safari */
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .marquee-left {
   animation: marqueeLeft 42s linear infinite;
+  -webkit-animation: marqueeLeft 42s linear infinite;
 }
 
 .marquee-right {
   animation: marqueeRight 42s linear infinite;
+  -webkit-animation: marqueeRight 42s linear infinite;
 }
 
 @keyframes marqueeLeft {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
 @keyframes marqueeRight {
-  0%   { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+
+@-webkit-keyframes marqueeLeft {
+  from { -webkit-transform: translate3d(0, 0, 0); }
+  to   { -webkit-transform: translate3d(-50%, 0, 0); }
+}
+
+@-webkit-keyframes marqueeRight {
+  from { -webkit-transform: translate3d(-50%, 0, 0); }
+  to   { -webkit-transform: translate3d(0, 0, 0); }
 }
 
 .marquee-img {
