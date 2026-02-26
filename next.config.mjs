@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/prompts',
+        destination: '/prompts/111_originale_venta.html',
+      },
+    ]
+  },
   // Enable TypeScript checks, disable ESLint due to config issues
   eslint: {
     ignoreDuringBuilds: true, // TODO: Fix ESLint config circular dependency issue

@@ -937,17 +937,17 @@ export default function HomePage() {
         )}
 
            {/* 111 Originale Button */}
+           {/* Móvil: barra centrada encima del email de contacto. Desktop: top right fijo */}
            <div
-             className="fixed bottom-6 right-4 sm:bottom-auto sm:top-8 sm:right-8 z-30"
+             className="fixed bottom-10 left-0 w-full flex justify-center sm:w-auto sm:bottom-auto sm:left-auto sm:top-8 sm:right-8 sm:block z-30"
              style={{
                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
-               transition: 'opacity 0.8s ease-out 0.1s, visibility 0s, transform 0.8s ease-out 0.1s',
-               transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(-20px)'
+               transition: 'opacity 0.8s ease-out 0.1s, visibility 0s',
              }}
            >
              <a
-               href="/prompts/111_originale_venta.html"
+               href="/prompts"
                className="px-4 py-2 sm:px-6 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer flex items-center gap-2"
                style={{
                  backgroundColor: 'transparent',

@@ -588,12 +588,6 @@ function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
         Por eso, te dejo un codigo descuento exlcusivo:
       </p>
 
-      <div class="code-block">
-        <div class="code-label">Tu código de descuento</div>
-        <div class="code-value">MISTERY</div>
-        <div class="code-note">Introdúcelo en el checkout de Stripe · Plazas limitadas</div>
-      </div>
-
       <p>
         Lo que cambia de verdad no son los prompts. Es saber <strong>cómo pensar con IA</strong>,
         cómo construir cosas con ella, y cómo convertir eso en algo que te genere ingresos.
