@@ -560,6 +560,11 @@ body {
   gap: 14px;
   width: max-content;
   will-change: transform;
+  /* fuerza capa GPU — crítico para iOS Safari */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .marquee-left {
@@ -589,6 +594,9 @@ body {
   flex-shrink: 0;
   border: 1px solid rgba(250,245,235,0.07);
   transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease, border-color 0.4s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .marquee-img:hover {
@@ -935,10 +943,13 @@ body {
   .cred-photo { width: 140px; height: 140px; margin: 0 auto; display: block; }
   .free-section { padding: 60px 0; }
   .compare-grid { grid-template-columns: 1fr; }
-  .testimonios-section { padding: 60px 0 72px; }
-  .testi-head { padding: 0 20px 40px; }
-  .marquee-img { height: 180px; }
-  .marquee-wrapper::before, .marquee-wrapper::after { width: 48px; }
+  .testimonios-section { padding: 56px 0 64px; }
+  .testi-head { padding: 0 20px 36px; }
+  .testi-title { letter-spacing: -0.5px; }
+  .marquee-wrapper { gap: 10px; }
+  .marquee-inner { gap: 10px; }
+  .marquee-img { height: 170px; border-radius: 10px; }
+  .marquee-wrapper::before, .marquee-wrapper::after { width: 40px; }
   .books-section { padding: 60px 0; }
   .cta-mid { padding: 60px 0; }
   .collection { padding: 60px 0; }
@@ -954,6 +965,10 @@ body {
 
 @media (min-width: 641px) {
   .reviews-carousel { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-left, .marquee-right { animation: none; }
 }
 </style>
 </head>
@@ -1521,33 +1536,33 @@ cerebro anticipe el resultado.
     <!-- Fila 1: izquierda → -->
     <div class="marquee-track">
       <div class="marquee-inner marquee-left">
-        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review1.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review3.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" alt="Review" />
         <!-- duplicado para loop seamless -->
-        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review1.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review3.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" alt="Review" />
       </div>
     </div>
     <!-- Fila 2: ← derecha (offset) -->
     <div class="marquee-track">
       <div class="marquee-inner marquee-right">
-        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review3.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review1.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" alt="Review" />
         <!-- duplicado para loop seamless -->
-        <img src="/reviews/review3.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review5.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review1.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review4.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
-        <img src="/reviews/review2.png" class="marquee-img" onclick="openLightbox(this.src)" alt="Review" />
+        <img src="/reviews/review3.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review5.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review1.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review4.png" class="marquee-img" alt="Review" />
+        <img src="/reviews/review2.png" class="marquee-img" alt="Review" />
       </div>
     </div>
   </div>
@@ -1810,6 +1825,35 @@ function closeLightbox() {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeLightbox();
+});
+
+// Marquee touch: pausa al tocar, reanuda al soltar, abre lightbox si es tap
+document.querySelectorAll('.marquee-track').forEach(track => {
+  const inner = track.querySelector('.marquee-inner');
+  let startX = 0, startY = 0, startTime = 0;
+
+  track.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    startTime = Date.now();
+    inner.style.animationPlayState = 'paused';
+  }, { passive: true });
+
+  track.addEventListener('touchend', (e) => {
+    const dx = Math.abs(e.changedTouches[0].clientX - startX);
+    const dy = Math.abs(e.changedTouches[0].clientY - startY);
+    const dt = Date.now() - startTime;
+    // Tap: poca distancia y poco tiempo → abrir lightbox
+    if (dx < 12 && dy < 12 && dt < 350) {
+      const img = e.target.closest('.marquee-img');
+      if (img) openLightbox(img.src);
+    }
+    inner.style.animationPlayState = 'running';
+  }, { passive: true });
+
+  track.addEventListener('touchcancel', () => {
+    inner.style.animationPlayState = 'running';
+  }, { passive: true });
 });
 
 // Sticky CTA: show after scrolling past hero, hide when pricing is visible
