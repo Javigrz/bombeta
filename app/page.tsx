@@ -938,7 +938,7 @@ export default function HomePage() {
 
            {/* 111 Originale Button */}
            <div
-             className="fixed top-8 right-8 z-30"
+             className="fixed bottom-6 right-4 sm:bottom-auto sm:top-8 sm:right-8 z-30"
              style={{
                opacity: showMainContent && !showWeeklyBuilds ? 1 : 0,
                visibility: showMainContent && !showWeeklyBuilds ? 'visible' : 'hidden',
@@ -948,7 +948,7 @@ export default function HomePage() {
            >
              <a
                href="/prompts/111_originale_venta.html"
-               className="px-6 py-2 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer flex items-center gap-2"
+               className="px-4 py-2 sm:px-6 font-inter text-sm font-semibold rounded-lg transition-all duration-300 cursor-pointer flex items-center gap-2"
                style={{
                  backgroundColor: 'transparent',
                  color: '#FE4629',

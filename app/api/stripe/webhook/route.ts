@@ -29,16 +29,23 @@ export async function POST(req: Request) {
 
     const email = session.customer_details?.email
     const name = session.customer_details?.name
-    const product = session.metadata?.product
+    // Soporta tanto metadata correcta {product: "prompts_111"}
+    // como el formato incorrecto que guardó Stripe {Key: "product", Value: "prompts_111"}
+    const product =
+      session.metadata?.product ||
+      (session.metadata?.Value === "prompts_111" ? "prompts_111" : null)
 
     if (!email) {
       return new Response("No email found", { status: 200 })
     }
 
     if (product === "prompts_111") {
-      // Email con los prompts adjuntos
+      // Email 1: entrega de los prompts
       await sendPromptsEmail(email, name ?? "")
       console.log(`Prompts email sent to ${email}`)
+      // Email 2: tripwire — oferta del curso
+      await sendTripwireEmail(email, name ?? "")
+      console.log(`Tripwire email sent to ${email}`)
     } else {
       // Email de confirmación del curso
       await resend.emails.send({
@@ -426,5 +433,254 @@ Mientras tanto, si tienes alguna pregunta no dudes en escribirnos a contact@javi
 
 ---
 THE AI PLAYBOOK
+  `.trim()
+}
+
+async function sendTripwireEmail(email: string, name: string) {
+  const greeting = name ? `Hola ${name},` : "Hola,"
+  const COURSE_URL = "https://buy.stripe.com/7sYfZ9dxb79m3eOdph9EI02"
+
+  await resend.emails.send({
+    from: "Javi Gil <contact@javiggil.com>",
+    to: [email],
+    subject: "Tengo algo más para ti",
+    html: buildTripwireEmailHtml(greeting, COURSE_URL),
+    text: buildTripwireEmailText(greeting, COURSE_URL),
+  })
+}
+
+function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
+  return `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+        line-height: 1.8;
+        color: #222222;
+        background-color: #ffffff;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0;
+      }
+      .wrapper {
+        padding: 48px 40px;
+        background: #ffffff;
+      }
+      .label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #FE4629;
+        margin-bottom: 32px;
+      }
+      p {
+        font-size: 16px;
+        color: #333333;
+        margin: 0 0 22px;
+        line-height: 1.8;
+      }
+      .code-block {
+        background: #fff8f0;
+        border: 2px dashed #FE4629;
+        border-radius: 10px;
+        padding: 20px 24px;
+        margin: 32px 0;
+        text-align: center;
+      }
+      .code-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #999999;
+        margin-bottom: 8px;
+      }
+      .code-value {
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        color: #FE4629;
+        font-family: 'Courier New', monospace;
+      }
+      .code-note {
+        font-size: 13px;
+        color: #888888;
+        margin-top: 8px;
+      }
+      .what-is {
+        background: #f9f7f4;
+        border-radius: 10px;
+        padding: 24px 28px;
+        margin: 32px 0;
+      }
+      .what-is-title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #111;
+        margin-bottom: 16px;
+      }
+      .what-is p {
+        font-size: 15px;
+        color: #444;
+        margin: 0 0 10px;
+      }
+      .what-is p:last-child { margin-bottom: 0; }
+      .feature {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
+        font-size: 15px;
+        color: #333;
+      }
+      .check { color: #FE4629; font-weight: 700; flex-shrink: 0; }
+      .cta-wrap {
+        text-align: center;
+        margin: 36px 0 28px;
+      }
+      .cta-btn {
+        display: inline-block;
+        background: #FE4629;
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 16px 36px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: 0.02em;
+      }
+      .cta-sub {
+        font-size: 13px;
+        color: #999999;
+        margin-top: 12px;
+        margin-bottom: 0;
+      }
+      .divider {
+        border: none;
+        border-top: 1px solid #eeeeee;
+        margin: 36px 0;
+      }
+      .footer {
+        font-size: 13px;
+        color: #999999;
+        line-height: 1.6;
+      }
+      .footer a { color: #FE4629; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="label">The AI Playbook</div>
+
+      <p>${greeting}</p>
+
+      <p>
+        Muchas gracias por comprar los 111 prompts. Buena decisión. Son una herramienta potente,
+        pero una herramienta al final.
+
+        Por eso, te dejo un codigo descuento exlcusivo:
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Tu código de descuento</div>
+        <div class="code-value">MISTERY</div>
+        <div class="code-note">Introdúcelo en el checkout de Stripe · Plazas limitadas</div>
+      </div>
+
+      <p>
+        Lo que cambia de verdad no son los prompts. Es saber <strong>cómo pensar con IA</strong>,
+        cómo construir cosas con ella, y cómo convertir eso en algo que te genere ingresos.
+        Eso es lo que enseño en <strong>The AI Playbook</strong>.
+      </p>
+
+      <div class="what-is">
+        <div class="what-is-title">Qué es The AI Playbook</div>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">8 sesiones en directo por videollamada, 4 semanas</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Aprenderás a construir productos reales con IA — no teoría</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Cómo detectar oportunidades antes de que las vea todo el mundo</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Validar, lanzar y monetizar — con ejemplos de mis propios proyectos</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Red de contactos: gente que está exactamente donde estás tú</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-left:8px;">Plazas limitadas — el directo es el formato, no hay grabación que valga</td></tr>
+        </table>
+      </div>
+
+      <p>
+        Por haber comprado los prompts, tienes acceso a un descuento que no está en ningún otro sitio.
+        Aplícalo en el checkout:
+      </p>
+
+      <div class="code-block">
+        <div class="code-label">Tu código de descuento</div>
+        <div class="code-value">MISTERY</div>
+        <div class="code-note">Introdúcelo en el checkout de Stripe · Plazas limitadas</div>
+      </div>
+
+      <div class="cta-wrap">
+        <a href="${courseUrl}" class="cta-btn">→ Ver The AI Playbook</a>
+        <p class="cta-sub">390€ · 8 sesiones en directo · Plazas limitadas</p>
+      </div>
+
+      <p>
+        Si ya tienes claro que quieres estar, entra y usa el código.
+        Si quieres saber más primero, responde a este email y te cuento.
+      </p>
+
+      <p>
+        Un saludo,<br/>
+        <strong>Javi</strong>
+      </p>
+
+      <hr class="divider" />
+
+      <div class="footer">
+        The AI Playbook · <a href="mailto:contact@javiggil.com">contact@javiggil.com</a>
+      </div>
+    </div>
+  </body>
+</html>
+  `.trim()
+}
+
+function buildTripwireEmailText(greeting: string, courseUrl: string) {
+  return `
+${greeting}
+
+Acabas de comprar los 111 prompts. Buena decisión. Son una herramienta potente, pero una herramienta al final.
+
+Lo que cambia de verdad no son los prompts. Es saber cómo pensar con IA, cómo construir cosas con ella, y cómo convertir eso en algo que te genere ingresos. Eso es lo que enseño en The AI Playbook.
+
+QUÉ ES THE AI PLAYBOOK
+-----------------------
+✓ 8 sesiones en directo por videollamada, 4 semanas
+✓ Aprenderás a construir productos reales con IA — no teoría
+✓ Cómo detectar oportunidades antes de que las vea todo el mundo
+✓ Validar, lanzar y monetizar — con ejemplos de mis propios proyectos
+✓ Red de contactos: gente que está exactamente donde estás tú
+✓ Plazas limitadas — el directo es el formato, no hay grabación que valga
+
+Por haber comprado los prompts, tienes acceso a un descuento que no está en ningún otro sitio.
+
+TU CÓDIGO DE DESCUENTO: MISTERY
+(Introdúcelo en el checkout de Stripe)
+
+→ Ver The AI Playbook: ${courseUrl}
+390€ · 8 sesiones en directo · Plazas limitadas
+
+Si ya tienes claro que quieres estar, entra y usa el código.
+Si quieres saber más primero, responde a este email y te cuento.
+
+Un saludo,
+Javi
+
+---
+The AI Playbook · contact@javiggil.com
   `.trim()
 }
