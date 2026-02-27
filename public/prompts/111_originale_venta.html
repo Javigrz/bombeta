@@ -550,8 +550,6 @@ body {
 .marquee-track {
   overflow: hidden;
   position: relative;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
 }
 
 
@@ -945,7 +943,7 @@ body {
   .testi-head { padding: 0 20px 36px; }
   .testi-title { letter-spacing: -0.5px; }
   .marquee-wrapper { gap: 10px; }
-  .marquee-inner { gap: 10px; }
+  .marquee-inner { gap: 10px; will-change: auto; }
   .marquee-img { height: 170px; border-radius: 10px; }
   .marquee-wrapper::before, .marquee-wrapper::after { width: 40px; }
   .books-section { padding: 60px 0; }
@@ -1841,6 +1839,43 @@ window.addEventListener('scroll', () => {
     stickyCta.classList.remove('show');
   }
 });
+
+// Mobile marquee: rAF instead of CSS animation (fixes iOS Safari compositing bug)
+(function() {
+  if (window.innerWidth > 640) return;
+  var leftEl = document.querySelector('.marquee-left');
+  var rightEl = document.querySelector('.marquee-right');
+  if (!leftEl || !rightEl) return;
+
+  [leftEl, rightEl].forEach(function(el) {
+    el.style.animation = 'none';
+    el.style.webkitAnimation = 'none';
+    el.style.willChange = 'auto';
+  });
+
+  var leftPos = 0, rightPos = 0;
+  var SPEED = 0.6; // px per frame at 60fps
+
+  function step() {
+    var lHalf = leftEl.scrollWidth / 2;
+    var rHalf = rightEl.scrollWidth / 2;
+    leftPos -= SPEED;
+    if (leftPos <= -lHalf) leftPos += lHalf;
+    rightPos += SPEED;
+    if (rightPos >= 0) rightPos -= rHalf;
+    leftEl.style.transform = 'translateX(' + leftPos + 'px)';
+    rightEl.style.transform = 'translateX(' + rightPos + 'px)';
+    requestAnimationFrame(step);
+  }
+
+  function init() {
+    rightPos = -(rightEl.scrollWidth / 2);
+    requestAnimationFrame(step);
+  }
+
+  if (document.readyState === 'complete') { init(); }
+  else { window.addEventListener('load', init); }
+})();
 </script>
 
 </body>
