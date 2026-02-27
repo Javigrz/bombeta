@@ -33,10 +33,19 @@ export default function GraciasPromptPage() {
             Los prompts están<br />
             <span className="text-[#FE4629]">en tu email.</span>
           </h1>
+        </div>
 
-          <p className="font-inter text-base text-[#FAF5EB]/60 leading-relaxed">
-            Te hemos enviado los <strong className="text-[#FAF5EB]/80">111 Originale</strong> a tu correo. Si no ves el email, revisa la carpeta de <strong className="text-[#FAF5EB]/80">SPAM</strong>.
-          </p>
+        {/* SPAM WARNING — protagonista */}
+        <div className="w-full rounded-2xl border-2 border-amber-400/60 bg-amber-400/10 px-6 py-5 flex gap-4 items-start">
+          <span className="text-2xl mt-0.5">⚠️</span>
+          <div className="flex flex-col gap-1">
+            <p className="font-inter font-bold text-amber-300 text-base uppercase tracking-wide">
+              Revisa la carpeta de SPAM
+            </p>
+            <p className="font-inter text-[#FAF5EB]/80 text-sm leading-relaxed">
+              El email suele acabar ahí. Ábrelo, márcalo como "No es spam" y ya lo tendrás siempre en bandeja de entrada.
+            </p>
+          </div>
         </div>
 
         {/* Separador */}
@@ -84,10 +93,10 @@ export default function GraciasPromptPage() {
             </div>
           </div>
 
-          {/* Nota spam */}
+          {/* Contacto si no llega */}
           <div className="rounded-xl border border-[#FAF5EB]/10 bg-[#FAF5EB]/5 px-5 py-4">
             <p className="font-inter text-[#FAF5EB]/50 text-xs leading-relaxed">
-              <strong className="text-[#FAF5EB]/70">¿No has recibido el email?</strong> Revisa la carpeta de spam o correo no deseado. Si sigue sin aparecer, escríbenos a{" "}
+              ¿Sigue sin aparecer tras revisar spam? Escríbenos a{" "}
               <a href="mailto:contact@javiggil.com" className="text-[#FE4629]/70 hover:text-[#FE4629] transition-colors">
                 contact@javiggil.com
               </a>{" "}

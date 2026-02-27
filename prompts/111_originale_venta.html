@@ -557,7 +557,6 @@ body {
   display: flex;
   gap: 14px;
   width: max-content;
-  will-change: transform;
 }
 
 .marquee-left {
@@ -1840,9 +1839,8 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// Mobile marquee: rAF instead of CSS animation (fixes iOS Safari compositing bug)
+// Marquee: rAF animation (reliable on all devices)
 (function() {
-  if (window.innerWidth > 640) return;
   var leftEl = document.querySelector('.marquee-left');
   var rightEl = document.querySelector('.marquee-right');
   if (!leftEl || !rightEl) return;
