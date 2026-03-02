@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import {
   getKpis,
   getDailySessions,
@@ -7,6 +8,7 @@ import {
   getUtmStats,
   getRecentPurchases,
   getRecentEvents,
+  getAvailablePages,
 } from '@/lib/analytics-db'
 import { MetricsCards } from './_components/metrics-cards'
 import { SessionsChart } from './_components/sessions-chart'
@@ -16,25 +18,57 @@ import { TopPagesTable } from './_components/top-pages-table'
 import { UtmTable } from './_components/utm-table'
 import { PurchasesTable } from './_components/purchases-table'
 import { RecentEvents } from './_components/recent-events'
+import { PageFilter } from './_components/page-filter'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-export default async function DashboardPage() {
-  const [kpis, dailySessions, funnel, scrollDepth, topPages, utmStats, purchases, recentEvents] =
-    await Promise.all([
-      getKpis(),
-      getDailySessions(),
-      getFunnel(),
-      getScrollDepth(),
-      getTopPages(),
-      getUtmStats(),
-      getRecentPurchases(),
-      getRecentEvents(),
-    ])
+interface Props {
+  searchParams: Promise<{ page?: string }>
+}
+
+export default async function DashboardPage({ searchParams }: Props) {
+  const params = await searchParams
+  const pageFilter = params.page ?? null
+
+  const [
+    kpis,
+    dailySessions,
+    funnel,
+    scrollDepth,
+    topPages,
+    utmStats,
+    purchases,
+    recentEvents,
+    availablePages,
+  ] = await Promise.all([
+    getKpis(pageFilter),
+    getDailySessions(pageFilter),
+    getFunnel(pageFilter),
+    getScrollDepth(pageFilter),
+    getTopPages(),
+    getUtmStats(pageFilter),
+    getRecentPurchases(),
+    getRecentEvents(pageFilter),
+    getAvailablePages(),
+  ])
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Filtro de página */}
+      <div className="bg-gray-900 rounded-xl px-5 py-3 border border-gray-800">
+        <Suspense>
+          <PageFilter pages={availablePages} active={pageFilter} />
+        </Suspense>
+      </div>
+
+      {pageFilter && (
+        <p className="text-sm text-gray-400">
+          Filtrando por página:{' '}
+          <span className="text-orange-400 font-mono">{pageFilter}</span>
+        </p>
+      )}
+
       <MetricsCards
         totalSessions={kpis.totalSessions}
         formConversions={kpis.formConversions}
