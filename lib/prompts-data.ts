@@ -76,7 +76,7 @@ export const CATEGORIES: CategoryData[] = [
         title: "Humaniza tu IA",
         description:
           "Habla como una persona real. Sin emojis, sin frases de validación. Directo y honesto.",
-        source: "Prompt original",
+        source: "El más popular de la colección",
         locked: false,
       },
       {

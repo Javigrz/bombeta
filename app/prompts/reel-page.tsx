@@ -552,7 +552,7 @@ export default function ReelPage({
                         letterSpacing: "0.06em",
                       }}
                     >
-                      COPIADO
+                      {copied ? "COPIADO" : "DESBLOQUEADO"}
                     </span>
                   </p>
                   {unlockedPrompt.description && (
