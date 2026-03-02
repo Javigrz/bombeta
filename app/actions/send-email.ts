@@ -1,6 +1,7 @@
 'use server'
 
 import { Resend } from 'resend'
+import { trackServerEvent } from '@/lib/analytics-db'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -9,6 +10,7 @@ const STRIPE_URL = 'https://buy.stripe.com/7sYfZ9dxb79m3eOdph9EI02'
 export interface GroupReservationData {
   name: string
   email: string
+  sessionId?: string
 }
 
 export async function sendGroupReservationEmails(data: GroupReservationData) {
@@ -116,6 +118,13 @@ P.D.: El curso empieza el 9 de marzo. 8 sesiones en directo por videollamada, 4 
       console.error('Error sending user confirmation (non-fatal):', userEmail.error)
     }
 
+    // Track form submission in analytics
+    await trackServerEvent(data.sessionId ?? null, 'form_submit', '/', {
+      name: data.name,
+      email: data.email,
+      form: 'group_reservation',
+    })
+
     return { success: true }
   } catch (error) {
     console.error('Unexpected error:', error)
@@ -128,6 +137,7 @@ export interface FormData {
   email: string
   position: string
   language: string
+  sessionId?: string
 }
 
 export async function sendFormEmail(formData: FormData) {
@@ -259,6 +269,13 @@ Enviado desde bombetacourse.com
         error: 'Error al enviar el email. Por favor, inténtalo de nuevo.'
       }
     }
+
+    // Track form submission in analytics
+    await trackServerEvent(formData.sessionId ?? null, 'form_submit', '/', {
+      name: formData.name,
+      email: formData.email,
+      form: 'main_form',
+    })
 
     return {
       success: true,

@@ -3,6 +3,7 @@ import Stripe from "stripe"
 import { Resend } from "resend"
 import fs from "fs"
 import path from "path"
+import { trackServerEvent } from "@/lib/analytics-db"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -38,6 +39,16 @@ export async function POST(req: Request) {
     if (!email) {
       return new Response("No email found", { status: 200 })
     }
+
+    // Track purchase in analytics
+    const analyticsSessionId = session.metadata?.analytics_session_id ?? null
+    const amountTotal = session.amount_total ? session.amount_total / 100 : null
+    await trackServerEvent(analyticsSessionId, 'purchase', '/', {
+      email,
+      product: product ?? 'course',
+      amount: amountTotal,
+      stripeSessionId: session.id,
+    })
 
     if (product === "prompts_111") {
       // Email 1: entrega de los prompts

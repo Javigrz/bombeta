@@ -7,6 +7,7 @@ const STRIPE_URL = "https://buy.stripe.com/7sYfZ9dxb79m3eOdph9EI02"
 import MomentumLogo from "../components/momentum-logo"
 import { Clock, FileText, GitBranch, RefreshCw, Instagram } from "lucide-react"
 import { sendFormEmail, sendGroupReservationEmails } from "./actions/send-email"
+import { useAnalytics } from "@/hooks/use-analytics"
 // Eliminar la importación de MomentumLogoHot
 
 // Componente de gráfica de tendencia minimalista
@@ -69,6 +70,7 @@ function InlineDetails({ description, categories, makers }: InlineDetailsProps) 
 }
 
 export default function HomePage() {
+  const { track } = useAnalytics()
   const [currentTime, setCurrentTime] = useState<Date | null>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [showSignup, setShowSignup] = useState(false)
@@ -329,7 +331,8 @@ export default function HomePage() {
     setSubmitMessage(null)
 
     try {
-      const result = await sendFormEmail(formData)
+      const sessionId = typeof window !== 'undefined' ? localStorage.getItem('analytics_session_id') ?? undefined : undefined
+      const result = await sendFormEmail({ ...formData, sessionId })
 
       if (result.success) {
         setFormSubmitted(true)
@@ -355,7 +358,8 @@ export default function HomePage() {
     setGroupIsSubmitting(true)
     setGroupSubmitMessage(null)
     try {
-      const result = await sendGroupReservationEmails(groupFormData)
+      const sessionId = typeof window !== 'undefined' ? localStorage.getItem('analytics_session_id') ?? undefined : undefined
+      const result = await sendGroupReservationEmails({ ...groupFormData, sessionId })
       if (result.success) {
         setGroupFormSubmitted(true)
         window.dataLayer = window.dataLayer || []
@@ -1176,6 +1180,7 @@ export default function HomePage() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onFocus={() => track('form_focus', { form: 'main_form', field: 'name' })}
                   className="w-full px-4 py-3 font-inter rounded-lg focus:outline-none transition-all duration-300 placeholder-muted"
                   style={{
                     backgroundColor: 'rgba(254, 70, 41, 0.05)',

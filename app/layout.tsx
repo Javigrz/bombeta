@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Newsreader } from "next/font/google"
 import "./globals.css"
+import { AnalyticsProvider } from "@/contexts/analytics-provider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -84,7 +85,7 @@ export default function RootLayout({
         {/* Google Tag Manager (noscript) */}
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KM7KRF66" height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe></noscript>
         {/* End Google Tag Manager (noscript) */}
-        {children}
+        <AnalyticsProvider>{children}</AnalyticsProvider>
       </body>
     </html>
   )
