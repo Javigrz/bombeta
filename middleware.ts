@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 
-const SECRET = new TextEncoder().encode(process.env.DASHBOARD_JWT_SECRET ?? 'dev-secret')
-
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
@@ -15,6 +13,8 @@ export async function middleware(req: NextRequest) {
   if (!token) {
     return NextResponse.redirect(new URL('/login', req.url))
   }
+
+  const SECRET = new TextEncoder().encode(process.env.DASHBOARD_JWT_SECRET ?? 'dev-secret')
 
   try {
     await jwtVerify(token, SECRET)

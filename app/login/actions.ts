@@ -4,8 +4,6 @@ import { SignJWT } from 'jose'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-const SECRET = new TextEncoder().encode(process.env.DASHBOARD_JWT_SECRET ?? 'dev-secret')
-
 export async function validateLogin(formData: FormData) {
   const username = formData.get('username') as string
   const password = formData.get('password') as string
@@ -13,9 +11,15 @@ export async function validateLogin(formData: FormData) {
   const validUsername = process.env.DASHBOARD_USERNAME
   const validPassword = process.env.DASHBOARD_PASSWORD
 
+  if (!validUsername || !validPassword) {
+    return { error: 'Variables de entorno no configuradas' }
+  }
+
   if (username !== validUsername || password !== validPassword) {
     return { error: 'Credenciales incorrectas' }
   }
+
+  const SECRET = new TextEncoder().encode(process.env.DASHBOARD_JWT_SECRET ?? 'dev-secret')
 
   const token = await new SignJWT({ sub: username })
     .setProtectedHeader({ alg: 'HS256' })
