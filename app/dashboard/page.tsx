@@ -1,4 +1,3 @@
-import { Suspense } from 'react'
 import {
   getKpis,
   getDailySessions,
@@ -57,9 +56,7 @@ export default async function DashboardPage({ searchParams }: Props) {
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Filtro de página */}
       <div className="bg-gray-900 rounded-xl px-5 py-3 border border-gray-800">
-        <Suspense>
-          <PageFilter pages={availablePages} active={pageFilter} />
-        </Suspense>
+        <PageFilter pages={availablePages} active={pageFilter} />
       </div>
 
       {pageFilter && (
