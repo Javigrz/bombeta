@@ -333,6 +333,12 @@ export default function HomePage() {
 
       if (result.success) {
         setFormSubmitted(true)
+        window.dataLayer = window.dataLayer || []
+        window.dataLayer.push({
+          event: 'form_submit',
+          form_type: 'individual_signup',
+          user_language: formData.language,
+        })
       } else {
         setSubmitMessage({ type: 'error', text: result.error || 'Error al enviar la solicitud' })
       }
@@ -350,8 +356,14 @@ export default function HomePage() {
     setGroupSubmitMessage(null)
     try {
       const result = await sendGroupReservationEmails(groupFormData)
-      if (result.success) setGroupFormSubmitted(true)
-      else setGroupSubmitMessage({ type: 'error', text: result.error || 'Error al enviar' })
+      if (result.success) {
+        setGroupFormSubmitted(true)
+        window.dataLayer = window.dataLayer || []
+        window.dataLayer.push({
+          event: 'form_submit',
+          form_type: 'group_signup',
+        })
+      } else setGroupSubmitMessage({ type: 'error', text: result.error || 'Error al enviar' })
     } catch {
       setGroupSubmitMessage({ type: 'error', text: 'Error inesperado. Inténtalo de nuevo.' })
     } finally {
