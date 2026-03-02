@@ -12,7 +12,7 @@ export async function validateLogin(formData: FormData) {
   const validPassword = process.env.DASHBOARD_PASSWORD
 
   if (!validUsername || !validPassword) {
-    return { error: 'Variables de entorno no configuradas' }
+    return { error: `Config error: username=${!!validUsername} password=${!!validPassword}` }
   }
 
   if (username !== validUsername || password !== validPassword) {
