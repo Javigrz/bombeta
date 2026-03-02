@@ -2,7 +2,6 @@
 
 import { SignJWT } from 'jose'
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 export async function validateLogin(formData: FormData) {
   const username = formData.get('username') as string
@@ -12,7 +11,7 @@ export async function validateLogin(formData: FormData) {
   const validPassword = process.env.DASHBOARD_PASSWORD
 
   if (!validUsername || !validPassword) {
-    return { error: `Config error: username=${!!validUsername} password=${!!validPassword}` }
+    return { error: 'Credenciales incorrectas' }
   }
 
   if (username !== validUsername || password !== validPassword) {
@@ -36,5 +35,5 @@ export async function validateLogin(formData: FormData) {
     path: '/',
   })
 
-  redirect('/dashboard')
+  return { success: true }
 }
