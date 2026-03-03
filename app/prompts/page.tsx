@@ -28,6 +28,7 @@ export default async function PromptsPage({
       <ReelPage
         prompt={prompt}
         extraPrompts={extraPrompts}
+        displayOrder={tokenData.displayOrder}
         category={category}
         otherCategories={otherCategories}
       />

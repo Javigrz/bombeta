@@ -60,6 +60,7 @@ const C = {
 interface ReelPageProps {
   prompt: PromptFull;
   extraPrompts?: PromptFull[];
+  displayOrder?: { number: string; blurred: boolean }[];
   category: CategoryData;
   otherCategories: CategoryData[];
 }
@@ -319,6 +320,7 @@ function ExtraPromptBlock({ prompt }: { prompt: PromptFull }) {
 export default function ReelPage({
   prompt,
   extraPrompts = [],
+  displayOrder: customDisplayOrder,
   category,
   otherCategories,
 }: ReelPageProps) {
@@ -384,8 +386,8 @@ export default function ReelPage({
   const unlockedPrompt = realPrompts.find((p) => p.number === prompt.number)!;
   const byNumber = Object.fromEntries(realPrompts.map((p) => [p.number, p]));
 
-  // Ordered display list: 5 readable (with desc) + 3 blurred thin (title only), interspersed
-  const DISPLAY_ORDER: { number: string; blurred: boolean }[] = [
+  // Ordered display list — use custom order from token config, or default productividad order
+  const DEFAULT_DISPLAY_ORDER: { number: string; blurred: boolean }[] = [
     { number: "001", blurred: false }, // Humaniza tu IA — clave
     { number: "002", blurred: true  }, // Matriz Eisenhower — thin blur
     { number: "015", blurred: false }, // Negociador de Sueldo
@@ -395,7 +397,9 @@ export default function ReelPage({
     { number: "017", blurred: true  }, // Antifragile — thin blur
     { number: "013", blurred: false }, // Cazador de cupones
     { number: "019", blurred: false }, // Los 7 Hábitos
-  ].filter((d) => !unlockedNumbers.has(d.number) && byNumber[d.number]);
+  ];
+  const DISPLAY_ORDER = (customDisplayOrder ?? DEFAULT_DISPLAY_ORDER)
+    .filter((d) => !unlockedNumbers.has(d.number) && byNumber[d.number]);
 
   const shownNumbers = new Set(DISPLAY_ORDER.map((d) => d.number));
   const hiddenCount = category.count - unlockedNumbers.size - shownNumbers.size;
@@ -730,6 +734,9 @@ export default function ReelPage({
                       opacity: 0.5,
                     }}
                   >
+                    <span style={{ fontSize: 10, fontWeight: 700, color: C.red, flexShrink: 0 }}>
+                      {number}
+                    </span>
                     <span
                       style={{
                         fontSize: 13,
@@ -763,6 +770,9 @@ export default function ReelPage({
                     alignItems: "flex-start",
                   }}
                 >
+                  <span style={{ fontSize: 10, fontWeight: 700, color: C.red, flexShrink: 0, marginTop: 2 }}>
+                    {number}
+                  </span>
                   <div style={{ flex: 1 }}>
                     <p style={{ fontSize: 14, fontWeight: 600, color: C.dark, margin: 0 }}>
                       {p.title}

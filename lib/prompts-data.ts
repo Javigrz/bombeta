@@ -37,9 +37,27 @@ export interface CategoryData {
 export const STRIPE_URL = "https://buy.stripe.com/cNidR1eBfeBO7v4dph9EI03";
 
 // Token → prompt mapping. Each reel gets a unique token.
-export const REEL_TOKENS: Record<string, { promptId: string; categoryId: CategoryId; extraPromptIds?: string[] }> = {
+export interface ReelToken {
+  promptId: string;
+  categoryId: CategoryId;
+  extraPromptIds?: string[];
+  displayOrder?: { number: string; blurred: boolean }[];
+}
+
+export const REEL_TOKENS: Record<string, ReelToken> = {
   x9p2r7: { promptId: "013", categoryId: "productividad" },
   h7m3k1: { promptId: "001", categoryId: "productividad" },
+  f9k3z7: {
+    promptId: "036",
+    categoryId: "negocio",
+    displayOrder: [
+      { number: "045", blurred: false },
+      { number: "047", blurred: false },
+      { number: "049", blurred: true  },
+      { number: "051", blurred: false },
+      { number: "053", blurred: false },
+    ],
+  },
 };
 
 const PROMPT_001_CONTENT = `<system_configuration>
@@ -153,6 +171,25 @@ con la información que tienes y luego, si quieres, matiza.
 </response_logic>
 </behavior>`;
 
+const PROMPT_036_CONTENT = `Eres un analista financiero. Analiza los movimientos del mercado global de esta semana y dame un briefing semanal de inversión con esta estructura exacta:
+
+1. CONTEXTO MACRO (3-5 líneas)
+¿Qué ha movido los mercados esta semana? Decisiones de bancos centrales, datos económicos relevantes (inflación, empleo, PMI), tensiones geopolíticas, movimientos en bonos y divisas. Solo lo que realmente ha impactado precios.
+
+2. ACCIONES INFRAVALORADAS (5 candidatas globales)
+Criterios obligatorios: cotizando a menos del 15% de su máximo de 52 semanas, P/E por debajo de la media de su sector, flujo de caja libre positivo, deuda/EBITDA menor a 3x. Para cada una indica: ticker, precio actual, máximo 52 semanas, P/E vs media del sector, y el catalizador potencial que podría revertir la caída.
+
+3. ACCIONES CON MOMENTUM (5 candidatas globales)
+Criterios: subida de más del 10% en los últimos 30 días, volumen creciente respecto a su media de 90 días. Para cada una: ticker, rendimiento 30 días, volumen vs media, y si el momentum viene respaldado por fundamentales o es puramente especulativo.
+
+4. SECTORES Y TENDENCIAS
+¿Qué sectores han tenido mejor y peor rendimiento esta semana a nivel global? ¿Hay rotación sectorial? ¿Flujos de capital hacia o desde mercados emergentes?
+
+5. RIESGOS DE LA PRÓXIMA SEMANA
+Eventos del calendario económico de la semana que viene que podrían generar volatilidad: earnings importantes, decisiones de tipos, datos macro, vencimientos de opciones.
+
+Incluye fuentes y fechas de los datos. Formato limpio, sin introducciones innecesarias.`;
+
 const PROMPT_013_CONTENT = `Quiero comprar este producto.
 
 Busca en internet todos los códigos de descuento, cupones y ofertas disponibles para esta tienda.
@@ -164,6 +201,16 @@ Usa el modo agente para navegar tú mismo.
 [link del producto]`;
 
 export const FULL_PROMPTS: Record<string, PromptFull> = {
+  "036": {
+    id: "036",
+    number: "036",
+    title: "Briefing Semanal de Inversión",
+    description:
+      "Análisis semanal de mercados globales: acciones infravaloradas, momentum, sectores y riesgos de la semana que viene.",
+    categoryId: "negocio",
+    source: "Finanzas · Mercados globales",
+    content: PROMPT_036_CONTENT,
+  },
   "001": {
     id: "001",
     number: "001",
@@ -366,6 +413,14 @@ export const CATEGORIES: CategoryData[] = [
     icon: "💰",
     count: 16,
     prompts: [
+      {
+        number: "036",
+        title: "Briefing Semanal de Inversión",
+        description:
+          "Análisis semanal de mercados globales: acciones infravaloradas, momentum, sectores y riesgos de la semana que viene.",
+        source: "Finanzas · Mercados globales",
+        locked: false,
+      },
       {
         number: "045",
         title: "Activos vs Pasivos",

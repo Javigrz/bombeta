@@ -816,7 +816,7 @@ body {
         <a href="#p033" class="nav-prompt-link" onclick="closeMobile()">033 · Persona del Cliente Ideal</a>
         <a href="#p034" class="nav-prompt-link" onclick="closeMobile()">034 · Pitch de Elevador</a>
         <a href="#p035" class="nav-prompt-link" onclick="closeMobile()">035 · Revisor de Contratos</a>
-        <a href="#p036" class="nav-prompt-link" onclick="closeMobile()">036 · Análisis de Inversión</a>
+        <a href="#p036" class="nav-prompt-link" onclick="closeMobile()">036 · Briefing Semanal de Inversión</a>
         <a href="#p037" class="nav-prompt-link" onclick="closeMobile()">037 · Side Hustle Personalizado</a>
         <a href="#p038" class="nav-prompt-link" onclick="closeMobile()">038 · Calculadora Punto Equilib…</a>
         <a href="#p039" class="nav-prompt-link" onclick="closeMobile()">039 · Lean Startup Validator</a>
@@ -2781,8 +2781,8 @@ Usa el modo agente para navegar tú mismo.
       </a>
       <a href="#p036" class="prompt-list-item">
         <span class="pli-num">036</span>
-        <span class="pli-title">Análisis de Inversión</span>
-        <span class="pli-desc">Análisis de riesgos y potencial retorno para cualquier oport…</span>
+        <span class="pli-title">Briefing Semanal de Inversión</span>
+        <span class="pli-desc">Mercados globales esta semana: infravaloradas, momentum, sect…</span>
       </a>
       <a href="#p037" class="prompt-list-item">
         <span class="pli-num">037</span>
@@ -3094,13 +3094,36 @@ Si es adelante, dame los primeros 3 pasos concretos.
     <div class="prompt-card">
       <div class="prompt-meta">
         <span class="prompt-number">PROMPT 036</span>
-        <span class="prompt-type">Finanzas · Invertir</span>
+        <span class="prompt-type">Finanzas · Mercados globales</span>
       </div>
-      <h3 class="prompt-title">Análisis de Inversión</h3>
-      <p class="prompt-desc">Análisis de riesgos y potencial retorno para cualquier oportunidad de inversión.</p>
+      <h3 class="prompt-title">Briefing Semanal de Inversión</h3>
+      <p class="prompt-desc">Análisis semanal de mercados globales: acciones infravaloradas, momentum, sectores y riesgos de la semana que viene.</p>
       <div class="code-block">
-        <button class="copy-btn" onclick="copyPrompt('prompt036')">Copiar prompt</button>
-        <div class="code-content" id="prompt036">Estoy considerando invertir en <span class="placeholder" contenteditable="true">describe la inversión</span>. Mi perfil: <span class="placeholder" contenteditable="true">conservador/moderado/agresivo</span>, mi horizonte temporal es <span class="placeholder" contenteditable="true">X años</span>, y mi presupuesto es <span class="placeholder" contenteditable="true">cantidad</span>. Analiza: potencial de retorno siendo realista, riesgos principales que debo considerar, factores a favor y en contra, qué tendría que pasar para que sea una mala inversión, y si hay alternativas mejores para mi perfil. No me vendas la idea. Dame la perspectiva que me haría un asesor financiero independiente.</div>
+        <div class="code-header">
+          <span class="code-label">PROMPT</span>
+          <button class="copy-btn" onclick="copyPrompt(this, 'prompt036')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            COPIAR
+          </button>
+        </div>
+        <div class="code-content" id="prompt036">Eres un analista financiero. Analiza los movimientos del mercado global de esta semana y dame un briefing semanal de inversión con esta estructura exacta:
+
+<span class="directive">1. CONTEXTO MACRO (3-5 líneas)</span>
+¿Qué ha movido los mercados esta semana? Decisiones de bancos centrales, datos económicos relevantes (inflación, empleo, PMI), tensiones geopolíticas, movimientos en bonos y divisas. Solo lo que realmente ha impactado precios.
+
+<span class="directive">2. ACCIONES INFRAVALORADAS (5 candidatas globales)</span>
+Criterios obligatorios: cotizando a menos del 15% de su máximo de 52 semanas, P/E por debajo de la media de su sector, flujo de caja libre positivo, deuda/EBITDA menor a 3x. Para cada una indica: ticker, precio actual, máximo 52 semanas, P/E vs media del sector, y el catalizador potencial que podría revertir la caída.
+
+<span class="directive">3. ACCIONES CON MOMENTUM (5 candidatas globales)</span>
+Criterios: subida de más del 10% en los últimos 30 días, volumen creciente respecto a su media de 90 días. Para cada una: ticker, rendimiento 30 días, volumen vs media, y si el momentum viene respaldado por fundamentales o es puramente especulativo.
+
+<span class="directive">4. SECTORES Y TENDENCIAS</span>
+¿Qué sectores han tenido mejor y peor rendimiento esta semana a nivel global? ¿Hay rotación sectorial? ¿Flujos de capital hacia o desde mercados emergentes?
+
+<span class="directive">5. RIESGOS DE LA PRÓXIMA SEMANA</span>
+Eventos del calendario económico de la semana que viene que podrían generar volatilidad: earnings importantes, decisiones de tipos, datos macro, vencimientos de opciones.
+
+Incluye fuentes y fechas de los datos. Formato limpio, sin introducciones innecesarias.</div>
       </div>
     </div>
   </section>
