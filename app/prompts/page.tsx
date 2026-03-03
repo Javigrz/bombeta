@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { REEL_TOKENS, FULL_PROMPTS, CATEGORIES } from "@/lib/prompts-data";
+import { REEL_TOKENS, FULL_PROMPTS, CATEGORIES, PromptFull } from "@/lib/prompts-data";
 import ReelPage from "./reel-page";
 
 export default async function PromptsPage({
@@ -16,6 +16,9 @@ export default async function PromptsPage({
       redirect("/prompts");
     }
     const prompt = FULL_PROMPTS[tokenData.promptId];
+    const extraPrompts: PromptFull[] = (tokenData.extraPromptIds ?? [])
+      .map((id) => FULL_PROMPTS[id])
+      .filter((p): p is PromptFull => Boolean(p));
     const category = CATEGORIES.find((c) => c.id === tokenData.categoryId)!;
     const otherCategories = CATEGORIES.filter(
       (c) => c.id !== tokenData.categoryId
@@ -24,6 +27,7 @@ export default async function PromptsPage({
     return (
       <ReelPage
         prompt={prompt}
+        extraPrompts={extraPrompts}
         category={category}
         otherCategories={otherCategories}
       />

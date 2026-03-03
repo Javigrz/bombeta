@@ -13,11 +13,14 @@ import {
 // ─── Prompt content parser ───────────────────────────────────────────────────
 type PromptPart =
   | { type: "text"; content: string }
+  | { type: "tag"; content: string }
+  | { type: "directive"; content: string }
   | { type: "placeholder"; content: string };
 
 function parsePromptContent(content: string): PromptPart[] {
   const parts: PromptPart[] = [];
-  const regex = /\[([^\]]+)\]/g;
+  // Matches: XML tags | placeholders [text] | DIRECTIVE LABELS: (all-caps + colon)
+  const regex = /(<[^>]+>)|(\[[^\]]+\])|([A-ZÁÉÍÓÚÜÑ]{2,}(?:\s+[A-ZÁÉÍÓÚÜÑ]+)*:)/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -25,7 +28,13 @@ function parsePromptContent(content: string): PromptPart[] {
     if (match.index > lastIndex) {
       parts.push({ type: "text", content: content.slice(lastIndex, match.index) });
     }
-    parts.push({ type: "placeholder", content: match[1] });
+    if (match[1]) {
+      parts.push({ type: "tag", content: match[1] });
+    } else if (match[2]) {
+      parts.push({ type: "placeholder", content: match[2].slice(1, -1) });
+    } else if (match[3]) {
+      parts.push({ type: "directive", content: match[3] });
+    }
     lastIndex = match.index + match[0].length;
   }
   if (lastIndex < content.length) {
@@ -50,6 +59,7 @@ const C = {
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface ReelPageProps {
   prompt: PromptFull;
+  extraPrompts?: PromptFull[];
   category: CategoryData;
   otherCategories: CategoryData[];
 }
@@ -171,7 +181,7 @@ function CategoryAccordion({ category }: { category: CategoryData }) {
                   paddingTop: 1,
                 }}
               >
-                {p.locked ? "🔒" : p.number}
+                {p.number}
               </span>
               <div>
                 <p
@@ -218,9 +228,97 @@ function CategoryAccordion({ category }: { category: CategoryData }) {
   );
 }
 
+// ─── Extra unlocked prompt block ──────────────────────────────────────────────
+function ExtraPromptBlock({ prompt }: { prompt: PromptFull }) {
+  const [copied, setCopied] = useState(false);
+  const placeholderRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const parts = useMemo(() => parsePromptContent(prompt.content), [prompt.content]);
+
+  async function handleCopy() {
+    let pIdx = 0;
+    const copyText = parts
+      .map((part) => {
+        if (part.type !== "placeholder") return part.content;
+        const el = placeholderRefs.current[pIdx++];
+        return el ? (el.textContent?.trim() || part.content) : part.content;
+      })
+      .join("");
+    try {
+      await navigator.clipboard.writeText(copyText);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = copyText;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <section style={{ maxWidth: 680, margin: "0 auto", padding: "0 24px 32px" }}>
+      <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 32 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: C.muted, margin: "0 0 8px" }}>
+          PROMPT {prompt.number}
+        </p>
+        <h2 style={{ fontFamily: "var(--font-newsreader), Georgia, serif", fontSize: "clamp(24px, 6vw, 36px)", fontWeight: 400, lineHeight: 1.1, margin: "0 0 12px", color: C.dark }}>
+          {prompt.title}
+        </h2>
+        <p style={{ fontSize: 16, color: C.muted, margin: "0 0 6px", lineHeight: 1.5 }}>
+          {prompt.description}
+        </p>
+        <p style={{ fontSize: 12, color: C.red, fontWeight: 600, margin: "0 0 28px" }}>
+          {prompt.source}
+        </p>
+        <div style={{ background: "#2D0E1E", border: "1px solid rgba(254,70,41,0.2)", borderRadius: 10, marginBottom: 16, overflow: "hidden" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 20px", background: "#3D1A2B", borderBottom: "1px solid rgba(254,70,41,0.15)" }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(254,70,41,0.55)", letterSpacing: "1px", textTransform: "uppercase" }}>
+              ↓ copiar abajo
+            </span>
+          </div>
+          <pre style={{ fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace", fontSize: 13, lineHeight: 1.7, color: "#E8DDD4", margin: 0, padding: "20px 20px 16px", whiteSpace: "pre-wrap", wordBreak: "break-word", overflowX: "hidden" }}>
+            {(() => {
+              let pIdx = 0;
+              return parts.map((part, i) => {
+                if (part.type === "text") return <span key={i}>{part.content}</span>;
+                if (part.type === "tag") return <span key={i} style={{ color: "#FE4629" }}>{part.content}</span>;
+                if (part.type === "directive") return <span key={i} style={{ color: "#FFB299", fontWeight: 500 }}>{part.content}</span>;
+                const idx = pIdx++;
+                return (
+                  <span
+                    key={i}
+                    ref={(el) => { placeholderRefs.current[idx] = el; }}
+                    contentEditable
+                    suppressContentEditableWarning
+                    className="prompt-placeholder"
+                    style={{ display: "inline", background: "rgba(254,70,41,0.2)", border: "1px dashed #FE4629", borderRadius: 4, padding: "2px 8px", color: "#FE4629", fontWeight: 500, cursor: "text", outline: "none", minWidth: 80, fontFamily: "inherit", transition: "all 0.2s" }}
+                  >
+                    {part.content}
+                  </span>
+                );
+              });
+            })()}
+          </pre>
+        </div>
+        <button
+          onClick={handleCopy}
+          style={{ width: "100%", padding: "16px 24px", background: copied ? C.green : C.red, color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 700, letterSpacing: "0.05em", cursor: "pointer", minHeight: 56, transition: "background 0.2s" }}
+        >
+          {copied ? "✓ Prompt copiado" : "COPIAR PROMPT"}
+        </button>
+      </div>
+    </section>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function ReelPage({
   prompt,
+  extraPrompts = [],
   category,
   otherCategories,
 }: ReelPageProps) {
@@ -232,13 +330,17 @@ export default function ReelPage({
   const placeholderRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const parts = useMemo(() => parsePromptContent(prompt.content), [prompt.content]);
+  const unlockedNumbers = useMemo(
+    () => new Set([prompt.number, ...extraPrompts.map((p) => p.number)]),
+    [prompt.number, extraPrompts]
+  );
 
   async function handleCopy() {
     // Build copy text: regular parts as-is, placeholders with their current DOM value
     let pIdx = 0;
     const copyText = parts
       .map((part) => {
-        if (part.type === "text") return part.content;
+        if (part.type !== "placeholder") return part.content;
         const el = placeholderRefs.current[pIdx++];
         return el ? (el.textContent?.trim() || part.content) : part.content;
       })
@@ -291,11 +393,12 @@ export default function ReelPage({
     { number: "003", blurred: true  }, // Sprint de Trabajo Profundo — thin blur
     { number: "009", blurred: false }, // La semana laboral de 4 horas
     { number: "017", blurred: true  }, // Antifragile — thin blur
+    { number: "013", blurred: false }, // Cazador de cupones
     { number: "019", blurred: false }, // Los 7 Hábitos
-  ].filter((d) => d.number !== prompt.number && byNumber[d.number]);
+  ].filter((d) => !unlockedNumbers.has(d.number) && byNumber[d.number]);
 
   const shownNumbers = new Set(DISPLAY_ORDER.map((d) => d.number));
-  const hiddenCount = category.count - 1 - shownNumbers.size;
+  const hiddenCount = category.count - unlockedNumbers.size - shownNumbers.size;
 
   return (
     <div
@@ -407,21 +510,27 @@ export default function ReelPage({
         `}</style>
         <div
           style={{
-            background: C.card,
-            border: `1px solid ${C.border}`,
+            background: "#2D0E1E",
+            border: `1px solid rgba(254,70,41,0.2)`,
             borderRadius: 10,
-            padding: "20px 20px 16px",
             marginBottom: 16,
-            position: "relative",
+            overflow: "hidden",
           }}
         >
+          {/* Code header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 20px", background: "#3D1A2B", borderBottom: "1px solid rgba(254,70,41,0.15)" }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(254,70,41,0.55)", letterSpacing: "1px", textTransform: "uppercase" }}>
+              ↓ copiar abajo
+            </span>
+          </div>
           <pre
             style={{
               fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
               fontSize: 13,
               lineHeight: 1.7,
-              color: C.dark,
+              color: "#E8DDD4",
               margin: 0,
+              padding: "20px 20px 16px",
               whiteSpace: "pre-wrap",
               wordBreak: "break-word",
               overflowX: "hidden",
@@ -430,9 +539,9 @@ export default function ReelPage({
             {(() => {
               let pIdx = 0;
               return parts.map((part, i) => {
-                if (part.type === "text") {
-                  return <span key={i}>{part.content}</span>;
-                }
+                if (part.type === "text") return <span key={i}>{part.content}</span>;
+                if (part.type === "tag") return <span key={i} style={{ color: "#FE4629" }}>{part.content}</span>;
+                if (part.type === "directive") return <span key={i} style={{ color: "#FFB299", fontWeight: 500 }}>{part.content}</span>;
                 const idx = pIdx++;
                 return (
                   <span
@@ -447,7 +556,7 @@ export default function ReelPage({
                       border: "1px dashed #FE4629",
                       borderRadius: 4,
                       padding: "2px 8px",
-                      color: C.red,
+                      color: "#FE4629",
                       fontWeight: 500,
                       cursor: "text",
                       outline: "none",
@@ -485,6 +594,11 @@ export default function ReelPage({
           {copied ? "✓ Prompt copiado" : "COPIAR PROMPT"}
         </button>
       </section>
+
+      {/* ── Extra unlocked prompts ── */}
+      {extraPrompts.map((ep) => (
+        <ExtraPromptBlock key={ep.number} prompt={ep} />
+      ))}
 
       {/* ── Category section ── */}
       <section
@@ -564,6 +678,33 @@ export default function ReelPage({
               </div>
             </div>
 
+            {/* Extra unlocked prompts */}
+            {extraPrompts.map((ep) => {
+              const epPreview = realPrompts.find((p) => p.number === ep.number);
+              if (!epPreview) return null;
+              return (
+                <div
+                  key={ep.number}
+                  style={{ padding: "14px 16px", background: C.greenBg, border: `1.5px solid ${C.greenBorder}`, borderRadius: 8, marginBottom: 4 }}
+                >
+                  <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                    <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 700, color: C.green, paddingTop: 2 }}>✓</span>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: C.green, margin: 0 }}>
+                        {epPreview.title}
+                        <span style={{ marginLeft: 8, fontSize: 11, fontWeight: 700, color: C.green, background: C.greenBorder, padding: "2px 7px", borderRadius: 100, letterSpacing: "0.06em" }}>
+                          DESBLOQUEADO
+                        </span>
+                      </p>
+                      {epPreview.description && (
+                        <p style={{ fontSize: 13, color: C.muted, margin: "3px 0 0", lineHeight: 1.5 }}>{epPreview.description}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
             {/* Mixed list: readable + blurred thin rows, interspersed */}
             {DISPLAY_ORDER.map(({ number, blurred }) => {
               const p = byNumber[number];
@@ -589,7 +730,6 @@ export default function ReelPage({
                       opacity: 0.5,
                     }}
                   >
-                    <span style={{ flexShrink: 0, fontSize: 12, opacity: 0.7 }}>🔒</span>
                     <span
                       style={{
                         fontSize: 13,
@@ -623,7 +763,6 @@ export default function ReelPage({
                     alignItems: "flex-start",
                   }}
                 >
-                  <span style={{ flexShrink: 0, fontSize: 13, paddingTop: 2, opacity: 0.7 }}>🔒</span>
                   <div style={{ flex: 1 }}>
                     <p style={{ fontSize: 14, fontWeight: 600, color: C.dark, margin: 0 }}>
                       {p.title}
@@ -661,7 +800,6 @@ export default function ReelPage({
                   opacity: 0.55,
                 }}
               >
-                <span style={{ fontSize: 13, opacity: 0.7 }}>🔒</span>
                 <span style={{ fontSize: 13, color: C.muted, fontStyle: "italic", filter: "blur(2px)", userSelect: "none" }}>
                   + {hiddenCount} prompts más en {category.name}
                 </span>
@@ -947,7 +1085,7 @@ export default function ReelPage({
                 margin: "0 0 12px",
               }}
             >
-              🔒 Prompt bloqueado
+              Prompt bloqueado
             </p>
 
             <p
