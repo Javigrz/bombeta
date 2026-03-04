@@ -1235,13 +1235,8 @@ export default function ReelPage({
               margin: "0 0 6px",
             }}
           >
-            Este es 1 de {category.count} de{" "}
-            <span style={{ color: C.red, fontStyle: "italic" }}>{category.name}</span>.
-          </p>
-
-          {/* Sub-line: 1 de 111 */}
-          <p style={{ fontSize: 12, color: C.muted, margin: "0 0 22px" }}>
-            Y 1 de 111 en total.
+            Ya tienes 1 de 111.{" "}
+            <span style={{ color: C.red, fontStyle: "italic" }}>Te faltan 110.</span>
           </p>
 
           {/* Description */}
