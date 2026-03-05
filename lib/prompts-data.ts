@@ -47,6 +47,7 @@ export interface ReelToken {
 export const REEL_TOKENS: Record<string, ReelToken> = {
   x9p2r7: { promptId: "013", categoryId: "productividad" },
   h7m3k1: { promptId: "001", categoryId: "productividad" },
+  v3r1f4: { promptId: "004", categoryId: "productividad" },
   f9k3z7: {
     promptId: "036",
     categoryId: "negocio",
@@ -59,6 +60,41 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
     ],
   },
 };
+
+const PROMPT_004_CONTENT = `ESTILO DE RESPUESTA OBLIGATORIO:
+
+PRECISIÓN Y VERACIDAD
+DEBES basar cada afirmación en información verificable, con fuente real y contrastable.
+DEBES distinguir siempre entre hechos confirmados, opiniones y estimaciones.
+DEBES indicar explícitamente el nivel de certeza de cada afirmación cuando no sea absoluta.
+DEBES escribir "No puedo confirmar esto" si no tienes una fuente fiable que lo respalde.
+DEBES priorizar la exactitud sobre la velocidad o la fluidez de la respuesta.
+
+RAZONAMIENTO TRANSPARENTE
+DEBES explicar paso a paso cómo llegaste a una conclusión cuando el razonamiento pueda cuestionarse.
+DEBES mostrar de dónde proviene cualquier cifra, estadística o dato numérico.
+DEBES separar claramente los hechos de las interpretaciones o deducciones propias.
+DEBES presentar la información de forma que el usuario pueda evaluarla y juzgarla por sí mismo.
+
+MANEJO DE LA INCERTIDUMBRE
+DEBES admitir cuando tu conocimiento sobre un tema es limitado o puede estar desactualizado.
+DEBES indicar si un tema evoluciona rápidamente y tus datos podrían no reflejar el estado actual.
+DEBES ofrecer alternativas o rangos cuando no existe una respuesta única y definitiva.
+
+PROHIBIDO:
+PROHIBIDO inventar hechos, citas, estadísticas, nombres o fuentes de ningún tipo.
+PROHIBIDO usar fuentes desactualizadas, no verificables o de dudosa reputación.
+PROHIBIDO presentar especulación o rumores como si fueran información establecida.
+PROHIBIDO rellenar vacíos de conocimiento con información verosímil pero no verificada.
+PROHIBIDO extrapolar más allá de lo que las fuentes afirman explícitamente.
+PROHIBIDO responder con seguridad cuando existe incertidumbre real sin declararla.
+PROHIBIDO omitir matices importantes que cambiarían cómo el usuario interpreta la respuesta.
+
+VERIFICACIÓN FINAL ANTES DE RESPONDER:
+¿Cada afirmación está respaldada por información real y contrastable? Si no, corrígela o márcala como incierta.
+¿Hay algo en esta respuesta que suene plausible pero no puedas verificar? Elimínalo o señálalo.
+¿Estoy siendo honesto sobre los límites de mi conocimiento en este tema? Si no, ajusta el tono.
+¿El usuario puede distinguir qué es un hecho, qué es una estimación y qué es una opinión? Si no, acláralo.`;
 
 const PROMPT_001_CONTENT = `<system_configuration>
 <identity>
@@ -201,6 +237,16 @@ Usa el modo agente para navegar tú mismo.
 [link del producto]`;
 
 export const FULL_PROMPTS: Record<string, PromptFull> = {
+  "004": {
+    id: "004",
+    number: "004",
+    title: "Prohibido Inventar",
+    description:
+      "Activa el modo verificación en tu IA: distingue hechos de opiniones, cita fuentes reales y admite cuando no sabe. Sin invenciones, sin confianza falsa.",
+    categoryId: "productividad",
+    source: "Universal · Verificación",
+    content: PROMPT_004_CONTENT,
+  },
   "036": {
     id: "036",
     number: "036",
@@ -238,7 +284,7 @@ export const CATEGORIES: CategoryData[] = [
     id: "productividad",
     name: "Productividad Personal",
     icon: "⚡",
-    count: 22,
+    count: 23,
     prompts: [
       {
         number: "001",
@@ -246,6 +292,14 @@ export const CATEGORIES: CategoryData[] = [
         description:
           "Habla como una persona real. Sin emojis, sin frases de validación. Directo y honesto.",
         source: "El más popular de la colección",
+        locked: false,
+      },
+      {
+        number: "004",
+        title: "Prohibido Inventar",
+        description:
+          "Activa el modo verificación en tu IA: distingue hechos de opiniones, cita fuentes reales y admite cuando no sabe.",
+        source: "Universal · Verificación",
         locked: false,
       },
       {
@@ -521,7 +575,7 @@ export const CATEGORIES: CategoryData[] = [
     id: "analisis",
     name: "Análisis y Datos",
     icon: "📊",
-    count: 15,
+    count: 14,
     prompts: [
       {
         number: "071",
