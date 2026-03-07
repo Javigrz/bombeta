@@ -6,7 +6,7 @@ const EMAILS = [
   { day: 1, label: "Día 2 — Tu historia", subject: "Por qué hago este curso (y por qué no es uno más)" },
   { day: 2, label: "Día 4 — El caso de los 2,7M", subject: "2,7 millones en 30 días con IA. Sin saber programar." },
   { day: 3, label: "Día 6 — Lo que te diferencia", subject: "Lo que la mayoría se equivoca sobre la IA" },
-  { day: 4, label: "Día 7 — Cierre", subject: "Últimas plazas — The AI Playbook abre el 9 de marzo" },
+  { day: 4, label: "Día 7 — Cierre", subject: "Plazas limitadas — The AI Playbook abre próximamente" },
   { day: 5, label: "Día 9 — Seguimiento personal", subject: "¿Todo bien, [Nombre]?" },
 ];
 

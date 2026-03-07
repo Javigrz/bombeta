@@ -929,9 +929,9 @@ export default function HomePage() {
             {/* CTA FINAL */}
             <div className="w-full py-24 px-4 md:px-8 text-center" style={{ backgroundColor: '#4B0A23' }}>
               <div className="max-w-2xl mx-auto">
-                <p className="font-inter text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: 'rgba(254, 70, 41, 0.4)' }}>Próxima edición</p>
-                <h2 className="font-inter text-4xl md:text-6xl font-bold mb-2" style={{ color: '#FE4629' }}>9 de marzo</h2>
-                <p className="font-inter text-base mb-10" style={{ color: 'rgba(254, 70, 41, 0.5)' }}>Plazas limitadas</p>
+                <p className="font-inter text-xs font-semibold tracking-widest mb-3 uppercase" style={{ color: 'rgba(254, 70, 41, 0.4)' }}>Edición actual</p>
+                <h2 className="font-inter text-4xl md:text-6xl font-bold mb-2" style={{ color: '#FE4629' }}>Completa</h2>
+                <p className="font-inter text-base mb-10" style={{ color: 'rgba(254, 70, 41, 0.5)' }}>La próxima edición llega pronto</p>
                 <button
                   onClick={() => setShowGroupModal(true)}
                   className="px-12 py-4 font-inter text-lg font-semibold rounded-lg mb-6 transition-all duration-300"
@@ -939,7 +939,7 @@ export default function HomePage() {
                   onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FE4629'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#FE4629'; e.currentTarget.style.color = '#4B0A23'; }}
                 >
-                  Reserva tu plaza
+                  Avísame de la próxima edición
                 </button>
                 <div className="font-inter text-base" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
                   <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>

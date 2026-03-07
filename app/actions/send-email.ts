@@ -86,7 +86,7 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
               </div>
               <p>Si prefieres saber más antes de decidir, no hagas nada. Mañana te cuento más.</p>
               <p>Un saludo,<br><strong>Javi</strong></p>
-              <p style="margin-top:8px;color:#666;font-size:14px;"><em>P.D.: El curso empieza el 9 de marzo. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.</em></p>
+              <p style="margin-top:8px;color:#666;font-size:14px;"><em>P.D.: El curso empieza próximamente. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.</em></p>
               <div class="footer">The AI Playbook · contact@javiggil.com</div>
             </div>
           </body>
@@ -111,7 +111,7 @@ Si prefieres saber más antes de decidir, no hagas nada. Mañana te cuento más.
 Un saludo,
 Javi
 
-P.D.: El curso empieza el 9 de marzo. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.`
+P.D.: El curso empieza próximamente. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.`
     })
 
     if (userEmail.error) {
