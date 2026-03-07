@@ -648,7 +648,7 @@ export default function HomePage() {
                 transform: showMainContent && !showWeeklyBuilds ? 'translateY(0)' : 'translateY(15px)'
               }}
             >
-              <span style={{ color: 'rgba(254, 70, 41, 0.55)' }}>Próxima edición: <b>9 marzo</b> · Plazas limitadas · </span>
+              <span style={{ color: 'rgba(254, 70, 41, 0.55)' }}>Edición actual completa · Próxima edición: pronto · </span>
               <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
             </div>
           </div>
@@ -1653,7 +1653,7 @@ export default function HomePage() {
                       Reserva tu plaza
                     </button>
                     <p className="font-inter text-sm mb-1" style={{ color: 'rgba(254, 70, 41, 0.55)' }}>
-                      <b>9 marzo</b> · Plazas limitadas ·{' '}
+                      Edición actual completa · Próxima edición pronto ·{' '}
                       <span style={{ color: '#FE4629', fontWeight: 700 }}>390€</span>
                     </p>
                   </div>
@@ -2658,7 +2658,7 @@ export default function HomePage() {
                   Reserva tu plaza
                 </h2>
                 <p className="font-inter text-sm mb-7 text-center" style={{ color: 'rgba(254,70,41,0.6)' }}>
-                  9 marzo · Plazas limitadas · 390€
+                  Edición actual completa · Próxima edición pronto · 390€
                 </p>
 
                 <style>{`.group-input::placeholder { color: rgba(254,70,41,0.35); }`}</style>
