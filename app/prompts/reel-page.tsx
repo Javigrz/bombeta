@@ -1192,6 +1192,7 @@ export default function ReelPage({
       >
         <div
           style={{
+            position: "relative",
             width: "100%",
             maxWidth: 420,
             background: C.bg,
@@ -1224,6 +1225,26 @@ export default function ReelPage({
             </span>
           </div>
 
+          {/* Close button */}
+          <button
+            onClick={handleBannerDismiss}
+            style={{
+              position: "absolute",
+              top: 12,
+              right: 14,
+              background: "transparent",
+              border: "none",
+              color: C.muted,
+              fontSize: 16,
+              cursor: "pointer",
+              lineHeight: 1,
+              padding: 4,
+            }}
+            aria-label="Cerrar"
+          >
+            ✕
+          </button>
+
           {/* Main message */}
           <p
             style={{
@@ -1232,54 +1253,143 @@ export default function ReelPage({
               fontWeight: 400,
               color: C.dark,
               lineHeight: 1.2,
-              margin: "0 0 6px",
+              margin: "0 0 10px",
             }}
           >
             Ya tienes 1 de 111.{" "}
             <span style={{ color: C.red, fontStyle: "italic" }}>Te faltan 110.</span>
           </p>
 
-          {/* Description */}
-          <p style={{ fontSize: 14, color: C.muted, margin: "0 0 20px", lineHeight: 1.5 }}>
-            Los otros {otherCount} de {category.name} están aquí abajo.
+          {/* Circular progress */}
+          <style>{`
+            @keyframes arc-settle {
+              0%   { stroke-dashoffset: 175.9; }
+              45%  { stroke-dashoffset: 52.8; }
+              72%  { stroke-dashoffset: 52.8; }
+              100% { stroke-dashoffset: 161.9; }
+            }
+            @keyframes arc-rotate {
+              0%   { transform: rotate(-90deg); }
+              45%  { transform: rotate(220deg); }
+              72%  { transform: rotate(220deg); }
+              100% { transform: rotate(-90deg); }
+            }
+            @keyframes count-up {
+              0%   { opacity: 0; }
+              30%  { opacity: 1; }
+              100% { opacity: 1; }
+            }
+          `}</style>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, margin: "0 0 16px" }}>
+            <svg
+              width={72}
+              height={72}
+              viewBox="0 0 70 70"
+              style={{ flexShrink: 0 }}
+            >
+              {/* Track */}
+              <circle
+                cx={35} cy={35} r={28}
+                fill="none"
+                stroke="#E5E7EB"
+                strokeWidth={6}
+              />
+              {/* Arc */}
+              <circle
+                cx={35} cy={35} r={28}
+                fill="none"
+                stroke={C.green}
+                strokeWidth={6}
+                strokeLinecap="round"
+                strokeDasharray="175.9"
+                strokeDashoffset="161.9"
+                style={{
+                  transformOrigin: "35px 35px",
+                  animation: showBanner
+                    ? "arc-rotate 2.2s cubic-bezier(0.4,0,0.2,1) forwards, arc-settle 2.2s cubic-bezier(0.4,0,0.2,1) forwards"
+                    : "none",
+                }}
+              />
+              {/* Center label */}
+              <text
+                x={35} y={32}
+                textAnchor="middle"
+                fontSize={11}
+                fontWeight={700}
+                fill={C.dark}
+                style={{ animation: showBanner ? "count-up 2.2s ease forwards" : "none" }}
+              >
+                0,9%
+              </text>
+              <text
+                x={35} y={44}
+                textAnchor="middle"
+                fontSize={9}
+                fill={C.muted}
+              >
+                1/111
+              </text>
+            </svg>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 12, color: C.muted, margin: "0 0 4px", lineHeight: 1.4 }}>
+                Tienes 1 prompt de la colección completa.
+              </p>
+              <p style={{ fontSize: 12, color: C.muted, margin: 0, lineHeight: 1.4 }}>
+                Los 110 restantes están a un clic.
+              </p>
+            </div>
+          </div>
+
+          {/* Price line */}
+          <p style={{ fontSize: 15, color: C.dark, margin: "0 0 16px", lineHeight: 1.4 }}>
+            Los 111 por <strong>11,1€</strong>{" "}
+            <span style={{ fontSize: 13, color: C.muted }}>(0,10€ cada uno)</span>
           </p>
 
-          {/* Actions */}
-          <div style={{ display: "flex", gap: 10 }}>
-            <button
-              onClick={handleBannerExplore}
-              style={{
-                flex: 1,
-                padding: "14px 16px",
-                background: C.dark,
-                color: C.bg,
-                border: "none",
-                borderRadius: 8,
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: "pointer",
-                minHeight: 48,
-              }}
-            >
-              VER LOS OTROS →
-            </button>
-            <button
-              onClick={handleBannerDismiss}
-              style={{
-                padding: "14px 16px",
-                background: "transparent",
-                color: C.muted,
-                border: `1px solid ${C.border}`,
-                borderRadius: 8,
-                fontSize: 20,
-                cursor: "pointer",
-                minHeight: 48,
-                lineHeight: 1,
-              }}
-            >
-              ✕
-            </button>
-          </div>
+          {/* Primary CTA */}
+          <a
+            href={STRIPE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "block",
+              width: "100%",
+              padding: "15px 16px",
+              background: C.dark,
+              color: C.bg,
+              border: "none",
+              borderRadius: 8,
+              fontSize: 15,
+              fontWeight: 700,
+              cursor: "pointer",
+              textAlign: "center",
+              textDecoration: "none",
+              letterSpacing: "0.03em",
+              marginBottom: 12,
+            }}
+          >
+            DESBLOQUEAR LOS 111 →
+          </a>
+
+          {/* Secondary link */}
+          <button
+            onClick={handleBannerExplore}
+            style={{
+              display: "block",
+              width: "100%",
+              background: "transparent",
+              border: "none",
+              color: C.dark,
+              fontSize: 13,
+              cursor: "pointer",
+              textAlign: "center",
+              textDecoration: "underline",
+              textDecorationColor: `${C.dark}55`,
+              padding: "4px 0",
+            }}
+          >
+            o ver los 110 que te faltan
+          </button>
         </div>
       </div>
     </div>
