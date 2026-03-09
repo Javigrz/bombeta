@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       // Email 1: entrega de los prompts
       await sendPromptsEmail(email, name ?? "")
       console.log(`Prompts email sent to ${email}`)
-      // Email 2: tripwire — oferta del curso
+      // Email 2: tripwire - oferta del curso
       await sendTripwireEmail(email, name ?? "")
       console.log(`Tripwire email sent to ${email}`)
     } else {
@@ -229,7 +229,7 @@ function buildPromptsEmail(greeting: string) {
   </head>
   <body>
     <div class="wrapper">
-      <div class="logo">111 Originale — Javi Gil</div>
+      <div class="logo">111 Originale - Javi Gil</div>
 
       <h1>${greeting}<br/>Aquí tienes tus prompts.</h1>
 
@@ -251,7 +251,7 @@ function buildPromptsEmail(greeting: string) {
             </td>
             <td style="padding-left:12px;font-size:15px;color:#333;line-height:1.6;padding-bottom:16px;">
               <strong>Mejor opción: el archivo .html en un navegador</strong> (Chrome, Safari, Firefox).
-              Descárgalo y arrástralo al navegador, o haz doble clic en él. Navegación lateral, copia y pega —
+              Descárgalo y arrástralo al navegador, o haz doble clic en él. Navegación lateral, copia y pega -
               todo funciona perfecto.
             </td>
           </tr>
@@ -318,7 +318,7 @@ CÓMO ABRIRLOS
 --------------
 
 1. Mejor opción: abre el archivo .html en un navegador (Chrome, Safari, Firefox).
-   Descárgalo y arrástralo al navegador, o haz doble clic. Navegación, copia y pega —
+   Descárgalo y arrástralo al navegador, o haz doble clic. Navegación, copia y pega -
    todo funciona perfecto.
 
 2. iPhone: puedes abrir el .html con Vista Previa, pero dependiendo de la versión
@@ -609,11 +609,11 @@ function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
         <div class="what-is-title">Qué es The AI Playbook</div>
         <table width="100%" cellpadding="0" cellspacing="0">
           <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">8 sesiones en directo por videollamada, 4 semanas</td></tr>
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Aprenderás a construir productos reales con IA — no teoría</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Aprenderás a construir productos reales con IA - no teoría</td></tr>
           <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Cómo detectar oportunidades antes de que las vea todo el mundo</td></tr>
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Validar, lanzar y monetizar — con ejemplos de mis propios proyectos</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Validar, lanzar y monetizar - con ejemplos de mis propios proyectos</td></tr>
           <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Red de contactos: gente que está exactamente donde estás tú</td></tr>
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-left:8px;">Plazas limitadas — el directo es el formato, no hay grabación que valga</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-left:8px;">Plazas limitadas - el directo es el formato, no hay grabación que valga</td></tr>
         </table>
       </div>
 
@@ -665,11 +665,11 @@ Lo que cambia de verdad no son los prompts. Es saber cómo pensar con IA, cómo 
 QUÉ ES THE AI PLAYBOOK
 -----------------------
 ✓ 8 sesiones en directo por videollamada, 4 semanas
-✓ Aprenderás a construir productos reales con IA — no teoría
+✓ Aprenderás a construir productos reales con IA - no teoría
 ✓ Cómo detectar oportunidades antes de que las vea todo el mundo
-✓ Validar, lanzar y monetizar — con ejemplos de mis propios proyectos
+✓ Validar, lanzar y monetizar - con ejemplos de mis propios proyectos
 ✓ Red de contactos: gente que está exactamente donde estás tú
-✓ Plazas limitadas — el directo es el formato, no hay grabación que valga
+✓ Plazas limitadas - el directo es el formato, no hay grabación que valga
 
 Por haber comprado los prompts, tienes acceso a un descuento que no está en ningún otro sitio.
 

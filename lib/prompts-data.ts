@@ -59,6 +59,17 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
       { number: "053", blurred: false },
     ],
   },
+  cv4ats7: {
+    promptId: "074",
+    categoryId: "analisis",
+    displayOrder: [
+      { number: "074", blurred: false },
+      { number: "015", blurred: true  },
+      { number: "009", blurred: true  },
+      { number: "071", blurred: false },
+      { number: "073", blurred: false },
+    ],
+  },
 };
 
 const PROMPT_004_CONTENT = `ESTILO DE RESPUESTA OBLIGATORIO:
@@ -236,6 +247,35 @@ Usa el modo agente para navegar tú mismo.
 
 [link del producto]`;
 
+const PROMPT_074_CONTENT = `──────────────────────────────────────────
+
+PROMPT 1 - CALCULA TU PUNTUACIÓN DE MATCH
+
+Actúa como un recruiter senior con más de 10 años de experiencia. Analiza mi CV frente a esta oferta de trabajo. Dame una puntuación de compatibilidad sobre 100 y lista las 5 palabras clave que me faltan para pasar los filtros ATS.
+
+[Pega aquí tu CV]
+[Pega aquí la descripción del puesto]
+
+──────────────────────────────────────────
+
+PROMPT 2 - OPTIMIZA TU SECCIÓN DE EXPERIENCIA
+
+Reescribe mi sección de experiencia para incluir de forma natural esas palabras clave. Usa la fórmula XYZ de Google para cada punto: "Logré [X] medido por [Y] haciendo [Z]."
+
+Asegúrate de que las palabras clave suenen naturales y no forzadas. Enfócate en resultados cuantificables.
+
+──────────────────────────────────────────
+
+PROMPT 3 - PASA EL FILTRO ATS (EL MÁS IMPORTANTE)
+
+Actúa como un sistema de filtrado ATS. Escanea mi nuevo CV. Dime qué secciones un bot tendría dificultades para leer, qué formato puede causar problemas y qué necesito corregir para garantizar un 100% de compatibilidad con los sistemas ATS.
+
+──────────────────────────────────────────
+
+PROMPT 4 - PREPÁRATE PARA LA ENTREVISTA
+
+Actúa como el responsable de selección de este puesto específico. Hazme las 3 preguntas técnicas más difíciles que harías en una entrevista. Luego dame la respuesta perfecta basada en mi perfil y la descripción del puesto.`;
+
 export const FULL_PROMPTS: Record<string, PromptFull> = {
   "004": {
     id: "004",
@@ -276,6 +316,16 @@ export const FULL_PROMPTS: Record<string, PromptFull> = {
     categoryId: "productividad",
     source: "Productividad · Cupones descuento",
     content: PROMPT_013_CONTENT,
+  },
+  "074": {
+    id: "074",
+    number: "074",
+    title: "Optimizador de CV con IA",
+    description:
+      "El 90% de las empresas usan sistemas ATS para filtrar CVs antes de que un humano los vea. Si tu CV no está optimizado, te está rechazando un algoritmo - no porque no estés cualificado, sino porque no usaste las palabras clave correctas.\n\nEsta cadena de 4 prompts te enseña exactamente cómo usar ChatGPT o Claude para superar el ATS, escribir un CV que llame la atención y prepararte para entrevistas como un profesional.",
+    categoryId: "analisis",
+    source: "Búsqueda de empleo · ATS · Entrevistas",
+    content: PROMPT_074_CONTENT,
   },
 };
 
@@ -591,6 +641,14 @@ export const CATEGORIES: CategoryData[] = [
         description:
           "Calcula si una inversión o acción realmente va a merecer la pena antes de hacerla.",
         source: "Análisis cuantitativo",
+        locked: false,
+      },
+      {
+        number: "074",
+        title: "Optimizador de CV con IA",
+        description:
+          "Cadena de 4 prompts para superar filtros ATS, reescribir tu experiencia con resultados medibles y prepararte para la entrevista.",
+        source: "Búsqueda de empleo · ATS · Entrevistas",
         locked: false,
       },
       {

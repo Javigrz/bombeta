@@ -30,12 +30,12 @@ export function PurchasesTable({ data }: PurchasesTableProps) {
                   minute: '2-digit',
                 })}
               </td>
-              <td className="py-2 text-white">{row.email ?? '—'}</td>
-              <td className="py-2 text-gray-300">{row.product ?? '—'}</td>
+              <td className="py-2 text-white">{row.email ?? '-'}</td>
+              <td className="py-2 text-gray-300">{row.product ?? '-'}</td>
               <td className="py-2 text-right text-green-400 font-medium">
                 {row.amount != null
                   ? new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(Number(row.amount))
-                  : '—'}
+                  : '-'}
               </td>
             </tr>
           ))}

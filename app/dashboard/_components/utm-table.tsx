@@ -24,8 +24,8 @@ export function UtmTable({ data }: UtmTableProps) {
           {data.map((row, i) => (
             <tr key={i} className="border-b border-gray-800/50 hover:bg-gray-800/30">
               <td className="py-2 text-white">{row.utm_source ?? '(directo)'}</td>
-              <td className="py-2 text-gray-400">{row.utm_medium ?? '—'}</td>
-              <td className="py-2 text-gray-400 text-xs font-mono">{row.utm_campaign ?? '—'}</td>
+              <td className="py-2 text-gray-400">{row.utm_medium ?? '-'}</td>
+              <td className="py-2 text-gray-400 text-xs font-mono">{row.utm_campaign ?? '-'}</td>
               <td className="py-2 text-right text-gray-300">{Number(row.sessions).toLocaleString()}</td>
               <td className="py-2 text-right">
                 <span className={Number(row.rate) > 0 ? 'text-green-400' : 'text-gray-500'}>

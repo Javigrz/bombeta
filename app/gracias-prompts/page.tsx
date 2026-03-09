@@ -35,7 +35,7 @@ export default function GraciasPromptPage() {
           </h1>
         </div>
 
-        {/* SPAM WARNING — protagonista */}
+        {/* SPAM WARNING - protagonista */}
         <div className="w-full rounded-2xl border-2 border-amber-400/60 bg-amber-400/10 px-6 py-5 flex gap-4 items-start">
           <span className="text-2xl mt-0.5">⚠️</span>
           <div className="flex flex-col gap-1">

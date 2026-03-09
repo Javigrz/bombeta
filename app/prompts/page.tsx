@@ -36,6 +36,6 @@ export default async function PromptsPage({
   }
 
   // No token: the beforeFiles rewrite in next.config.mjs serves the static HTML.
-  // This branch is only reached if that rewrite somehow fails — redirect as fallback.
+  // This branch is only reached if that rewrite somehow fails - redirect as fallback.
   redirect("/prompts/111_originale_venta.html");
 }

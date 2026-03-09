@@ -26,7 +26,7 @@ const EMAIL_CONFIG: Record<
   },
   4: {
     file: "email-04-cierre.html",
-    subject: () => "Plazas limitadas — The AI Playbook abre próximamente",
+    subject: () => "Plazas limitadas - The AI Playbook abre próximamente",
     day: "Día 7",
   },
   5: {

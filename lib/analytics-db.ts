@@ -139,7 +139,7 @@ export async function getKpis(pageFilter: string | null = null) {
         `
       : sql`SELECT COUNT(*) AS total FROM sessions`,
 
-    // Conversiones form — de las sesiones que visitaron la página
+    // Conversiones form - de las sesiones que visitaron la página
     p
       ? sql`
           SELECT COUNT(DISTINCT e.session_id) AS total
@@ -149,7 +149,7 @@ export async function getKpis(pageFilter: string | null = null) {
         `
       : sql`SELECT COUNT(*) AS total FROM sessions WHERE converted_form = TRUE`,
 
-    // Compras — globales siempre (las compras no tienen página de origen fiable)
+    // Compras - globales siempre (las compras no tienen página de origen fiable)
     sql`
       SELECT
         COUNT(*) AS total,
@@ -158,7 +158,7 @@ export async function getKpis(pageFilter: string | null = null) {
       WHERE event_type = 'purchase'
     `,
 
-    // Duración media — sesiones que visitaron la página
+    // Duración media - sesiones que visitaron la página
     p
       ? sql`
           SELECT AVG(EXTRACT(EPOCH FROM (s.last_seen_at - s.created_at))) AS avg_seconds

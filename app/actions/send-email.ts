@@ -24,7 +24,7 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
       return { success: false, error: 'El email no es válido' }
     }
 
-    // 1. Notificación al admin (bloqueante — si falla, devolvemos error)
+    // 1. Notificación al admin (bloqueante - si falla, devolvemos error)
     const adminEmail = await resend.emails.send({
       from: 'Javi Gil <curso@javiggil.com>',
       to: ['javiergilrodriguez@icloud.com'],
@@ -41,7 +41,7 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
             .value { color: #333; font-size: 16px; }
           </style></head>
           <body>
-            <div class="header"><h1 style="margin:0;font-size:22px;">Nueva pre-reserva — The AI Playbook</h1></div>
+            <div class="header"><h1 style="margin:0;font-size:22px;">Nueva pre-reserva - The AI Playbook</h1></div>
             <div class="content">
               <div class="field"><div class="label">Nombre</div><div class="value">${data.name}</div></div>
               <div class="field"><div class="label">Email</div><div class="value"><a href="mailto:${data.email}" style="color:#FE4629;text-decoration:none;">${data.email}</a></div></div>
@@ -49,7 +49,7 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
           </body>
         </html>
       `,
-      text: `Nueva pre-reserva — The AI Playbook\n\nNombre: ${data.name}\nEmail: ${data.email}`
+      text: `Nueva pre-reserva - The AI Playbook\n\nNombre: ${data.name}\nEmail: ${data.email}`
     })
 
     if (adminEmail.error) {
@@ -57,7 +57,7 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
       return { success: false, error: 'Error al enviar el email. Por favor, inténtalo de nuevo.' }
     }
 
-    // 2. Confirmación al usuario (no-bloqueante — si falla, el admin ya fue notificado)
+    // 2. Confirmación al usuario (no-bloqueante - si falla, el admin ya fue notificado)
     const userEmail = await resend.emails.send({
       from: 'Javi Gil <curso@javiggil.com>',
       to: [data.email],
@@ -79,7 +79,7 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
               <p><strong>Buena decisión.</strong></p>
               <p>Tu plaza para The AI Playbook está pre-reservada. Las plazas se confirman por orden de pago, así que cuanto antes confirmes, más seguro tienes tu sitio.</p>
               <p>Te cuento rápido qué va a pasar:</p>
-              <p>Los próximos días te voy a mandar unos emails donde te explico exactamente qué vamos a hacer en el curso, cómo funciona, y por qué creo que puede cambiar la forma en la que trabajas con IA. No es humo. Es lo que llevo haciendo los últimos años con empresas reales — las mías y las de mis clientes.</p>
+              <p>Los próximos días te voy a mandar unos emails donde te explico exactamente qué vamos a hacer en el curso, cómo funciona, y por qué creo que puede cambiar la forma en la que trabajas con IA. No es humo. Es lo que llevo haciendo los últimos años con empresas reales - las mías y las de mis clientes.</p>
               <p>Si ya lo tienes claro y no necesitas más información:</p>
               <div class="cta-block">
                 <a href="${STRIPE_URL}" class="cta-btn">→ Confirmar mi plaza ahora (390€)</a>
@@ -100,7 +100,7 @@ Tu plaza para The AI Playbook está pre-reservada. Las plazas se confirman por o
 
 Te cuento rápido qué va a pasar:
 
-Los próximos días te voy a mandar unos emails donde te explico exactamente qué vamos a hacer en el curso, cómo funciona, y por qué creo que puede cambiar la forma en la que trabajas con IA. No es humo. Es lo que llevo haciendo los últimos años con empresas reales — las mías y las de mis clientes.
+Los próximos días te voy a mandar unos emails donde te explico exactamente qué vamos a hacer en el curso, cómo funciona, y por qué creo que puede cambiar la forma en la que trabajas con IA. No es humo. Es lo que llevo haciendo los últimos años con empresas reales - las mías y las de mis clientes.
 
 Si ya lo tienes claro y no necesitas más información:
 

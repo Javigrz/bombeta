@@ -682,7 +682,7 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Secciones de contenido del curso — scroll */}
+        {/* Secciones de contenido del curso - scroll */}
         {showMainContent && !showWeeklyBuilds && (
           <>
             {/* MISIÓN / CREDIBILIDAD */}
@@ -745,13 +745,13 @@ export default function HomePage() {
                 </div>
                 <div className="p-6 rounded-2xl" style={{ backgroundColor: 'rgba(254, 70, 41, 0.06)', border: '1px solid rgba(254, 70, 41, 0.15)' }}>
                   <p className="font-inter text-base" style={{ color: 'rgba(254, 70, 41, 0.8)' }}>
-                    Ahora mismo estamos en la fase de <span className="font-semibold" style={{ color: '#FE4629' }}>early adopters</span>. La ventana para posicionarte está abierta, pero se cierra rápido. La pregunta no es si la IA va a cambiar las reglas — es si tú vas a estar preparado cuando lo haga.
+                    Ahora mismo estamos en la fase de <span className="font-semibold" style={{ color: '#FE4629' }}>early adopters</span>. La ventana para posicionarte está abierta, pero se cierra rápido. La pregunta no es si la IA va a cambiar las reglas, es si tú vas a estar preparado cuando lo haga.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* LOS 3 BLOQUES — header */}
+            {/* LOS 3 BLOQUES - header */}
             <div className="w-full py-16 px-4 md:px-8" style={{ backgroundColor: '#FAEBD7' }}>
               <div className="max-w-3xl mx-auto text-center">
                 <p className="font-inter text-xs font-semibold tracking-widest mb-4 uppercase" style={{ color: 'rgba(75, 10, 35, 0.4)' }}>El programa</p>

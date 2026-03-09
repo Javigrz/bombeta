@@ -24,7 +24,7 @@ export function TopPagesTable({ data }: TopPagesTableProps) {
               <td className="py-2 text-white font-mono text-xs">{row.page}</td>
               <td className="py-2 text-right text-gray-300">{Number(row.views).toLocaleString()}</td>
               <td className="py-2 text-right text-gray-300">
-                {row.avg_scroll != null ? `${Math.round(Number(row.avg_scroll))}%` : '—'}
+                {row.avg_scroll != null ? `${Math.round(Number(row.avg_scroll))}%` : '-'}
               </td>
             </tr>
           ))}

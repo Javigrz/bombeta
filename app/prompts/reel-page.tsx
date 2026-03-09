@@ -386,15 +386,15 @@ export default function ReelPage({
   const unlockedPrompt = realPrompts.find((p) => p.number === prompt.number)!;
   const byNumber = Object.fromEntries(realPrompts.map((p) => [p.number, p]));
 
-  // Ordered display list — use custom order from token config, or default productividad order
+  // Ordered display list - use custom order from token config, or default productividad order
   const DEFAULT_DISPLAY_ORDER: { number: string; blurred: boolean }[] = [
-    { number: "001", blurred: false }, // Humaniza tu IA — clave
-    { number: "002", blurred: true  }, // Matriz Eisenhower — thin blur
+    { number: "001", blurred: false }, // Humaniza tu IA - clave
+    { number: "002", blurred: true  }, // Matriz Eisenhower - thin blur
     { number: "015", blurred: false }, // Negociador de Sueldo
     { number: "007", blurred: false }, // Constructor de Hábitos
-    { number: "003", blurred: true  }, // Sprint de Trabajo Profundo — thin blur
+    { number: "003", blurred: true  }, // Sprint de Trabajo Profundo - thin blur
     { number: "009", blurred: false }, // La semana laboral de 4 horas
-    { number: "017", blurred: true  }, // Antifragile — thin blur
+    { number: "017", blurred: true  }, // Antifragile - thin blur
     { number: "013", blurred: false }, // Cazador de cupones
     { number: "019", blurred: false }, // Los 7 Hábitos
   ];
@@ -483,17 +483,20 @@ export default function ReelPage({
           {prompt.title}
         </h1>
 
-        {/* One-liner */}
-        <p
-          style={{
-            fontSize: 16,
-            color: C.muted,
-            margin: "0 0 6px",
-            lineHeight: 1.5,
-          }}
-        >
-          {prompt.description}
-        </p>
+        {/* One-liner / intro */}
+        {prompt.description.split("\n\n").map((para, i) => (
+          <p
+            key={i}
+            style={{
+              fontSize: 16,
+              color: C.muted,
+              margin: i === prompt.description.split("\n\n").length - 1 ? "0 0 6px" : "0 0 14px",
+              lineHeight: 1.5,
+            }}
+          >
+            {para}
+          </p>
+        ))}
 
         {/* Source */}
         <p
@@ -715,7 +718,7 @@ export default function ReelPage({
               if (!p) return null;
 
               if (blurred) {
-                // Thin blurred row — title only, no description
+                // Thin blurred row - title only, no description
                 return (
                   <button
                     key={number}
@@ -752,7 +755,7 @@ export default function ReelPage({
                 );
               }
 
-              // Readable row — title + description + source, clearly visible
+              // Readable row - title + description + source, clearly visible
               return (
                 <button
                   key={number}
