@@ -42,6 +42,7 @@ export interface ReelToken {
   categoryId: CategoryId;
   extraPromptIds?: string[];
   displayOrder?: { number: string; blurred: boolean }[];
+  bannerSubtext?: string;
 }
 
 export const REEL_TOKENS: Record<string, ReelToken> = {
@@ -69,6 +70,18 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
       { number: "071", blurred: false },
       { number: "073", blurred: true  },
       { number: "009", blurred: false },
+    ],
+  },
+  w3b044: {
+    promptId: "044",
+    categoryId: "marketing",
+    bannerSubtext: "Crear la web es solo el primer paso. También hay que venderla. Para eso tienes los 110 prompts restantes.",
+    displayOrder: [
+      { number: "047", blurred: false },
+      { number: "051", blurred: true  },
+      { number: "080", blurred: false },
+      { number: "053", blurred: true  },
+      { number: "049", blurred: false },
     ],
   },
 };
@@ -277,7 +290,37 @@ PROMPT 4 - PREPÁRATE PARA LA ENTREVISTA
 
 Actúa como el responsable de selección de este puesto específico. Hazme las 3 preguntas técnicas más difíciles que harías en una entrevista. Luego dame la respuesta perfecta basada en mi perfil y la descripción del puesto.`;
 
+const PROMPT_044_CONTENT = `Analiza la captura de pantalla que te adjunto de un perfil de Instagram.
+Extrae: nombre del negocio, sector, paleta de colores, tono visual y tipo de cliente.
+
+Con esa información, escribe un prompt completo y detallado para Antigravity que genere
+una landing page premium. El prompt debe especificar lo siguiente:
+
+Stack técnico: HTML5 semántico, CSS3 vanilla, JavaScript ES6+, GSAP con ScrollTrigger
+y Lenis para smooth scroll.
+
+Animación hero: Diseña un concepto de scroll animation frame-by-frame adaptado al sector y la identidad visual del negocio. Define el concepto visual (qué se anima, desde dónde,
+hacia dónde, qué transmite), el sistema dual canvas con foreground canvas en object-fit contain con mask-image feathered 8% arriba y abajo, ambient canvas con object-fit cover,
+blur 40px y saturate 2.0, y la progresión narrativa del scroll describiendo qué ocurre al 0%, al 70% y al 100% del recorrido.
+
+Sistema de diseño: Tipografía condensada de impacto para headings con Antonio 700, Archivo Narrow para body, paleta de colores extraída del perfil, fondo blanco puro en secciones post-hero, sin grises claros.
+
+Secciones post-hero: Intro de producto o servicio principal, carrusel horizontal con snap points, banner cinematográfico 85vh con headline de impacto, grid de categorías 3 columnas, footer limpio 4 columnas.
+
+El prompt debe estar listo para pegarlo directamente en Antigravity sin modificaciones.
+
+Escríbelo en inglés técnico. No incluyas explicaciones, solo el prompt.`;
+
 export const FULL_PROMPTS: Record<string, PromptFull> = {
+  "044": {
+    id: "prompt-044",
+    number: "044",
+    title: "Página Web Premium con Antigravity",
+    description: "Analiza un perfil de Instagram y genera el prompt técnico completo para construir una landing page premium con scroll animations, GSAP y Lenis.",
+    categoryId: "marketing",
+    source: "Antigravity · GSAP · Lenis",
+    content: PROMPT_044_CONTENT,
+  },
   "004": {
     id: "004",
     number: "004",
@@ -536,18 +579,18 @@ export const CATEGORIES: CategoryData[] = [
       },
       {
         number: "047",
-        title: "Psicología del Dinero",
+        title: "Storytelling que Vende sin Vender",
         description:
-          "Las trampas mentales que te hacen tomar malas decisiones con el dinero sin darte cuenta.",
-        source: "Morgan Housel · Psychology of Money",
+          "La gente ama comprar pero odia que le vendan. Fórmula ADP: Después-Antes-Puente. Venta invisible a través de storytelling.",
+        source: "Marketing · Método Fer Miralles",
         locked: false,
       },
       {
         number: "049",
-        title: "Lean Startup",
+        title: "Oferta Irresistible",
         description:
-          "Valida tu idea de negocio antes de gastar meses de tiempo y dinero en ella.",
-        source: "Eric Ries · The Lean Startup",
+          "Del libro de Alex Hormozi. Valor = (Resultado × Probabilidad) / (Tiempo × Esfuerzo). Crea ofertas que la gente se sienta estúpida rechazando.",
+        source: "Marketing · $100M Offers",
         locked: false,
       },
       {
@@ -567,6 +610,14 @@ export const CATEGORIES: CategoryData[] = [
         locked: true,
       },
       {
+        number: "080",
+        title: "Negociación FBI",
+        description:
+          "Técnicas del ex negociador del FBI: escucha táctica, etiquetado, espejos, y el \"no\" que abre puertas.",
+        source: "Chris Voss · Never Split the Difference",
+        locked: false,
+      },
+      {
         number: "055",
         title: "+ 11 prompts más",
         description: "",
@@ -581,6 +632,14 @@ export const CATEGORIES: CategoryData[] = [
     icon: "🎯",
     count: 10,
     prompts: [
+      {
+        number: "044",
+        title: "Página Web Premium con Antigravity",
+        description:
+          "Analiza un perfil de Instagram y genera el prompt técnico completo para construir una landing page premium con scroll animations, GSAP y Lenis.",
+        source: "Antigravity · GSAP · Lenis",
+        locked: false,
+      },
       {
         number: "061",
         title: "Los 6 Principios de Cialdini",

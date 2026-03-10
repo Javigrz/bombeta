@@ -63,6 +63,7 @@ interface ReelPageProps {
   displayOrder?: { number: string; blurred: boolean }[];
   category: CategoryData;
   otherCategories: CategoryData[];
+  bannerSubtext?: string;
 }
 
 // ─── Buy CTA ─────────────────────────────────────────────────────────────────
@@ -323,6 +324,7 @@ export default function ReelPage({
   displayOrder: customDisplayOrder,
   category,
   otherCategories,
+  bannerSubtext,
 }: ReelPageProps) {
   const [copied, setCopied] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
@@ -1338,10 +1340,10 @@ export default function ReelPage({
             </svg>
             <div style={{ flex: 1 }}>
               <p style={{ fontSize: 12, color: C.muted, margin: "0 0 4px", lineHeight: 1.4 }}>
-                Tienes 1 prompt de la colección completa.
+                {bannerSubtext ?? "Tienes 1 prompt de la colección completa."}
               </p>
               <p style={{ fontSize: 12, color: C.muted, margin: 0, lineHeight: 1.4 }}>
-                Los 110 restantes están a un clic.
+                {bannerSubtext ? "" : "Los 110 restantes están a un clic."}
               </p>
             </div>
           </div>
