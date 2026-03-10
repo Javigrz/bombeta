@@ -50,7 +50,59 @@ body {
 
 .sidebar-logo {
   padding: 28px 24px 20px;
-  
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--cream);
+  cursor: pointer;
+  padding: 6px 4px;
+  opacity: 0.45;
+  transition: opacity 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.sidebar-toggle-btn:hover { opacity: 1; }
+.sidebar-toggle-btn span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.sidebar-reopen-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 14px;
+  z-index: 200;
+  background: var(--dark);
+  border: 1px solid rgba(250,245,235,0.15);
+  border-radius: 6px;
+  color: var(--cream);
+  cursor: pointer;
+  padding: 8px 9px;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+.sidebar-reopen-btn span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
 }
 
 .sidebar-logo img {
@@ -181,11 +233,19 @@ body {
 
 .overlay.show { display: block; }
 
+.sidebar.desktop-collapsed {
+  transform: translateX(-100%);
+}
+.main.sidebar-collapsed {
+  margin-left: 0;
+}
+
 /* ============ MAIN CONTENT ============ */
 .main {
   margin-left: calc(var(--sidebar-w) - 1px);
   min-height: 100vh;
   border: none;
+  transition: margin-left 0.3s ease;
 }
 
 /* ============ HERO ============ */
@@ -256,6 +316,7 @@ body {
 .section {
   padding: 80px 48px 60px;
   max-width: 800px;
+  margin: 0 auto;
 }
 
 .section-header {
@@ -623,6 +684,8 @@ body {
 
 /* ============ RESPONSIVE ============ */
 @media (max-width: 768px) {
+  .sidebar-toggle-btn { display: none; }
+  .sidebar-reopen-btn { display: none !important; }
   .sidebar {
     transform: translateX(-100%);
   }
@@ -722,10 +785,13 @@ body {
 </div>
 
 <div class="sidebar" id="sidebar">
-  <div class="sidebar-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="cursor:pointer;">
-    <svg height="22" viewBox="0 0 3792 1004" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <div class="sidebar-logo">
+    <svg height="22" viewBox="0 0 3792 1004" fill="none" xmlns="http://www.w3.org/2000/svg" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="cursor:pointer;">
     <path d="M794 198C782 198 770 196 760 188C744 176 736 158 736 134C736 110 744 88 762 66C782 38 808 24 840 24C878 24 898 44 898 84C898 108 890 132 874 154C852 184 826 198 794 198ZM-2.38419e-06 1004L76 766C172 766 264 730 348 654C432 580 516 468 600 316H574L626 226H846C814 270 778 322 734 382C690 444 652 496 622 538C590 582 562 618 538 650C352 886 172 1004 -2.38419e-06 1004ZM819.531 622C743.531 622 705.531 594 705.531 534C705.531 470 739.531 410 811.531 352C917.531 268 1051.53 226 1213.53 226C1257.53 226 1295.53 230 1329.53 236C1363.53 242 1387.53 248 1399.53 254L1417.53 264C1367.53 334 1343.53 386 1343.53 422C1343.53 448 1353.53 460 1377.53 460C1417.53 460 1473.53 424 1545.53 352L1599.53 392C1453.53 544 1333.53 620 1237.53 620C1203.53 620 1177.53 610 1159.53 590C1139.53 570 1131.53 544 1131.53 510V496C1017.53 580 913.531 622 819.531 622ZM987.531 478C1049.53 478 1131.53 426 1231.53 318C1221.53 316 1203.53 314 1179.53 314C1119.53 314 1067.53 332 1019.53 364C971.531 396 949.531 426 949.531 452C949.531 470 961.531 478 987.531 478ZM2165.91 328L2187.91 384C2119.91 424 2061.91 444 2013.91 444C1971.91 444 1947.91 430 1941.91 402C1883.91 474 1817.91 528 1743.91 566C1667.91 604 1599.91 622 1539.91 622C1499.91 622 1469.91 614 1445.91 598C1421.91 582 1411.91 560 1411.91 528C1411.91 484 1441.91 428 1501.91 356C1561.91 286 1591.91 236 1591.91 204C1591.91 200 1589.91 194 1587.91 182H1705.91C1709.91 192 1711.91 204 1711.91 218C1711.91 250 1697.91 288 1673.91 334C1647.91 380 1625.91 416 1607.91 444C1589.91 472 1587.91 486 1599.91 486C1635.91 486 1677.91 460 1721.91 406C1765.91 352 1797.91 292 1817.91 226H2047.91C2035.91 258 2031.91 286 2031.91 310C2031.91 344 2043.91 360 2067.91 360C2093.91 360 2125.91 350 2165.91 328ZM2290.86 198C2278.86 198 2266.86 196 2256.86 188C2240.86 176 2232.86 158 2232.86 134C2232.86 112 2240.86 90 2256.86 66C2278.86 38 2304.86 24 2334.86 24C2372.86 24 2392.86 44 2392.86 84C2392.86 108 2384.86 132 2368.86 154C2346.86 184 2320.86 198 2290.86 198ZM2130.86 620C2094.86 620 2066.86 610 2048.86 590C2030.86 570 2022.86 542 2022.86 508C2022.86 476 2030.86 444 2050.86 408C2070.86 372 2094.86 336 2124.86 298C2152.86 262 2170.86 238 2178.86 226H2356.86C2276.86 320 2236.86 386 2236.86 422C2236.86 448 2246.86 460 2270.86 460C2310.86 460 2364.86 424 2436.86 352L2492.86 392C2346.86 544 2226.86 620 2130.86 620ZM2216.61 1004L2294.61 766C2372.61 766 2456.61 732 2546.61 664C2636.61 596 2692.61 540 2716.61 496C2612.61 580 2508.61 622 2402.61 622C2326.61 622 2288.61 596 2288.61 540C2288.61 462 2332.61 392 2424.61 332C2528.61 262 2652.61 226 2796.61 226C2840.61 226 2880.61 230 2914.61 236C2948.61 242 2972.61 248 2984.61 254L3002.61 264C2946.61 344 2900.61 406 2868.61 452C2834.61 498 2794.61 550 2750.61 610C2704.61 670 2666.61 716 2636.61 750C2604.61 784 2570.61 820 2530.61 856C2490.61 894 2456.61 922 2424.61 940C2392.61 958 2360.61 974 2324.61 986C2288.61 998 2252.61 1004 2216.61 1004ZM2572.61 478C2632.61 478 2714.61 426 2816.61 318C2804.61 316 2786.61 314 2762.61 314C2704.61 314 2652.61 332 2604.61 364C2556.61 396 2534.61 426 2534.61 452C2534.61 470 2546.61 478 2572.61 478ZM3187.42 198C3175.42 198 3163.42 196 3153.42 188C3137.42 176 3129.42 158 3129.42 134C3129.42 112 3137.42 90 3153.42 66C3175.42 38 3201.42 24 3231.42 24C3269.42 24 3289.42 44 3289.42 84C3289.42 108 3281.42 132 3265.42 154C3243.42 184 3217.42 198 3187.42 198ZM3027.42 620C2991.42 620 2963.42 610 2945.42 590C2927.42 570 2919.42 542 2919.42 508C2919.42 476 2927.42 444 2947.42 408C2967.42 372 2991.42 336 3021.42 298C3049.42 262 3067.42 238 3075.42 226H3253.42C3173.42 320 3133.42 386 3133.42 422C3133.42 448 3143.42 460 3167.42 460C3207.42 460 3261.42 424 3333.42 352L3389.42 392C3243.42 544 3123.42 620 3027.42 620ZM3357.17 622C3317.17 622 3287.17 612 3263.17 592C3239.17 572 3229.17 544 3229.17 510C3229.17 466 3247.17 420 3283.17 368C3319.17 318 3417.17 196 3581.17 -4.81606e-05H3791.17C3771.17 22 3737.17 58 3689.17 106C3641.17 154 3609.17 190 3589.17 212C3569.17 234 3543.17 262 3515.17 296C3487.17 330 3467.17 358 3455.17 380C3443.17 404 3439.17 424 3439.17 440C3439.17 464 3451.17 476 3475.17 476C3523.17 476 3595.17 436 3689.17 352L3745.17 392C3597.17 546 3469.17 622 3357.17 622Z" fill="#FE4629"/>
     </svg>
+    <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="toggleDesktopSidebar()" title="Colapsar menú">
+      <span></span><span></span><span></span>
+    </button>
   </div>
   <nav>
 
@@ -832,7 +898,7 @@ body {
       </div>
       <div class="nav-links">
         <a href="#p043" class="nav-prompt-link" onclick="closeMobile()">043 · Copy de Respuesta Directa…</a>
-        <a href="#p044" class="nav-prompt-link" onclick="closeMobile()">044 · Landing Page que Conviert…</a>
+        <a href="#p044" class="nav-prompt-link" onclick="closeMobile()">044 · Página Web Premium con An…</a>
         <a href="#p045" class="nav-prompt-link" onclick="closeMobile()">045 · Script de Ventas por DM</a>
         <a href="#p046" class="nav-prompt-link" onclick="closeMobile()">046 · Manejador de Objeciones</a>
         <a href="#p047" class="nav-prompt-link" onclick="closeMobile()">047 · Storytelling que Vende si…</a>
@@ -917,11 +983,14 @@ body {
 </div>
 
 
+<button class="sidebar-reopen-btn" id="sidebar-reopen-btn" onclick="toggleDesktopSidebar()" title="Abrir menú">
+  <span></span><span></span><span></span>
+</button>
+
 <div class="overlay" id="overlay" onclick="closeMobile()"></div>
 
 <div class="main" id="main">
   <div class="hero" id="intro">
-    <div class="hero-bg-text">111</div>
     <div class="hero-grain"></div>
     <div class="hero-content">
       <svg class="hero-svg" viewBox="0 0 5266 3936" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -3354,8 +3423,8 @@ Incluye fuentes y fechas de los datos. Formato limpio, sin introducciones innece
       </a>
       <a href="#p044" class="prompt-list-item">
         <span class="pli-num">044</span>
-        <span class="pli-title">Landing Page que Convierte</span>
-        <span class="pli-desc">Estructura completa: hero, beneficios, prueba social, FAQs, …</span>
+        <span class="pli-title">Página Web Premium con Antigravity</span>
+        <span class="pli-desc">Analiza Instagram y genera el prompt técnico para una landing…</span>
       </a>
       <a href="#p045" class="prompt-list-item">
         <span class="pli-num">045</span>
@@ -3429,10 +3498,11 @@ Incluye fuentes y fechas de los datos. Formato limpio, sin introducciones innece
     <div class="prompt-card">
       <div class="prompt-meta">
         <span class="prompt-number">PROMPT 044</span>
-        <span class="prompt-type">Marketing · Web</span>
+        <span class="prompt-type">Marketing · Diseño Web</span>
       </div>
-      <h3 class="prompt-title">Landing Page que Convierte</h3>
-      <p class="prompt-desc">Estructura completa: hero, beneficios, prueba social, FAQs, CTA. Todo el copy, no solo la estructura.</p>
+      <h3 class="prompt-title">Página Web Premium con Antigravity</h3>
+      <p class="prompt-desc">Analiza un perfil de Instagram y genera automáticamente el prompt técnico completo para construir una landing page premium con scroll animations, GSAP y Lenis.</p>
+      <p style="font-size: 12px; margin-top: 8px; margin-bottom: 16px;">¿Quieres ver cómo se hace paso a paso? <a href="https://www.notion.so/Como-cre-una-web-para-una-marca-de-Instagram-paso-a-paso-31f949a92e7980ef910ad9594b433dd1?source=copy_link" target="_blank" style="color: var(--red); text-decoration: none;">Ver la guía completa →</a></p>
       <div class="code-block">
         <div class="code-header">
           <span class="code-label">PROMPT</span>
@@ -3441,7 +3511,26 @@ Incluye fuentes y fechas de los datos. Formato limpio, sin introducciones innece
             COPIAR
           </button>
         </div>
-        <div class="code-content" id="prompt044">Escribe el copy completo de una landing page para <span class="placeholder" contenteditable="true">producto/servicio</span>. Audiencia: <span class="placeholder" contenteditable="true">describe</span>. Estructura: HERO (headline + subheadline + CTA), PROBLEMA (3 puntos de dolor), SOLUCIÓN (cómo mi producto resuelve cada dolor), BENEFICIOS (no features, beneficios reales), PRUEBA SOCIAL (formato para testimonios), CÓMO FUNCIONA (3 pasos simples), PRICING (cómo presentar el precio), FAQs (las 5 objeciones más comunes respondidas), CTA FINAL (con urgencia). Todo el copy, no solo la estructura.</div>
+        <div class="code-content" id="prompt044">Analiza la captura de pantalla que te adjunto de un perfil de Instagram.
+Extrae: nombre del negocio, sector, paleta de colores, tono visual y tipo de cliente.
+
+Con esa información, escribe un prompt completo y detallado para Antigravity que genere
+una landing page premium. El prompt debe especificar lo siguiente:
+
+Stack técnico: HTML5 semántico, CSS3 vanilla, JavaScript ES6+, GSAP con ScrollTrigger
+y Lenis para smooth scroll.
+
+Animación hero: Diseña un concepto de scroll animation frame-by-frame adaptado al sector y la identidad visual del negocio. Define el concepto visual (qué se anima, desde dónde,
+hacia dónde, qué transmite), el sistema dual canvas con foreground canvas en object-fit contain con mask-image feathered 8% arriba y abajo, ambient canvas con object-fit cover,
+blur 40px y saturate 2.0, y la progresión narrativa del scroll describiendo qué ocurre al 0%, al 70% y al 100% del recorrido.
+
+Sistema de diseño: Tipografía condensada de impacto para headings con Antonio 700, Archivo Narrow para body, paleta de colores extraída del perfil, fondo blanco puro en secciones post-hero, sin grises claros.
+
+Secciones post-hero: Intro de producto o servicio principal, carrusel horizontal con snap points, banner cinematográfico 85vh con headline de impacto, grid de categorías 3 columnas, footer limpio 4 columnas.
+
+El prompt debe estar listo para pegarlo directamente en Antigravity sin modificaciones.
+
+Escríbelo en inglés técnico. No incluyas explicaciones, solo el prompt.</div>
       </div>
     </div>
   </section>
@@ -4939,6 +5028,15 @@ function navigateToSection(sectionId) {
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('overlay').classList.toggle('show');
+}
+
+function toggleDesktopSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const main = document.getElementById('main');
+  const reopenBtn = document.getElementById('sidebar-reopen-btn');
+  const collapsed = sidebar.classList.toggle('desktop-collapsed');
+  main.classList.toggle('sidebar-collapsed', collapsed);
+  reopenBtn.style.display = collapsed ? 'flex' : 'none';
 }
 
 function closeMobile() {
