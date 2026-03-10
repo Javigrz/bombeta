@@ -384,7 +384,10 @@ export default function ReelPage({
 
   const realPrompts = category.prompts.filter((p) => p.description !== "");
   const unlockedPrompt = realPrompts.find((p) => p.number === prompt.number)!;
-  const byNumber = Object.fromEntries(realPrompts.map((p) => [p.number, p]));
+  const allPrompts = [category, ...otherCategories].flatMap((c) =>
+    c.prompts.filter((p) => p.description !== "")
+  );
+  const byNumber = Object.fromEntries(allPrompts.map((p) => [p.number, p]));
 
   // Ordered display list - use custom order from token config, or default productividad order
   const DEFAULT_DISPLAY_ORDER: { number: string; blurred: boolean }[] = [

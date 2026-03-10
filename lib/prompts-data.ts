@@ -64,10 +64,11 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
     categoryId: "analisis",
     displayOrder: [
       { number: "074", blurred: false },
-      { number: "015", blurred: true  },
-      { number: "009", blurred: true  },
+      { number: "001", blurred: false },
+      { number: "004", blurred: true  },
       { number: "071", blurred: false },
-      { number: "073", blurred: false },
+      { number: "073", blurred: true  },
+      { number: "009", blurred: false },
     ],
   },
 };
