@@ -278,7 +278,7 @@ function buildPromptsEmail(greeting: string) {
 
       <p>
         Hay 111 prompts organizados por categorías. Tómate el tiempo que necesites para explorarlos.
-        No hay ninguna forma correcta de usarlos.
+        Todas las formas de usarlos son correctas.
       </p>
 
       <hr class="divider" />
