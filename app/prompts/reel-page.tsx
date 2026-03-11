@@ -1047,7 +1047,10 @@ export default function ReelPage({
           />
         </a>
         <p style={{ fontSize: 12, color: C.muted, margin: 0 }}>
-          © 2026 · @javiggil
+          © 2026 ·{" "}
+          <a href="https://www.instagram.com/javiggil/" target="_blank" rel="noopener noreferrer" style={{ color: C.muted, textDecoration: "none" }}>
+            @javiggil
+          </a>
         </p>
       </footer>
 

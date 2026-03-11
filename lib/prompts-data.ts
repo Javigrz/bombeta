@@ -72,6 +72,18 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
       { number: "009", blurred: false },
     ],
   },
+  ul082k: {
+    promptId: "082",
+    categoryId: "aprendizaje",
+    displayOrder: [
+      { number: "082", blurred: false },
+      { number: "023", blurred: false },
+      { number: "025", blurred: true  },
+      { number: "027", blurred: false },
+      { number: "031", blurred: true  },
+      { number: "033", blurred: false },
+    ],
+  },
   w3b044: {
     promptId: "044",
     categoryId: "marketing",
@@ -290,6 +302,41 @@ PROMPT 4 - PREPÁRATE PARA LA ENTREVISTA
 
 Actúa como el responsable de selección de este puesto específico. Hazme las 3 preguntas técnicas más difíciles que harías en una entrevista. Luego dame la respuesta perfecta basada en mi perfil y la descripción del puesto.`;
 
+const PROMPT_082_CONTENT = `Eres un coach de aprendizaje acelerado basado en el método Ultralearning de Scott Young.
+
+Quiero aprender [HABILIDAD O TEMA] hasta un nivel de [NIVEL: básico / competente / avanzado / experto] en [PLAZO EN SEMANAS O MESES].
+
+Diseña mi plan completo de Ultralearning siguiendo los 9 principios del método:
+
+1. METALEARNING (mapa previo)
+¿Cuáles son los conceptos, hechos y procedimientos más importantes de esta habilidad? ¿Qué recursos y métodos usan los mejores? Dame el mapa de lo que tengo que aprender antes de empezar.
+
+2. FOCUS (bloqueo de atención)
+¿Cuántas sesiones a la semana y de cuánto tiempo? ¿Cómo estructuro cada sesión para maximizar concentración? Dime el horario exacto y la técnica de enfoque recomendada (Pomodoro, bloques largos, etc.).
+
+3. DIRECTNESS (aprendizaje directo)
+¿Cuál es la actividad más parecida a lo que quiero hacer de verdad? Diseña mi práctica para que sea lo más directa posible al resultado final, no ejercicios abstractos.
+
+4. DRILL (ataque a las debilidades)
+Identifica los 3 cuellos de botella más comunes en esta habilidad. Para cada uno, dame un ejercicio específico para eliminarlo.
+
+5. RETRIEVAL (práctica de recuerdo)
+¿Cómo voy a recuperar lo aprendido sin mirar los apuntes? Dame el sistema de práctica de recuerdo: flashcards, tests, explicación en voz alta, o lo que corresponda.
+
+6. FEEDBACK (retroalimentación inmediata)
+¿Cómo sé si lo estoy haciendo bien o mal? Dame 3 formas concretas de obtener feedback rápido y honesto durante mi práctica.
+
+7. RETENTION (retención a largo plazo)
+¿Qué sistema de repaso espaciado uso? ¿Cada cuánto repaso y qué material?
+
+8. INTUITION (comprensión profunda)
+Dame 2 o 3 preguntas de "¿por qué?" que debo ser capaz de responder cuando haya dominado cada bloque. Si no puedo responderlas, no he entendido de verdad.
+
+9. EXPERIMENTATION (salir del método)
+¿En qué punto del plan tengo que empezar a experimentar y probar cosas propias en lugar de seguir instrucciones? Dame la señal concreta de cuándo dar ese salto.
+
+Al final, dame un calendario semanal visual con las actividades de cada semana para todo el plazo.`;
+
 const PROMPT_044_CONTENT = `Analiza la captura de pantalla que te adjunto de un perfil de Instagram.
 Extrae: nombre del negocio, sector, paleta de colores, tono visual y tipo de cliente.
 
@@ -312,6 +359,16 @@ El prompt debe estar listo para pegarlo directamente en Antigravity sin modifica
 Escríbelo en inglés técnico. No incluyas explicaciones, solo el prompt.`;
 
 export const FULL_PROMPTS: Record<string, PromptFull> = {
+  "082": {
+    id: "082",
+    number: "082",
+    title: "Ultralearning: Aprende 5× Más Rápido",
+    description:
+      "Diseña tu plan de aprendizaje acelerado siguiendo los 9 principios de Scott Young: metalearning, directness, drill, retrieval, feedback y más. Domina cualquier habilidad en el mínimo tiempo posible.",
+    categoryId: "aprendizaje",
+    source: "Scott Young · Ultralearning",
+    content: PROMPT_082_CONTENT,
+  },
   "044": {
     id: "prompt-044",
     number: "044",
@@ -512,6 +569,14 @@ export const CATEGORIES: CategoryData[] = [
         description:
           "Si no puedes explicarlo de forma simple, es que aún no lo entiendes de verdad.",
         source: "Richard Feynman",
+        locked: false,
+      },
+      {
+        number: "082",
+        title: "Ultralearning: Aprende 5× Más Rápido",
+        description:
+          "Los 9 principios de Scott Young para aprender cualquier habilidad en el mínimo tiempo posible.",
+        source: "Scott Young · Ultralearning",
         locked: false,
       },
       {
