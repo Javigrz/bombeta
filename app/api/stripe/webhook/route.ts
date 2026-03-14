@@ -54,9 +54,13 @@ export async function POST(req: Request) {
       // Email 1: entrega de los prompts
       await sendPromptsEmail(email, name ?? "")
       console.log(`Prompts email sent to ${email}`)
-      // Email 2: tripwire - oferta del curso
+      // Email 2: tripwire - upsell sesión 1:1
       await sendTripwireEmail(email, name ?? "")
       console.log(`Tripwire email sent to ${email}`)
+    } else if (product === "one_to_one") {
+      // Email de confirmación de la sesión 1:1
+      await sendOneToOneConfirmationEmail(email, name ?? "")
+      console.log(`One-to-one confirmation email sent to ${email}`)
     } else {
       // Email de confirmación del curso
       await resend.emails.send({
@@ -449,18 +453,18 @@ THE AI PLAYBOOK
 
 async function sendTripwireEmail(email: string, name: string) {
   const greeting = name ? `Hola ${name},` : "Hola,"
-  const COURSE_URL = "https://buy.stripe.com/7sYfZ9dxb79m3eOdph9EI02"
+  const ONE_TO_ONE_URL = "https://buy.stripe.com/7sY7sDdxbaly02C4SL9EI04"
 
   await resend.emails.send({
     from: "Javi Gil <contact@javiggil.com>",
     to: [email],
     subject: "Tengo algo más para ti",
-    html: buildTripwireEmailHtml(greeting, COURSE_URL),
-    text: buildTripwireEmailText(greeting, COURSE_URL),
+    html: buildTripwireEmailHtml(greeting, ONE_TO_ONE_URL),
+    text: buildTripwireEmailText(greeting, ONE_TO_ONE_URL),
   })
 }
 
-function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
+function buildTripwireEmailHtml(greeting: string, oneToOneUrl: string) {
   return `
 <!DOCTYPE html>
 <html>
@@ -543,15 +547,20 @@ function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
         margin: 0 0 10px;
       }
       .what-is p:last-child { margin-bottom: 0; }
-      .feature {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 10px;
-        font-size: 15px;
-        color: #333;
+      .steps-box {
+        background: #f9f7f4;
+        border-radius: 10px;
+        padding: 24px 28px;
+        margin: 32px 0;
       }
-      .check { color: #FE4629; font-weight: 700; flex-shrink: 0; }
+      .steps-title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #111;
+        margin-bottom: 16px;
+      }
       .cta-wrap {
         text-align: center;
         margin: 36px 0 28px;
@@ -588,38 +597,32 @@ function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
   </head>
   <body>
     <div class="wrapper">
-      <div class="label">The AI Playbook</div>
+      <div class="label">Sesión 1:1 · Javi Gil</div>
 
       <p>${greeting}</p>
 
       <p>
-        Muchas gracias por comprar los 111 prompts. Buena decisión. Son una herramienta potente,
-        pero una herramienta al final.
-
-        Por eso, te dejo un codigo descuento exlcusivo:
+        Gracias por comprar los 111 prompts. Son una herramienta potente —
+        pero lo que de verdad mueve la aguja es saber aplicarlos a <strong>tu caso concreto</strong>.
       </p>
 
       <p>
-        Lo que cambia de verdad no son los prompts. Es saber <strong>cómo pensar con IA</strong>,
-        cómo construir cosas con ella, y cómo convertir eso en algo que te genere ingresos.
-        Eso es lo que enseño en <strong>The AI Playbook</strong>.
+        Por eso te ofrezco algo que no está disponible en ningún otro sitio:
+        <strong>una hora conmigo, enfocada en ti</strong>.
       </p>
 
       <div class="what-is">
-        <div class="what-is-title">Qué es The AI Playbook</div>
+        <div class="what-is-title">Qué es la sesión 1:1</div>
         <table width="100%" cellpadding="0" cellspacing="0">
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">8 sesiones en directo por videollamada, 4 semanas</td></tr>
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Aprenderás a construir productos reales con IA - no teoría</td></tr>
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Cómo detectar oportunidades antes de que las vea todo el mundo</td></tr>
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Validar, lanzar y monetizar - con ejemplos de mis propios proyectos</td></tr>
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Red de contactos: gente que está exactamente donde estás tú</td></tr>
-          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-left:8px;">Plazas limitadas - el directo es el formato, no hay grabación que valga</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Una hora por videollamada — solo tú y yo</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Analizamos qué estás haciendo y a dónde quieres llegar con IA</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;padding-bottom:10px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-bottom:10px;padding-left:8px;">Saldrás con un plan claro y pasos definidos para tu situación</td></tr>
+          <tr><td width="20" valign="top" style="color:#FE4629;font-weight:700;font-size:15px;">✓</td><td style="font-size:15px;color:#333;line-height:1.7;padding-left:8px;">Sin plantillas genéricas — todo adaptado a lo que tú necesitas</td></tr>
         </table>
       </div>
 
       <p>
-        Por haber comprado los prompts, tienes acceso a un descuento que no está en ningún otro sitio.
-        Aplícalo en el checkout:
+        Por haber comprado los prompts, tienes acceso a un precio especial con el código secreto:
       </p>
 
       <div class="code-block">
@@ -629,13 +632,34 @@ function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
       </div>
 
       <div class="cta-wrap">
-        <a href="${courseUrl}" class="cta-btn">→ Ver The AI Playbook</a>
-        <p class="cta-sub">390€ · 8 sesiones en directo · Plazas limitadas</p>
+        <a href="${oneToOneUrl}" class="cta-btn">→ Reservar mi sesión 1:1</a>
+        <p class="cta-sub">97€ · Una hora contigo · Plazas limitadas</p>
+      </div>
+
+      <div class="steps-box">
+        <div class="steps-title">Qué pasa después de comprar</div>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="30" valign="top" style="padding-top:2px;">
+              <div style="width:22px;height:22px;background:#FE4629;color:#fff;border-radius:50%;text-align:center;font-size:11px;font-weight:700;line-height:22px;">1</div>
+            </td>
+            <td style="padding-left:12px;font-size:15px;color:#333;line-height:1.6;padding-bottom:14px;">
+              Compra tu sesión con el link de arriba (usa el código MISTERY)
+            </td>
+          </tr>
+          <tr>
+            <td width="30" valign="top" style="padding-top:2px;">
+              <div style="width:22px;height:22px;background:#FE4629;color:#fff;border-radius:50%;text-align:center;font-size:11px;font-weight:700;line-height:22px;">2</div>
+            </td>
+            <td style="padding-left:12px;font-size:15px;color:#333;line-height:1.6;">
+              Reserva tu hueco en el calendario: <a href="https://calendar.app.google/JCXhGkyfqKp1ekRq5" style="color:#FE4629;text-decoration:none;font-weight:600;">calendar.app.google/JCXhGkyfqKp1ekRq5</a>
+            </td>
+          </tr>
+        </table>
       </div>
 
       <p>
-        Si ya tienes claro que quieres estar, entra y usa el código.
-        Si quieres saber más primero, responde a este email y te cuento.
+        Si quieres saber más antes de decidirte, responde a este email y te cuento.
       </p>
 
       <p>
@@ -646,7 +670,7 @@ function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
       <hr class="divider" />
 
       <div class="footer">
-        The AI Playbook · <a href="mailto:contact@javiggil.com">contact@javiggil.com</a>
+        Sesión 1:1 · <a href="mailto:contact@javiggil.com">contact@javiggil.com</a>
       </div>
     </div>
   </body>
@@ -654,38 +678,218 @@ function buildTripwireEmailHtml(greeting: string, courseUrl: string) {
   `.trim()
 }
 
-function buildTripwireEmailText(greeting: string, courseUrl: string) {
+function buildTripwireEmailText(greeting: string, oneToOneUrl: string) {
   return `
 ${greeting}
 
-Acabas de comprar los 111 prompts. Buena decisión. Son una herramienta potente, pero una herramienta al final.
+Gracias por comprar los 111 prompts. Son una herramienta potente — pero lo que de verdad mueve la aguja es saber aplicarlos a tu caso concreto.
 
-Lo que cambia de verdad no son los prompts. Es saber cómo pensar con IA, cómo construir cosas con ella, y cómo convertir eso en algo que te genere ingresos. Eso es lo que enseño en The AI Playbook.
+Por eso te ofrezco algo que no está disponible en ningún otro sitio: una hora conmigo, enfocada en ti.
 
-QUÉ ES THE AI PLAYBOOK
------------------------
-✓ 8 sesiones en directo por videollamada, 4 semanas
-✓ Aprenderás a construir productos reales con IA - no teoría
-✓ Cómo detectar oportunidades antes de que las vea todo el mundo
-✓ Validar, lanzar y monetizar - con ejemplos de mis propios proyectos
-✓ Red de contactos: gente que está exactamente donde estás tú
-✓ Plazas limitadas - el directo es el formato, no hay grabación que valga
+QUÉ ES LA SESIÓN 1:1
+----------------------
+✓ Una hora por videollamada — solo tú y yo
+✓ Analizamos qué estás haciendo y a dónde quieres llegar con IA
+✓ Saldrás con un plan claro y pasos definidos para tu situación
+✓ Sin plantillas genéricas — todo adaptado a lo que tú necesitas
 
-Por haber comprado los prompts, tienes acceso a un descuento que no está en ningún otro sitio.
+Por haber comprado los prompts, tienes acceso a un precio especial con el código secreto.
 
 TU CÓDIGO DE DESCUENTO: MISTERY
 (Introdúcelo en el checkout de Stripe)
 
-→ Ver The AI Playbook: ${courseUrl}
-390€ · 8 sesiones en directo · Plazas limitadas
+→ Reservar mi sesión 1:1: ${oneToOneUrl}
+97€ · Una hora contigo · Plazas limitadas
 
-Si ya tienes claro que quieres estar, entra y usa el código.
-Si quieres saber más primero, responde a este email y te cuento.
+QUÉ PASA DESPUÉS DE COMPRAR
+-----------------------------
+1. Compra tu sesión con el link de arriba (usa el código MISTERY)
+2. Reserva tu hueco en el calendario: https://calendar.app.google/JCXhGkyfqKp1ekRq5
+
+Si quieres saber más antes de decidirte, responde a este email y te cuento.
 
 Un saludo,
 Javi
 
 ---
-The AI Playbook · contact@javiggil.com
+Sesión 1:1 · contact@javiggil.com
+  `.trim()
+}
+
+async function sendOneToOneConfirmationEmail(email: string, name: string) {
+  const greeting = name ? `Hola ${name},` : "Hola,"
+
+  await resend.emails.send({
+    from: "Javi Gil <contact@javiggil.com>",
+    to: [email],
+    subject: "Tu sesión 1:1 con Javi — reserva tu hueco",
+    html: buildOneToOneConfirmationEmailHtml(greeting),
+    text: buildOneToOneConfirmationEmailText(greeting),
+  })
+}
+
+function buildOneToOneConfirmationEmailHtml(greeting: string) {
+  return `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        line-height: 1.6;
+        color: #FAF5EB;
+        background-color: #1A0A00;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0;
+      }
+      .wrapper {
+        background-color: #1A0A00;
+        padding: 48px 32px;
+      }
+      .logo {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #FE4629;
+        margin-bottom: 40px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #FAF5EB;
+        margin: 32px 0 16px;
+        line-height: 1.3;
+      }
+      h1 span { color: #FE4629; }
+      p {
+        font-size: 16px;
+        color: #FAF5EB;
+        opacity: 0.7;
+        margin: 0 0 20px;
+      }
+      .calendar-box {
+        background: rgba(254, 70, 41, 0.08);
+        border: 1px solid rgba(254, 70, 41, 0.3);
+        border-radius: 10px;
+        padding: 24px 28px;
+        margin: 32px 0;
+        text-align: center;
+      }
+      .calendar-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(250, 245, 235, 0.5);
+        margin-bottom: 16px;
+      }
+      .cta-btn {
+        display: inline-block;
+        background: #FE4629;
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 14px 32px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 0.02em;
+      }
+      .spam-note {
+        background: rgba(250, 245, 235, 0.05);
+        border: 1px solid rgba(250, 245, 235, 0.1);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin: 28px 0;
+      }
+      .spam-note p {
+        font-size: 14px;
+        color: rgba(250, 245, 235, 0.5);
+        margin: 0;
+        opacity: 1;
+      }
+      .divider {
+        border: none;
+        border-top: 1px solid rgba(250, 245, 235, 0.1);
+        margin: 36px 0;
+      }
+      .footer {
+        font-size: 13px;
+        color: rgba(250, 245, 235, 0.3);
+      }
+      .footer a {
+        color: #FE4629;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="logo">SESIÓN 1:1 · JAVI GIL</div>
+
+      <h1>${greeting}<br/><span>Ya tienes tu sesión.</span></h1>
+
+      <p>
+        Tu compra está confirmada. Ahora solo tienes que reservar el hueco en el calendario
+        para que podamos quedar.
+      </p>
+
+      <div class="calendar-box">
+        <div class="calendar-label">Reserva tu videollamada</div>
+        <a href="https://calendar.app.google/JCXhGkyfqKp1ekRq5" class="cta-btn">→ Elegir mi fecha y hora</a>
+      </div>
+
+      <div class="spam-note">
+        <p>
+          ⚠️ Si no ves este email en bandeja de entrada, revisa la carpeta de spam y márcalo como "No es spam".
+        </p>
+      </div>
+
+      <p>
+        Nos vemos pronto. Si tienes cualquier duda antes de la sesión, responde a este email.
+      </p>
+
+      <hr class="divider" />
+
+      <p style="font-size:16px;opacity:0.9;">
+        Un saludo,<br/>
+        <strong style="color:#FAF5EB;">Javi</strong>
+      </p>
+
+      <hr class="divider" />
+
+      <div class="footer">
+        ¿Tienes alguna duda? Escríbenos a
+        <a href="mailto:contact@javiggil.com">contact@javiggil.com</a>
+      </div>
+    </div>
+  </body>
+</html>
+  `.trim()
+}
+
+function buildOneToOneConfirmationEmailText(greeting: string) {
+  return `
+${greeting}
+
+Ya tienes tu sesión.
+
+Tu compra está confirmada. Ahora solo tienes que reservar el hueco en el calendario para que podamos quedar.
+
+→ Reserva tu videollamada aquí: https://calendar.app.google/JCXhGkyfqKp1ekRq5
+
+Si no ves este email en bandeja de entrada, revisa la carpeta de spam y márcalo como "No es spam".
+
+Nos vemos pronto. Si tienes cualquier duda antes de la sesión, responde a este email.
+
+---
+
+Un saludo,
+Javi
+
+¿Dudas? Escríbenos a contact@javiggil.com
   `.trim()
 }
