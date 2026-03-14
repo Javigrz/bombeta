@@ -404,7 +404,7 @@ export default function ReelPage({
     { number: "019", blurred: false }, // Los 7 Hábitos
   ];
   const DISPLAY_ORDER = (customDisplayOrder ?? DEFAULT_DISPLAY_ORDER)
-    .filter((d) => !unlockedNumbers.has(d.number) && byNumber[d.number]);
+    .filter((d) => !unlockedNumbers.has(d.number) && (d.blurred || byNumber[d.number]));
 
   const shownNumbers = new Set(DISPLAY_ORDER.map((d) => d.number));
   const hiddenCount = category.count - unlockedNumbers.size - shownNumbers.size;
@@ -720,7 +720,7 @@ export default function ReelPage({
             {/* Mixed list: readable + blurred thin rows, interspersed */}
             {DISPLAY_ORDER.map(({ number, blurred }) => {
               const p = byNumber[number];
-              if (!p) return null;
+              if (!p && !blurred) return null;
 
               if (blurred) {
                 // Thin blurred row - title only, no description
@@ -754,7 +754,7 @@ export default function ReelPage({
                         userSelect: "none",
                       }}
                     >
-                      {p.title}
+                      {p?.title ?? "••••••••••••••••••"}
                     </span>
                   </button>
                 );

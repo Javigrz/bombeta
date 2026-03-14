@@ -84,6 +84,18 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
       { number: "033", blurred: false },
     ],
   },
+  ph4ku7: {
+    promptId: "107",
+    categoryId: "contenido",
+    bannerSubtext: "Mejorar una imagen es fácil con el prompt correcto. Para el resto del trabajo tienes los 110 prompts restantes.",
+    displayOrder: [
+      { number: "107", blurred: false },
+      { number: "108", blurred: true },
+      { number: "013", blurred: false },
+      { number: "109", blurred: true  },
+      { number: "009", blurred: false  },
+    ],
+  },
   w3b044: {
     promptId: "044",
     categoryId: "marketing",
@@ -337,6 +349,16 @@ Dame 2 o 3 preguntas de "¿por qué?" que debo ser capaz de responder cuando hay
 
 Al final, dame un calendario semanal visual con las actividades de cada semana para todo el plazo.`;
 
+const PROMPT_107_CONTENT = `Ultra-high-resolution 4K photorealistic enhancement of this image. Preserve every visual element exactly as it appears in the source: composition, framing, perspective, and camera angle must remain identical.
+
+Reconstruct fine detail with photographic accuracy. Recover texture in clothing, fabric weave, grass, net mesh, and all surface materials. Enhance sharpness, edge definition, and high-frequency detail throughout the entire frame. No stylization, no artistic interpretation.
+
+Maintain exact color science: white balance, tonal relationships, contrast, and exposure must match the source precisely. Expand dynamic range where information already exists. Do not reassign shadows or highlights. Lighting direction and quality must remain unchanged.
+
+Remove compression artifacts, JPEG blocking, chroma errors, and noise. Apply controlled sharpening without halo generation. Output must feel like the original was captured on higher-end equipment: same image, only sharper, cleaner, and more detailed.
+
+Negative constraints: no reframing, no added elements, no removed elements, no perspective shift, no distortion, no hallucinated detail, no generative interpretation. Faithful technical upscale only.`;
+
 const PROMPT_044_CONTENT = `Analiza la captura de pantalla que te adjunto de un perfil de Instagram.
 Extrae: nombre del negocio, sector, paleta de colores, tono visual y tipo de cliente.
 
@@ -359,6 +381,16 @@ El prompt debe estar listo para pegarlo directamente en Antigravity sin modifica
 Escríbelo en inglés técnico. No incluyas explicaciones, solo el prompt.`;
 
 export const FULL_PROMPTS: Record<string, PromptFull> = {
+  "107": {
+    id: "107",
+    number: "107",
+    title: "Upscale 4K Fotorrealista",
+    description:
+      "Convierte cualquier imagen mediocre en una fotografía 4K de nivel profesional. Sin reencuadrar, sin añadir elementos, sin distorsión. Solo más nítida, más limpia y con el detalle que merecía desde el principio.",
+    categoryId: "contenido",
+    source: "Midjourney · DALL·E · Flux",
+    content: PROMPT_107_CONTENT,
+  },
   "082": {
     id: "082",
     number: "082",
@@ -863,7 +895,15 @@ export const CATEGORIES: CategoryData[] = [
       },
       {
         number: "107",
-        title: "+ 4 prompts más",
+        title: "Upscale 4K Fotorrealista",
+        description:
+          "Convierte cualquier imagen mediocre en una fotografía 4K de nivel profesional. Sin reencuadrar, sin añadir elementos, sin distorsión. Solo más nítida, más limpia y con el detalle que merecía desde el principio.",
+        source: "Midjourney · DALL·E · Flux",
+        locked: false,
+      },
+      {
+        number: "109",
+        title: "+ 3 prompts más",
         description: "",
         source: "",
         locked: true,
