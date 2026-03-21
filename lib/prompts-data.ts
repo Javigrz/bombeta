@@ -43,6 +43,7 @@ export interface ReelToken {
   extraPromptIds?: string[];
   displayOrder?: { number: string; blurred: boolean }[];
   bannerSubtext?: string;
+  guideUrl?: string;
 }
 
 export const REEL_TOKENS: Record<string, ReelToken> = {
@@ -100,6 +101,7 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
     promptId: "044",
     categoryId: "marketing",
     bannerSubtext: "Crear la web es solo el primer paso. También hay que venderla. Para eso tienes los 110 prompts restantes.",
+    guideUrl: "https://www.notion.so/Como-cre-una-web-para-una-marca-de-Instagram-paso-a-paso-31f949a92e7980ef910ad9594b433dd1",
     displayOrder: [
       { number: "047", blurred: false },
       { number: "051", blurred: true  },

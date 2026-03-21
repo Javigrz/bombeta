@@ -30,6 +30,7 @@ export default async function PromptsPage({
         extraPrompts={extraPrompts}
         displayOrder={tokenData.displayOrder}
         bannerSubtext={tokenData.bannerSubtext}
+        guideUrl={tokenData.guideUrl}
         category={category}
         otherCategories={otherCategories}
       />

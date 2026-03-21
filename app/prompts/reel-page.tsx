@@ -64,6 +64,7 @@ interface ReelPageProps {
   category: CategoryData;
   otherCategories: CategoryData[];
   bannerSubtext?: string;
+  guideUrl?: string;
 }
 
 // ─── Buy CTA ─────────────────────────────────────────────────────────────────
@@ -325,6 +326,7 @@ export default function ReelPage({
   category,
   otherCategories,
   bannerSubtext,
+  guideUrl,
 }: ReelPageProps) {
   const [copied, setCopied] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
@@ -514,6 +516,21 @@ export default function ReelPage({
         >
           {prompt.source}
         </p>
+
+        {/* Guide link */}
+        {guideUrl && (
+          <p style={{ fontSize: 15, color: C.muted, margin: "0 0 28px", lineHeight: 1.5 }}>
+            ¿Quieres ver cómo se hace paso a paso?{" "}
+            <a
+              href={guideUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: C.red, fontWeight: 600, textDecoration: "none" }}
+            >
+              Ver la guía completa →
+            </a>
+          </p>
+        )}
 
         {/* Prompt content block */}
         <style>{`
