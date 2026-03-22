@@ -815,7 +815,7 @@ body {
         <a href="#p004" class="nav-prompt-link" onclick="closeMobile()">004 · Prohibido Inventar</a>
         <a href="#p005" class="nav-prompt-link" onclick="closeMobile()">005 · El Experto</a>
         <a href="#p006" class="nav-prompt-link" onclick="closeMobile()">006 · El Mejorador</a>
-        <a href="#p007" class="nav-prompt-link" onclick="closeMobile()">007 · Matriz Eisenhower</a>
+        <a href="#p007" class="nav-prompt-link" onclick="closeMobile()">007 · Lifestyle Design: Peter Kell</a>
         <a href="#p008" class="nav-prompt-link" onclick="closeMobile()">008 · Sprint de Trabajo Profund…</a>
         <a href="#p009" class="nav-prompt-link" onclick="closeMobile()">009 · 80/20 para Aprender Cualq…</a>
         <a href="#p010" class="nav-prompt-link" onclick="closeMobile()">010 · Pensamiento de Segundo Or…</a>
@@ -1427,8 +1427,8 @@ PROHIBIDO omitir matices importantes que cambiarían cómo el usuario interpreta
       </a>
       <a href="#p007" class="prompt-list-item">
         <span class="pli-num">007</span>
-        <span class="pli-title">Matriz Eisenhower</span>
-        <span class="pli-desc">Pega TODAS tus tareas y la IA las clasifica: hacer hoy, prog…</span>
+        <span class="pli-title">Lifestyle Design: El framework de $30,000 de Peter Kell</span>
+        <span class="pli-desc">48 preguntas que diseñan tu vida ideal. La IA te las hace una por una. Al final: tu día completo dentro de 3 años.</span>
       </a>
       <a href="#p008" class="prompt-list-item">
         <span class="pli-num">008</span>
@@ -1675,13 +1675,13 @@ escríbela directamente. Prioriza: si solo pudiera hacer
     <div class="prompt-card">
       <div class="prompt-meta">
         <span class="prompt-number">PROMPT 007</span>
-        <span class="prompt-type">Productividad · Priorizar</span>
+        <span class="prompt-type">Productividad · Diseño de Vida</span>
       </div>
-      <h3 class="prompt-title">Matriz Eisenhower</h3>
-      <p class="prompt-desc">Pega TODAS tus tareas y la IA las clasifica: hacer hoy, programar, delegar o eliminar. Sé despiadado con el eliminar.</p>
+      <h3 class="prompt-title">Lifestyle Design: El framework de $30,000 de Peter Kell</h3>
+      <p class="prompt-desc">48 preguntas que te obligan a diseñar tu vida ideal en detalle extremo. La IA te las hace una por una y cuando terminas, te describe un día completo de tu vida dentro de 3 años. Media hora que te da más claridad que meses pensándolo solo.</p>
       <div class="prompt-instructions">
         <span class="prompt-instructions-icon">👆</span>
-        <p class="prompt-instructions-text"><strong>Cómo usarlo:</strong> copia el prompt, rellena los campos marcados en naranja y pégalo en la IA. Los campos se pueden editar aquí antes de copiar.</p>
+        <p class="prompt-instructions-text"><strong>Cómo usarlo:</strong> copia el prompt y pégalo en la IA. Te hará las 48 preguntas una a una. Responde con detalle real. Al terminar, te describe tu día completo dentro de 3 a 5 años.</p>
       </div>
       <div class="code-block">
         <div class="code-header">
@@ -1691,34 +1691,91 @@ escríbela directamente. Prioriza: si solo pudiera hacer
             COPIAR
           </button>
         </div>
-        <div class="code-content" id="prompt007"><span class="tag">&lt;eisenhower_matrix&gt;</span>
+        <div class="code-content" id="prompt007"><span class="tag">&lt;lifestyle_design_coach&gt;</span>
 
-<span class="directive">MIS TAREAS PENDIENTES:</span>
-<span class="placeholder" contenteditable="true">Pega aquí TODAS tus tareas pendientes, sin filtrar. Volcado total.</span>
-<span class="placeholder-hint">Ejemplos: "Responder emails, preparar presentación viernes, llamar al dentista, revisar contrato, aprender Excel..."</span>
+<span class="directive">INSTRUCCIONES PARA LA IA:</span>
+Vas a ser mi coach de diseño de vida. Tienes 48 preguntas que hacerme, una por una. No me las sueltes todas de golpe. Me haces una, esperas mi respuesta, y solo entonces pasas a la siguiente. Si mi respuesta es vaga o demasiado corta, pídeme que sea más específico. Necesito detalle real, no ideas abstractas.
 
-<span class="directive">MI ROL / CONTEXTO:</span>
-<span class="placeholder" contenteditable="true">Tu rol profesional y qué es lo más importante en tu trabajo ahora mismo</span>
+No seas motivacional. No me digas que mis respuestas son geniales. No me animes. Solo escucha, pregunta, y avanza. Esto no es terapia, es un ejercicio de claridad.
 
-<span class="tag">&lt;instructions&gt;</span>
-Clasifica cada tarea en la Matriz Eisenhower:
-1. URGENTE + IMPORTANTE → Hacer hoy
-2. IMPORTANTE + NO URGENTE → Programar esta semana
-3. URGENTE + NO IMPORTANTE → Delegar o automatizar
-4. NI URGENTE NI IMPORTANTE → Eliminar
+Cuando terminemos las 48 preguntas, quiero que hagas una sola cosa: basándote en todas mis respuestas, descríbeme un día completo de mi vida dentro de 3 a 5 años. Desde que me despierto hasta que me acuesto. Con el máximo detalle posible. No motivacional. No aspiracional. Realista con lo que he escrito. Que suene a un día normal, no a un día perfecto de película.
 
-Sé despiadado con la categoría "eliminar". La mayoría de
-personas tienen un 30% de tareas que no deberían existir.
+Estas son las 48 preguntas en orden. Hazme solo la primera y espera mi respuesta.
 
-Para cada categoría, ordénalas por impacto.
-Al final, dame mi plan de acción para hoy en 3 pasos máximo.
-<span class="tag">&lt;/instructions&gt;</span>
+<span class="tag">&lt;preguntas&gt;</span>
 
-<span class="tag">&lt;/eisenhower_matrix&gt;</span></div>
+<span class="directive">BLOQUE 1 · PROPÓSITO Y VISIÓN</span>
+1. ¿Cuál es el propósito de este capítulo de tu vida?
+2. ¿Cuál es el mejor escenario posible que te podría pasar en los próximos 3 a 5 años?
+3. ¿Cuánto dinero tendrías en el banco?
+4. ¿Qué experiencias habrías vivido?
+5. Si pudieras crear la vida más increíble que puedas imaginar, ¿cómo sería exactamente?
+6. ¿A dónde querrías ir?
+7. ¿Qué experiencias querrías tener con tu familia?
+8. ¿Qué cosas te encantaría tener?
+9. ¿Cómo te gustaría contribuir a los demás?
+10. ¿Cómo estarías devolviendo algo al mundo?
+11. ¿Cómo quieres contribuir a tu familia?
+12. ¿Cuál es la vida más increíble que podrías crear en este capítulo de tu vida?
+
+<span class="directive">BLOQUE 2 · IDENTIDAD</span>
+13. ¿En qué tipo de persona te tienes que convertir para crear esa vida?
+
+<span class="directive">BLOQUE 3 · NEGOCIO Y CARRERA</span>
+14. Si piensas en el mejor día de tu carrera profesional en los próximos 5 años, ¿cuál sería?
+15. ¿Qué crees que habría pasado ese día específico?
+16. ¿Qué pasó exactamente ese día?
+17. ¿Cómo te hizo sentir ese día?
+18. ¿Qué dice la gente sobre ti?
+19. ¿Cómo te miran tus amigos ahora que has conseguido esta vida?
+20. ¿Cómo compartes lo que has aprendido con tus amigos ahora que lo has logrado?
+21. ¿Cuánto dinero estaría generando tu negocio cada mes en los próximos 3 a 5 años?
+22. ¿Cómo serían las operaciones?
+23. ¿Sería fácil?
+24. ¿O sería estresante?
+25. ¿Sería fácil y consistente?
+26. ¿Qué dicen tus clientes sobre los productos que te compran?
+27. ¿Qué tipo de testimonios y reseñas recibes cada día de tus clientes?
+28. ¿Qué dice tu equipo sobre el negocio en el que trabajan?
+29. ¿Cómo se sienten de formar parte de esta empresa?
+30. ¿Qué tipo de propósito y pasión te llena esto cada día?
+31. ¿Cuánto estarías gastando cada mes en publicidad?
+
+<span class="directive">BLOQUE 4 · ESTILO DE VIDA</span>
+32. ¿Dónde vives en tu vida ideal?
+33. ¿Con quién vives?
+34. ¿Cómo es tu casa?
+35. ¿Cómo es tu espacio de trabajo?
+36. ¿Qué tipo de trabajo haces a diario?
+37. ¿Cuántas horas a la semana trabajas?
+
+<span class="directive">BLOQUE 5 · HABILIDADES Y SALUD</span>
+38. ¿Qué habilidades has dominado?
+39. ¿Cómo te sientes respecto a tu salud física?
+40. ¿Cómo es tu rutina de ejercicio?
+41. ¿Qué tipo de dieta o hábitos de nutrición sigues?
+42. ¿Cómo cuidas tu salud mental?
+
+<span class="directive">BLOQUE 6 · RELACIONES Y HÁBITOS</span>
+43. ¿Quiénes son las 5 personas más importantes de tu vida?
+44. ¿Qué cualidades comparten?
+45. ¿Qué hábitos ya no tienes?
+46. ¿Qué hábitos diarios te han ayudado a llegar hasta aquí?
+
+<span class="directive">BLOQUE 7 · REFLEXIÓN</span>
+47. ¿Qué retos has superado para llegar a este punto?
+48. Si pudieras mandarle un solo consejo a tu yo del presente, ¿cuál sería?
+
+<span class="tag">&lt;/preguntas&gt;</span>
+
+<span class="directive">RECUERDA:</span>
+Una pregunta a la vez. Espera mi respuesta. No seas motivacional. Cuando terminemos las 48, descríbeme mi día completo dentro de 3 a 5 años.
+
+<span class="tag">&lt;/lifestyle_design_coach&gt;</span></div>
       </div>
       <div class="pro-tip">
         <span class="pro-tip-badge">PRO TIP</span>
-        <p class="pro-tip-text">Úsalo cada lunes por la mañana. 5 minutos que te ahorran horas.</p>
+        <p class="pro-tip-text">Reserva 30 minutos sin interrupciones. Responde con detalle real, no con lo que "debería" ser tu vida. El resultado es tan bueno como lo honesto que seas.</p>
       </div>
     </div>
   </section>

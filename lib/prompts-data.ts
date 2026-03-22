@@ -44,9 +44,15 @@ export interface ReelToken {
   displayOrder?: { number: string; blurred: boolean }[];
   bannerSubtext?: string;
   guideUrl?: string;
+  expiryDate?: string;
 }
 
 export const REEL_TOKENS: Record<string, ReelToken> = {
+  ls007: {
+    promptId: "007",
+    categoryId: "productividad",
+    expiryDate: "2026-03-29T23:59:59",
+  },
   x9p2r7: { promptId: "013", categoryId: "productividad" },
   h7m3k1: { promptId: "001", categoryId: "productividad" },
   v3r1f4: { promptId: "004", categoryId: "productividad" },
@@ -361,6 +367,88 @@ Remove compression artifacts, JPEG blocking, chroma errors, and noise. Apply con
 
 Negative constraints: no reframing, no added elements, no removed elements, no perspective shift, no distortion, no hallucinated detail, no generative interpretation. Faithful technical upscale only.`;
 
+const PROMPT_007_CONTENT = `<lifestyle_design_coach>
+
+INSTRUCCIONES PARA LA IA:
+Vas a ser mi coach de diseño de vida. Tienes 48 preguntas que hacerme, una por una. No me las sueltes todas de golpe. Me haces una, esperas mi respuesta, y solo entonces pasas a la siguiente. Si mi respuesta es vaga o demasiado corta, pídeme que sea más específico. Necesito detalle real, no ideas abstractas.
+
+No seas motivacional. No me digas que mis respuestas son geniales. No me animes. Solo escucha, pregunta, y avanza. Esto no es terapia, es un ejercicio de claridad.
+
+Cuando terminemos las 48 preguntas, quiero que hagas una sola cosa: basándote en todas mis respuestas, descríbeme un día completo de mi vida dentro de 3 a 5 años. Desde que me despierto hasta que me acuesto. Con el máximo detalle posible. No motivacional. No aspiracional. Realista con lo que he escrito. Que suene a un día normal, no a un día perfecto de película.
+
+Estas son las 48 preguntas en orden. Hazme solo la primera y espera mi respuesta.
+
+<preguntas>
+
+PROPÓSITO Y VISIÓN:
+1. ¿Cuál es el propósito de este capítulo de tu vida?
+2. ¿Cuál es el mejor escenario posible que te podría pasar en los próximos 3 a 5 años?
+3. ¿Cuánto dinero tendrías en el banco?
+4. ¿Qué experiencias habrías vivido?
+5. Si pudieras crear la vida más increíble que puedas imaginar, ¿cómo sería exactamente?
+6. ¿A dónde querrías ir?
+7. ¿Qué experiencias querrías tener con tu familia?
+8. ¿Qué cosas te encantaría tener?
+9. ¿Cómo te gustaría contribuir a los demás?
+10. ¿Cómo estarías devolviendo algo al mundo?
+11. ¿Cómo quieres contribuir a tu familia?
+12. ¿Cuál es la vida más increíble que podrías crear en este capítulo de tu vida?
+
+IDENTIDAD:
+13. ¿En qué tipo de persona te tienes que convertir para crear esa vida?
+
+NEGOCIO Y CARRERA:
+14. Si piensas en el mejor día de tu carrera profesional en los próximos 5 años, ¿cuál sería?
+15. ¿Qué crees que habría pasado ese día específico?
+16. ¿Qué pasó exactamente ese día?
+17. ¿Cómo te hizo sentir ese día?
+18. ¿Qué dice la gente sobre ti?
+19. ¿Cómo te miran tus amigos ahora que has conseguido esta vida?
+20. ¿Cómo compartes lo que has aprendido con tus amigos ahora que lo has logrado?
+21. ¿Cuánto dinero estaría generando tu negocio cada mes en los próximos 3 a 5 años?
+22. ¿Cómo serían las operaciones?
+23. ¿Sería fácil?
+24. ¿O sería estresante?
+25. ¿Sería fácil y consistente?
+26. ¿Qué dicen tus clientes sobre los productos que te compran?
+27. ¿Qué tipo de testimonios y reseñas recibes cada día de tus clientes?
+28. ¿Qué dice tu equipo sobre el negocio en el que trabajan?
+29. ¿Cómo se sienten de formar parte de esta empresa?
+30. ¿Qué tipo de propósito y pasión te llena esto cada día?
+31. ¿Cuánto estarías gastando cada mes en publicidad?
+
+ESTILO DE VIDA:
+32. ¿Dónde vives en tu vida ideal?
+33. ¿Con quién vives?
+34. ¿Cómo es tu casa?
+35. ¿Cómo es tu espacio de trabajo?
+36. ¿Qué tipo de trabajo haces a diario?
+37. ¿Cuántas horas a la semana trabajas?
+
+HABILIDADES Y SALUD:
+38. ¿Qué habilidades has dominado?
+39. ¿Cómo te sientes respecto a tu salud física?
+40. ¿Cómo es tu rutina de ejercicio?
+41. ¿Qué tipo de dieta o hábitos de nutrición sigues?
+42. ¿Cómo cuidas tu salud mental?
+
+RELACIONES Y HÁBITOS:
+43. ¿Quiénes son las 5 personas más importantes de tu vida?
+44. ¿Qué cualidades comparten?
+45. ¿Qué hábitos ya no tienes?
+46. ¿Qué hábitos diarios te han ayudado a llegar hasta aquí?
+
+REFLEXIÓN:
+47. ¿Qué retos has superado para llegar a este punto?
+48. Si pudieras mandarle un solo consejo a tu yo del presente, ¿cuál sería?
+
+</preguntas>
+
+RECUERDA:
+Una pregunta a la vez. Espera mi respuesta. No seas motivacional. Cuando terminemos las 48, descríbeme mi día completo dentro de 3 a 5 años.
+
+</lifestyle_design_coach>`;
+
 const PROMPT_044_CONTENT = `Analiza la captura de pantalla que te adjunto de un perfil de Instagram.
 Extrae: nombre del negocio, sector, paleta de colores, tono visual y tipo de cliente.
 
@@ -383,6 +471,16 @@ El prompt debe estar listo para pegarlo directamente en Antigravity sin modifica
 Escríbelo en inglés técnico. No incluyas explicaciones, solo el prompt.`;
 
 export const FULL_PROMPTS: Record<string, PromptFull> = {
+  "007": {
+    id: "007",
+    number: "007",
+    title: "Lifestyle Design: El framework de $30,000 de Peter Kell",
+    description:
+      "48 preguntas que te obligan a diseñar tu vida ideal en detalle extremo. La IA te las hace una por una y cuando terminas, te describe un día completo de tu vida dentro de 3 años. Media hora que te da más claridad que meses pensándolo solo.",
+    categoryId: "productividad",
+    source: "Peter Kell · Lifestyle Design",
+    content: PROMPT_007_CONTENT,
+  },
   "107": {
     id: "107",
     number: "107",
@@ -488,11 +586,11 @@ export const CATEGORIES: CategoryData[] = [
         locked: false,
       },
       {
-        number: "002",
-        title: "Matriz Eisenhower",
+        number: "007",
+        title: "Lifestyle Design: El framework de $30,000 de Peter Kell",
         description:
-          "Organiza tus tareas por urgencia e importancia. Deja de apagar fuegos y empieza a avanzar.",
-        source: "Stephen Covey · Los 7 Hábitos",
+          "48 preguntas que te obligan a diseñar tu vida ideal en detalle extremo. La IA te las hace una por una y cuando terminas, te describe un día completo de tu vida dentro de 3 años. Media hora que te da más claridad que meses pensándolo solo.",
+        source: "Peter Kell · Lifestyle Design",
         locked: false,
       },
       {
@@ -509,14 +607,6 @@ export const CATEGORIES: CategoryData[] = [
         description:
           "Haz lo más difícil primero. El resto del día parece fácil después.",
         source: "Brian Tracy · Eat That Frog",
-        locked: false,
-      },
-      {
-        number: "007",
-        title: "Constructor de Hábitos",
-        description:
-          "Crea o rompe cualquier hábito con el método exacto de Atomic Habits.",
-        source: "James Clear · Atomic Habits",
         locked: false,
       },
       {

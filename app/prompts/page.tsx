@@ -31,6 +31,7 @@ export default async function PromptsPage({
         displayOrder={tokenData.displayOrder}
         bannerSubtext={tokenData.bannerSubtext}
         guideUrl={tokenData.guideUrl}
+        expiryDate={tokenData.expiryDate}
         category={category}
         otherCategories={otherCategories}
       />

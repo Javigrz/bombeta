@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect, Fragment } from "react";
 import Image from "next/image";
 import {
   CategoryData,
@@ -65,6 +65,7 @@ interface ReelPageProps {
   otherCategories: CategoryData[];
   bannerSubtext?: string;
   guideUrl?: string;
+  expiryDate?: string;
 }
 
 // ─── Buy CTA ─────────────────────────────────────────────────────────────────
@@ -327,12 +328,42 @@ export default function ReelPage({
   otherCategories,
   bannerSubtext,
   guideUrl,
+  expiryDate,
 }: ReelPageProps) {
   const [copied, setCopied] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const categorySectionRef = useRef<HTMLDivElement>(null);
+
+  const [timeLeft, setTimeLeft] = useState<{
+    days: number; hours: number; minutes: number; seconds: number;
+  } | null>(null);
+  const [isExpired, setIsExpired] = useState(false);
+
+  useEffect(() => {
+    if (!expiryDate) return;
+    const expiry = new Date(expiryDate);
+
+    function tick() {
+      const diff = expiry.getTime() - Date.now();
+      if (diff <= 0) {
+        setIsExpired(true);
+        setTimeLeft(null);
+        return;
+      }
+      setTimeLeft({
+        days:    Math.floor(diff / 86400000),
+        hours:   Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000),
+      });
+    }
+
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [expiryDate]);
   const placeholderRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   const parts = useMemo(() => parsePromptContent(prompt.content), [prompt.content]);
@@ -396,9 +427,8 @@ export default function ReelPage({
   // Ordered display list - use custom order from token config, or default productividad order
   const DEFAULT_DISPLAY_ORDER: { number: string; blurred: boolean }[] = [
     { number: "001", blurred: false }, // Humaniza tu IA - clave
-    { number: "002", blurred: true  }, // Matriz Eisenhower - thin blur
+    { number: "007", blurred: false }, // Lifestyle Design - framework de $30,000
     { number: "015", blurred: false }, // Negociador de Sueldo
-    { number: "007", blurred: false }, // Constructor de Hábitos
     { number: "003", blurred: true  }, // Sprint de Trabajo Profundo - thin blur
     { number: "009", blurred: false }, // La semana laboral de 4 horas
     { number: "017", blurred: true  }, // Antifragile - thin blur
@@ -440,6 +470,108 @@ export default function ReelPage({
         </a>
       </header>
 
+      {/* ── Countdown banner ── */}
+      {timeLeft && (
+        <div
+          style={{
+            background: C.dark,
+            color: C.bg,
+            padding: "28px 24px 24px",
+            textAlign: "center",
+            borderBottom: `1px solid rgba(254,70,41,0.2)`,
+          }}
+        >
+          {/* Badge */}
+          <div style={{ marginBottom: 16 }}>
+            <span
+              style={{
+                display: "inline-block",
+                background: C.red,
+                color: "#fff",
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                padding: "5px 14px",
+                borderRadius: 100,
+              }}
+            >
+              Gratis · Tiempo limitado
+            </span>
+          </div>
+          {/* Countdown units */}
+          <div style={{ display: "flex", gap: 8, justifyContent: "center", alignItems: "stretch" }}>
+            {[
+              { v: timeLeft.days,    l: "días" },
+              { v: timeLeft.hours,   l: "horas" },
+              { v: timeLeft.minutes, l: "min" },
+              { v: timeLeft.seconds, l: "seg" },
+            ].map(({ v, l }, i, arr) => (
+              <Fragment key={l}>
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.07)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    borderRadius: 10,
+                    padding: "12px 16px",
+                    textAlign: "center",
+                    minWidth: 64,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: "clamp(24px, 6vw, 36px)",
+                      fontWeight: 700,
+                      lineHeight: 1,
+                      color: C.bg,
+                    }}
+                  >
+                    {String(v).padStart(2, "0")}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 10,
+                      letterSpacing: "0.08em",
+                      color: "rgba(255,255,255,0.4)",
+                      marginTop: 6,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {l}
+                  </div>
+                </div>
+                {i < arr.length - 1 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      paddingBottom: 20,
+                      color: "rgba(255,255,255,0.25)",
+                      fontSize: 22,
+                      fontWeight: 300,
+                    }}
+                  >
+                    :
+                  </div>
+                )}
+              </Fragment>
+            ))}
+          </div>
+          {/* Expiry note */}
+          <p
+            style={{
+              fontSize: 12,
+              color: "rgba(255,255,255,0.35)",
+              margin: "16px 0 0",
+              letterSpacing: "0.03em",
+            }}
+          >
+            Disponible hasta el 29 de marzo de 2026
+          </p>
+        </div>
+      )}
+
       {/* ── Unlocked prompt block ── */}
       <section
         style={{
@@ -448,180 +580,238 @@ export default function ReelPage({
           padding: "40px 24px 32px",
         }}
       >
-        {/* Category badge */}
-        <p
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: C.red,
-            margin: "0 0 12px",
-          }}
-        >
-          {category.icon} {category.name}
-        </p>
-
-        {/* Prompt number */}
-        <p
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: C.muted,
-            margin: "0 0 8px",
-          }}
-        >
-          PROMPT {prompt.number}
-        </p>
-
-        {/* Title */}
-        <h1
-          style={{
-            fontFamily: "var(--font-newsreader), Georgia, serif",
-            fontSize: "clamp(28px, 7vw, 42px)",
-            fontWeight: 400,
-            lineHeight: 1.1,
-            margin: "0 0 12px",
-            color: C.dark,
-          }}
-        >
-          {prompt.title}
-        </h1>
-
-        {/* One-liner / intro */}
-        {prompt.description.split("\n\n").map((para, i) => (
-          <p
-            key={i}
-            style={{
-              fontSize: 16,
-              color: C.muted,
-              margin: i === prompt.description.split("\n\n").length - 1 ? "0 0 6px" : "0 0 14px",
-              lineHeight: 1.5,
-            }}
-          >
-            {para}
-          </p>
-        ))}
-
-        {/* Source */}
-        <p
-          style={{
-            fontSize: 12,
-            color: C.red,
-            fontWeight: 600,
-            margin: "0 0 28px",
-          }}
-        >
-          {prompt.source}
-        </p>
-
-        {/* Guide link */}
-        {guideUrl && (
-          <p style={{ fontSize: 15, color: C.muted, margin: "0 0 28px", lineHeight: 1.5 }}>
-            ¿Quieres ver cómo se hace paso a paso?{" "}
-            <a
-              href={guideUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: C.red, fontWeight: 600, textDecoration: "none" }}
+        {expiryDate && isExpired ? (
+          <div style={{ textAlign: "center", padding: "60px 0 40px" }}>
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: C.muted,
+                margin: "0 0 20px",
+              }}
             >
-              Ver la guía completa →
+              PROMPT {prompt.number}
+            </p>
+            <h1
+              style={{
+                fontFamily: "var(--font-newsreader), Georgia, serif",
+                fontSize: "clamp(24px, 6vw, 36px)",
+                fontWeight: 400,
+                lineHeight: 1.2,
+                margin: "0 0 16px",
+                color: C.dark,
+              }}
+            >
+              Este regalo ya caducó.
+            </h1>
+            <p
+              style={{
+                fontSize: 16,
+                color: C.muted,
+                margin: "0 auto 36px",
+                maxWidth: 360,
+                lineHeight: 1.6,
+              }}
+            >
+              El prompt 007 ahora forma parte de los 111 Originale.
+            </p>
+            <a
+              href={STRIPE_URL}
+              style={{
+                display: "inline-block",
+                background: C.dark,
+                color: C.bg,
+                padding: "18px 36px",
+                borderRadius: 8,
+                fontSize: 15,
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                textDecoration: "none",
+              }}
+            >
+              Conseguir los 111 Originale →
             </a>
-          </p>
-        )}
-
-        {/* Prompt content block */}
-        <style>{`
-          .prompt-placeholder::before { content: '✎ '; font-size: 10px; opacity: 0.7; }
-          .prompt-placeholder:focus { background: rgba(254,70,41,0.35) !important; border-style: solid !important; box-shadow: 0 0 0 2px rgba(254,70,41,0.3) !important; }
-        `}</style>
-        <div
-          style={{
-            background: "#2D0E1E",
-            border: `1px solid rgba(254,70,41,0.2)`,
-            borderRadius: 10,
-            marginBottom: 16,
-            overflow: "hidden",
-          }}
-        >
-          {/* Code header */}
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 20px", background: "#3D1A2B", borderBottom: "1px solid rgba(254,70,41,0.15)" }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(254,70,41,0.55)", letterSpacing: "1px", textTransform: "uppercase" }}>
-              ↓ copiar abajo
-            </span>
           </div>
-          <pre
-            style={{
-              fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
-              fontSize: 13,
-              lineHeight: 1.7,
-              color: "#E8DDD4",
-              margin: 0,
-              padding: "20px 20px 16px",
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              overflowX: "hidden",
-            }}
-          >
-            {(() => {
-              let pIdx = 0;
-              return parts.map((part, i) => {
-                if (part.type === "text") return <span key={i}>{part.content}</span>;
-                if (part.type === "tag") return <span key={i} style={{ color: "#FE4629" }}>{part.content}</span>;
-                if (part.type === "directive") return <span key={i} style={{ color: "#FFB299", fontWeight: 500 }}>{part.content}</span>;
-                const idx = pIdx++;
-                return (
-                  <span
-                    key={i}
-                    ref={(el) => { placeholderRefs.current[idx] = el; }}
-                    contentEditable
-                    suppressContentEditableWarning
-                    className="prompt-placeholder"
-                    style={{
-                      display: "inline",
-                      background: "rgba(254,70,41,0.2)",
-                      border: "1px dashed #FE4629",
-                      borderRadius: 4,
-                      padding: "2px 8px",
-                      color: "#FE4629",
-                      fontWeight: 500,
-                      cursor: "text",
-                      outline: "none",
-                      minWidth: 80,
-                      fontFamily: "inherit",
-                      transition: "all 0.2s",
-                    }}
-                  >
-                    {part.content}
-                  </span>
-                );
-              });
-            })()}
-          </pre>
-        </div>
+        ) : (
+          <>
+            {/* Category badge */}
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: C.red,
+                margin: "0 0 12px",
+              }}
+            >
+              {category.icon} {category.name}
+            </p>
 
-        {/* Copy button */}
-        <button
-          onClick={handleCopy}
-          style={{
-            width: "100%",
-            padding: "16px 24px",
-            background: copied ? C.green : C.red,
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            fontSize: 15,
-            fontWeight: 700,
-            letterSpacing: "0.05em",
-            cursor: "pointer",
-            minHeight: 56,
-            transition: "background 0.2s",
-          }}
-        >
-          {copied ? "✓ Prompt copiado" : "COPIAR PROMPT"}
-        </button>
+            {/* Prompt number */}
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: C.muted,
+                margin: "0 0 8px",
+              }}
+            >
+              PROMPT {prompt.number}
+            </p>
+
+            {/* Title */}
+            <h1
+              style={{
+                fontFamily: "var(--font-newsreader), Georgia, serif",
+                fontSize: "clamp(28px, 7vw, 42px)",
+                fontWeight: 400,
+                lineHeight: 1.1,
+                margin: "0 0 12px",
+                color: C.dark,
+              }}
+            >
+              {prompt.title}
+            </h1>
+
+            {/* One-liner / intro */}
+            {prompt.description.split("\n\n").map((para, i) => (
+              <p
+                key={i}
+                style={{
+                  fontSize: 16,
+                  color: C.muted,
+                  margin: i === prompt.description.split("\n\n").length - 1 ? "0 0 6px" : "0 0 14px",
+                  lineHeight: 1.5,
+                }}
+              >
+                {para}
+              </p>
+            ))}
+
+            {/* Source */}
+            <p
+              style={{
+                fontSize: 12,
+                color: C.red,
+                fontWeight: 600,
+                margin: "0 0 28px",
+              }}
+            >
+              {prompt.source}
+            </p>
+
+            {/* Guide link */}
+            {guideUrl && (
+              <p style={{ fontSize: 15, color: C.muted, margin: "0 0 28px", lineHeight: 1.5 }}>
+                ¿Quieres ver cómo se hace paso a paso?{" "}
+                <a
+                  href={guideUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: C.red, fontWeight: 600, textDecoration: "none" }}
+                >
+                  Ver la guía completa →
+                </a>
+              </p>
+            )}
+
+            {/* Prompt content block */}
+            <style>{`
+              .prompt-placeholder::before { content: '✎ '; font-size: 10px; opacity: 0.7; }
+              .prompt-placeholder:focus { background: rgba(254,70,41,0.35) !important; border-style: solid !important; box-shadow: 0 0 0 2px rgba(254,70,41,0.3) !important; }
+            `}</style>
+            <div
+              style={{
+                background: "#2D0E1E",
+                border: `1px solid rgba(254,70,41,0.2)`,
+                borderRadius: 10,
+                marginBottom: 16,
+                overflow: "hidden",
+              }}
+            >
+              {/* Code header */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 20px", background: "#3D1A2B", borderBottom: "1px solid rgba(254,70,41,0.15)" }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(254,70,41,0.55)", letterSpacing: "1px", textTransform: "uppercase" }}>
+                  ↓ copiar abajo
+                </span>
+              </div>
+              <pre
+                style={{
+                  fontFamily: "'JetBrains Mono', 'Fira Code', 'Courier New', monospace",
+                  fontSize: 13,
+                  lineHeight: 1.7,
+                  color: "#E8DDD4",
+                  margin: 0,
+                  padding: "20px 20px 16px",
+                  whiteSpace: "pre-wrap",
+                  wordBreak: "break-word",
+                  overflowX: "hidden",
+                }}
+              >
+                {(() => {
+                  let pIdx = 0;
+                  return parts.map((part, i) => {
+                    if (part.type === "text") return <span key={i}>{part.content}</span>;
+                    if (part.type === "tag") return <span key={i} style={{ color: "#FE4629" }}>{part.content}</span>;
+                    if (part.type === "directive") return <span key={i} style={{ color: "#FFB299", fontWeight: 500 }}>{part.content}</span>;
+                    const idx = pIdx++;
+                    return (
+                      <span
+                        key={i}
+                        ref={(el) => { placeholderRefs.current[idx] = el; }}
+                        contentEditable
+                        suppressContentEditableWarning
+                        className="prompt-placeholder"
+                        style={{
+                          display: "inline",
+                          background: "rgba(254,70,41,0.2)",
+                          border: "1px dashed #FE4629",
+                          borderRadius: 4,
+                          padding: "2px 8px",
+                          color: "#FE4629",
+                          fontWeight: 500,
+                          cursor: "text",
+                          outline: "none",
+                          minWidth: 80,
+                          fontFamily: "inherit",
+                          transition: "all 0.2s",
+                        }}
+                      >
+                        {part.content}
+                      </span>
+                    );
+                  });
+                })()}
+              </pre>
+            </div>
+
+            {/* Copy button */}
+            <button
+              onClick={handleCopy}
+              style={{
+                width: "100%",
+                padding: "16px 24px",
+                background: copied ? C.green : C.red,
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                fontSize: 15,
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                cursor: "pointer",
+                minHeight: 56,
+                transition: "background 0.2s",
+              }}
+            >
+              {copied ? "✓ Prompt copiado" : "COPIAR PROMPT"}
+            </button>
+          </>
+        )}
       </section>
 
       {/* ── Extra unlocked prompts ── */}
@@ -668,44 +858,71 @@ export default function ReelPage({
 
           {/* Prompts: unlocked one + limited locked ones */}
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            {/* Unlocked prompt */}
-            <div
-              style={{
-                padding: "14px 16px",
-                background: C.greenBg,
-                border: `1.5px solid ${C.greenBorder}`,
-                borderRadius: 8,
-                marginBottom: 4,
-              }}
-            >
-              <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 700, color: C.green, paddingTop: 2 }}>✓</span>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: C.green, margin: 0 }}>
-                    {unlockedPrompt.title}
-                    <span
-                      style={{
-                        marginLeft: 8,
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: C.green,
-                        background: C.greenBorder,
-                        padding: "2px 7px",
-                        borderRadius: 100,
-                        letterSpacing: "0.06em",
-                      }}
-                    >
-                      {copied ? "COPIADO" : "DESBLOQUEADO"}
-                    </span>
-                  </p>
-                  {unlockedPrompt.description && (
-                    <p style={{ fontSize: 13, color: C.muted, margin: "3px 0 0", lineHeight: 1.5 }}>
-                      {unlockedPrompt.description}
+            {/* Unlocked prompt (shown as locked when expired) */}
+            {expiryDate && isExpired ? (
+              <div
+                style={{
+                  padding: "14px 16px",
+                  background: "transparent",
+                  border: `1px solid ${C.border}`,
+                  borderRadius: 8,
+                  marginBottom: 4,
+                  opacity: 0.5,
+                }}
+              >
+                <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <span style={{ flexShrink: 0, fontSize: 12, paddingTop: 2 }}>🔒</span>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: C.dark, margin: 0 }}>
+                      {unlockedPrompt.title}
                     </p>
-                  )}
+                    {unlockedPrompt.description && (
+                      <p style={{ fontSize: 13, color: C.muted, margin: "3px 0 0", lineHeight: 1.5 }}>
+                        {unlockedPrompt.description}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div
+                style={{
+                  padding: "14px 16px",
+                  background: C.greenBg,
+                  border: `1.5px solid ${C.greenBorder}`,
+                  borderRadius: 8,
+                  marginBottom: 4,
+                }}
+              >
+                <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                  <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 700, color: C.green, paddingTop: 2 }}>✓</span>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: C.green, margin: 0 }}>
+                      {unlockedPrompt.title}
+                      <span
+                        style={{
+                          marginLeft: 8,
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: C.green,
+                          background: C.greenBorder,
+                          padding: "2px 7px",
+                          borderRadius: 100,
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        {copied ? "COPIADO" : "DESBLOQUEADO"}
+                      </span>
+                    </p>
+                    {unlockedPrompt.description && (
+                      <p style={{ fontSize: 13, color: C.muted, margin: "3px 0 0", lineHeight: 1.5 }}>
+                        {unlockedPrompt.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Extra unlocked prompts */}
             {extraPrompts.map((ep) => {
