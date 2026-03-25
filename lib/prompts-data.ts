@@ -56,6 +56,7 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
   x9p2r7: { promptId: "013", categoryId: "productividad" },
   h7m3k1: { promptId: "001", categoryId: "productividad" },
   v3r1f4: { promptId: "004", categoryId: "productividad" },
+  em020: { promptId: "020", categoryId: "productividad" },
   f9k3z7: {
     promptId: "036",
     categoryId: "negocio",
@@ -470,6 +471,12 @@ El prompt debe estar listo para pegarlo directamente en Antigravity sin modifica
 
 Escríbelo en inglés técnico. No incluyas explicaciones, solo el prompt.`;
 
+const PROMPT_020_CONTENT = `Me vas a ayudar a responder el email que te pego abajo. Tu objetivo es escribir una respuesta que suene completamente humana, natural, cercana y real, no como algo generado por una IA.
+
+Antes de escribir nada, lee el email completo con atención y fíjate en el tono general, el tipo de relación que implica, lo que pide o plantea, y cualquier matiz emocional que tenga.
+
+Luego escribe una respuesta que encaje exactamente con el tono del remitente, que suene como una persona real, que no empiece con relleno, que responda a todo lo que dice, y que sea concisa.`;
+
 export const FULL_PROMPTS: Record<string, PromptFull> = {
   "007": {
     id: "007",
@@ -559,6 +566,16 @@ export const FULL_PROMPTS: Record<string, PromptFull> = {
     categoryId: "analisis",
     source: "Búsqueda de empleo · ATS · Entrevistas",
     content: PROMPT_074_CONTENT,
+  },
+  "020": {
+    id: "020",
+    number: "020",
+    title: "Email Perfecto en 60 Segundos",
+    description:
+      "Pégale un email y te escribe una respuesta que suena como tú, no como una IA.",
+    categoryId: "productividad",
+    source: "Universal · Email",
+    content: PROMPT_020_CONTENT,
   },
 };
 
@@ -656,6 +673,14 @@ export const CATEGORIES: CategoryData[] = [
           "Los hábitos que tienen en común las personas más efectivas del mundo.",
         source: "Stephen Covey · Los 7 Hábitos",
         locked: true,
+      },
+      {
+        number: "020",
+        title: "Email Perfecto en 60 Segundos",
+        description:
+          "Pégale un email y te escribe una respuesta que suena como tú, no como una IA.",
+        source: "Universal · Email",
+        locked: false,
       },
       {
         number: "021",
