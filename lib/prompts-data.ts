@@ -51,7 +51,7 @@ export const REEL_TOKENS: Record<string, ReelToken> = {
   ls007: {
     promptId: "007",
     categoryId: "productividad",
-    expiryDate: "2026-03-29T23:59:59",
+    expiryDate: "2026-04-02T23:59:59",
   },
   x9p2r7: { promptId: "013", categoryId: "productividad" },
   h7m3k1: { promptId: "001", categoryId: "productividad" },
