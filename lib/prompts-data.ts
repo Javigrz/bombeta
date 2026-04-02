@@ -48,6 +48,7 @@ export interface ReelToken {
 }
 
 export const REEL_TOKENS: Record<string, ReelToken> = {
+  diagX: { promptId: "X", categoryId: "productividad" },
   ls007: {
     promptId: "007",
     categoryId: "productividad",
@@ -477,6 +478,8 @@ Antes de escribir nada, lee el email completo con atención y fíjate en el tono
 
 Luego escribe una respuesta que encaje exactamente con el tono del remitente, que suene como una persona real, que no empiece con relleno, que responda a todo lo que dice, y que sea concisa.`;
 
+const PROMPT_X_CONTENT = `Quiero que me ayudes a identificar qué me está frenando en la vida. Pero no me des respuestas todavía. Primero necesitas conocerme. Hazme preguntas, una por una. Espera mi respuesta antes de pasar a la siguiente. Necesito que cubras estas áreas: qué hago cada día, qué quiero conseguir, qué he intentado que no ha funcionado, qué evito hacer y por qué, y cómo paso mi tiempo libre. Cuando tengas suficiente contexto, ahí sí: dime verdades brutales. Sin filtro. Pero basadas en lo que yo te he contado, no en suposiciones.`;
+
 export const FULL_PROMPTS: Record<string, PromptFull> = {
   "007": {
     id: "007",
@@ -577,6 +580,16 @@ export const FULL_PROMPTS: Record<string, PromptFull> = {
     source: "Universal · Email",
     content: PROMPT_020_CONTENT,
   },
+  "X": {
+    id: "X",
+    number: "X",
+    title: "El Diagnóstico Sin Filtro",
+    description:
+      "La IA no te da respuestas hasta que te conoce de verdad. Te hace preguntas una por una sobre tu vida real: qué haces cada día, qué quieres conseguir, qué has intentado sin éxito, qué evitas y por qué. Cuando tiene suficiente contexto, te dice exactamente qué te está frenando. Sin suavizar. Sin suposiciones. Solo verdades basadas en lo que tú mismo le contaste.",
+    categoryId: "productividad",
+    source: "Autodiagnóstico · Crecimiento Personal",
+    content: PROMPT_X_CONTENT,
+  },
 };
 
 export const CATEGORIES: CategoryData[] = [
@@ -586,6 +599,14 @@ export const CATEGORIES: CategoryData[] = [
     icon: "⚡",
     count: 23,
     prompts: [
+      {
+        number: "X",
+        title: "El Diagnóstico Sin Filtro",
+        description:
+          "La IA te hace preguntas una por una sobre tu vida real. Cuando tiene suficiente contexto, te dice exactamente qué te está frenando. Sin filtro. Sin suposiciones.",
+        source: "Autodiagnóstico · Crecimiento Personal",
+        locked: false,
+      },
       {
         number: "001",
         title: "Humaniza tu IA",
