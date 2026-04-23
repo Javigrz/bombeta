@@ -1004,7 +1004,7 @@ body {
     width: 100%;
   }
   .section-title {
-    margin-top: clamp(32px, 6vh, 72px);
+    margin-top: 0;
     margin-bottom: clamp(16px, 3vh, 28px);
   }
   .photo-stack {
@@ -1077,10 +1077,10 @@ body {
 
 @media (max-width: 900px) and (max-height: 760px) {
   .section-problema {
-    padding-top: clamp(56px, 9vh, 100px);
+    padding-top: clamp(72px, 10svh, 120px);
   }
   .section-title {
-    margin-top: clamp(28px, 4.5vh, 60px);
+    margin-top: 0;
     font-size: clamp(26px, 7vw, 40px);
   }
   .section-body {
@@ -1532,17 +1532,12 @@ body {
   margin: 0 0 clamp(28px, 4vh, 56px) 0;
 }
 
-/* Respiro extra en la II: el eyebrow entra con más aire arriba para que
-   la II (y el bloque de texto) no queden pegados al nav. En desktop más
-   generoso; en mobile un toque suave, porque la altura la manda el pullquote
-   y el photo-stack abajo. */
+/* Eyebrow alineado al top: el padding-top del .section-problema ya aporta
+   el aire necesario, igual que .section-lado. Sin margin-top extra para
+   que el título quede a la misma altura que el resto de secciones. */
 .section-problema .section-eyebrow {
-  margin-top: clamp(16px, 3vh, 32px);
-}
-@media (min-width: 901px) {
-  .section-problema .section-eyebrow {
-    margin-top: clamp(40px, 7vh, 96px);
-  }
+  margin-top: 0;
+  margin-bottom: clamp(14px, 2.2vh, 28px);
 }
 
 .section-dentro .section-eyebrow {
