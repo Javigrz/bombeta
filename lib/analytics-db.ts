@@ -111,6 +111,21 @@ export async function trackServerEvent(
   }
 }
 
+// Cuenta compras únicas de un producto. DISTINCT sobre stripeSessionId para
+// evitar doble conteo si Stripe reintenta el webhook (hoy no hay UNIQUE
+// constraint en events por stripeSessionId). Solo cuenta filas atribuidas a
+// una sesión — las compras sin analytics_session_id ni client_reference_id
+// no entran en trackServerEvent (ver línea 93).
+export async function getSoldCount(product: string): Promise<number> {
+  const result = await sql`
+    SELECT COUNT(DISTINCT properties->>'stripeSessionId')::int AS sold
+    FROM events
+    WHERE event_type = 'purchase'
+      AND properties->>'product' = ${product}
+  `
+  return Number(result.rows[0]?.sold ?? 0)
+}
+
 // ─── Dashboard queries ──────────────────────────────────────────────────────
 // pageFilter: null = todas las páginas, string = solo esa página
 

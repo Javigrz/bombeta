@@ -1,0 +1,4719 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>111 Originale · Sistema con IA para vivir y trabajar</title>
+<meta name="description" content="111 prompts. Un sistema. Para vivir y trabajar con IA. Diseñado dentro de la IA bancaria. Probado en startups. Construido para tu vida.">
+
+<!-- Tipografías (alternativas libres al stack de Brunello Cucinelli):
+     - Playfair Display → títulos editorial tipo Quarto
+     - DM Sans → cuerpo/microcopy tipo GT Eesti Pro Display
+     - JetBrains Mono → reloj en vivo (mono para dígitos estables) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&family=Archivo+Black&family=Archivo:wght@700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --cream: #FAF5EB;
+  --dark: #4B0A23;
+  --red: #FE4629;
+  --muted: #8B7355;
+  --card: #F3EBD9;
+
+  --space-xs: clamp(8px, 1.5vw, 12px);
+  --space-sm: clamp(16px, 2vw, 20px);
+  --space-md: clamp(24px, 3vw, 32px);
+  --space-lg: clamp(40px, 5vw, 64px);
+  --space-xl: clamp(64px, 8vw, 96px);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+body {
+  scroll-snap-type: y mandatory;
+}
+
+.hero {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  line-height: 1.6;
+  overflow-x: hidden;
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== NAV =====
+   Completamente transparente para no cortar la foto del hero.
+   mix-blend-mode: difference en el texto invierte el color automáticamente
+   según el fondo (claro sobre oscuro, oscuro sobre claro). Funciona sobre
+   la foto del hero y sobre el cream del resto de secciones. */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  isolation: isolate;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  min-height: 48px;
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.25));
+}
+
+.nav-logo img {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+
+.nav-back {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 8px;
+  transition: opacity 0.25s ease;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+
+.nav-back:hover {
+  opacity: 0.7;
+}
+
+.nav-back-arrow {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.nav-back:hover .nav-back-arrow { transform: translateX(-3px); }
+
+/* NAV SOBRE FONDO CLARO (secciones post-hero) */
+.top-nav.nav-light .nav-back {
+  color: var(--dark);
+  text-shadow: none;
+}
+
+.top-nav.nav-light .nav-clock {
+  color: var(--dark);
+  mix-blend-mode: normal;
+}
+
+.top-nav.nav-light .dgt-11 {
+  color: var(--dark);
+  mix-blend-mode: normal;
+}
+
+.top-nav.nav-light .nav-logo {
+  filter: none;
+}
+
+.top-nav.nav-light .nav-logo img {
+  filter: brightness(0) saturate(100%);
+}
+
+/* Transiciones suaves para todos los elementos de la nav */
+.nav-back,
+.nav-clock,
+.dgt-11,
+.nav-logo,
+.nav-logo img {
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* RELOJ EN VIVO
+   Centro de la nav. Detalle luxury digital tipo Stripe/Bottega.
+   Hora local del usuario actualizada cada segundo.
+   JetBrains Mono para que los números mantengan su grid (monoespaciado).
+   Tabular-nums asegura que los dígitos no salten al cambiar de cifra. */
+.nav-clock {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  opacity: 0;
+  animation: fadeInClock 0.8s ease 0.3s forwards;
+  mix-blend-mode: difference;
+  /* Centrado real al viewport, independiente del ancho de logo y Javi Gil */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes fadeInClock {
+  to { opacity: 1; }
+}
+
+/* Estilo del "11" destacado en el reloj.
+   Color naranja como guiño al branding 111 Originale.
+   isolation+position aísla del mix-blend-mode del padre nav-clock. */
+.dgt-11 {
+  color: var(--cream);
+  mix-blend-mode: normal;
+  isolation: isolate;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== HERO ===== 
+   Estructura final:
+   - SVG 111 inline (protagonista visual de marca)
+   - Primera letra "P" en Pinyon Script (firma editorial luxury)
+   - Resto en Instrument Serif
+   - "sistema" en italic (segundo acento calligraphic)
+   - Escala tipográfica grande (clamp hasta 140px)
+   - Line-height cerrado (0.92)
+   - Tracking negativo agresivo (-0.03em)
+*/
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-md) calc(12vh + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(6vh + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 5;
+  padding: 0 var(--space-md);
+}
+
+/* CONTENEDOR DE LA FOTO DEL HERO
+   Capa absoluta del body que cubre toda el área visual del hero,
+   incluyendo el espacio de la nav (que es transparente).
+   Así la imagen llega hasta arriba del todo sin cortes. */
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* VÍDEO DE FONDO DEL HERO
+   Solomei-night.mp4 en bucle muted autoplay.
+   Scale controlado por JS scroll parallax via --scroll-scale. */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  transform: scale(var(--scroll-scale, 1));
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* Overlay oscuro estilo Cucinelli: viñeta atmosférica nocturna que
+   oscurece los bordes y garantiza legibilidad del texto crema sobre
+   el vídeo en movimiento. */
+.hero-photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(10, 8, 14, 0.20) 0%,
+    rgba(10, 8, 14, 0.55) 70%,
+    rgba(10, 8, 14, 0.80) 100%
+  );
+  pointer-events: none;
+}
+
+/* TÍTULO PRINCIPAL */
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(38px, 5.2vw, 68px);
+  line-height: 0.98;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  margin: 0;
+  position: relative;
+  z-index: 5;
+  max-width: 100%;
+  color: var(--cream);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* Cada línea del título es un span block.
+   .line-gap añade espacio extra a la línea que abre nueva idea
+   (en este caso entre "Prompts." y "Un sistema."). */
+.hero h1 .line {
+  display: block;
+}
+
+.hero h1 .line-gap {
+  margin-top: 0.25em;
+}
+
+/* Salto de línea que solo aparece en móvil (tras "trabajar") */
+.mobile-break { display: none; }
+@media (max-width: 768px) {
+  .mobile-break { display: inline; }
+}
+
+/* SVG 111 inline.
+   Anclado a baseline (igual que la P de Pinyon) para que ambos crezcan
+   desde la misma línea base hacia arriba. Tamaño 1.3em es el punto medio
+   entre la P (1.9em) y el texto normal (1em). */
+.hero h1 .svg-111 {
+  display: inline-block;
+  height: 1.3em;
+  width: auto;
+  vertical-align: baseline;
+  margin-right: 0.18em;
+  margin-bottom: -0.05em;
+}
+
+/* PRIMERA LETRA EN PINYON SCRIPT
+   La firma visual del proyecto.
+   Estilo Shopify Winter 2026: la inicial caligráfica crece HACIA ARRIBA
+   desde la baseline del texto, no centrada. Por eso usamos baseline en
+   vertical-align y ajustamos line-height a 0 para que no fuerce altura
+   en el contenedor. La P se ancla con el resto y todo el ornamento
+   asciende sin descender por debajo. */
+.hero h1 .swash,
+.section-title .swash {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 1.9em;
+  font-weight: 400;
+  font-style: normal;
+  display: inline-block;
+  vertical-align: baseline;
+  line-height: 0;
+  margin-right: 0.05em;
+  margin-left: -0.02em;
+  color: inherit;
+}
+
+/* "Prompts" destacado con tamaño mayor que el resto del título */
+.hero h1 .word-prompts {
+  font-size: 1.5em;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+}
+
+/* Énfasis en "sistema" en italic */
+.hero h1 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--cream);
+}
+
+/* Highlight en naranja para palabras destacadas del título.
+   Se aplica selectivamente, ej: "IA". */
+.hero h1 .hl {
+  color: var(--cream);
+}
+
+/* GANCHO DE VALOR
+   DM Sans light: sans-serif neutro al estilo Cucinelli (GT Eesti Pro Display). */
+.hero-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(14px, 1.3vw, 16px);
+  line-height: 1.5;
+  font-weight: 300;
+  color: var(--cream);
+  opacity: 0.9;
+  max-width: 520px;
+  margin: 0 auto var(--space-md);
+  position: relative;
+  z-index: 5;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+.hero-tagline .line { display: block; }
+.hero-tagline .line + .line { margin-top: 4px; }
+
+/* CTA minimalista al estilo Cucinelli: label inline con una flecha fina
+   pequeña a su lado. Sin círculo, sin animación de flotado. */
+.hero-cta {
+  position: relative;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.hero-cta:hover { opacity: 0.7; }
+
+.hero-cta-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: rgba(250, 245, 235, 0.7);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-arrow {
+  display: inline-block;
+  font-size: 10px;
+  color: rgba(250, 245, 235, 0.7);
+  line-height: 1;
+}
+
+/* ===== HERO PARALLAX EXIT =====
+   Al hacer scroll, el contenido del hero sube y se desvanece.
+   Controlado por variables CSS que actualiza el JS. */
+.hero h1,
+.hero-bottom {
+  transform: translateY(var(--hero-drift, 0px));
+  opacity: var(--hero-opacity, 1);
+  will-change: transform, opacity;
+}
+
+/* ===== SCROLL REVEAL (sección 2+) =====
+   Cada elemento con .reveal empieza invisible y 30px abajo.
+   Al entrar en viewport (.is-visible), sube y aparece.
+   --reveal-delay permite escalonar líneas individuales. */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* La swash H tiene una entrada especial: escala desde 0.7 */
+.reveal-swash {
+  opacity: 0;
+  transform: scale(0.7) translateY(20px);
+  transform-origin: left baseline;
+  transition:
+    opacity 1s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s),
+    transform 1s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.reveal-swash.is-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* Las líneas del cierre entran con opacidad parcial extra */
+.section-cierre .reveal {
+  transform: translateY(20px);
+}
+
+/* ===== WORD-BY-WORD REVEAL CON BLUR-TO-FOCUS =====
+   Las palabras dentro de .section-body empiezan desenfocadas y
+   elevadas. Al tener .is-visible el contenedor, cada .word hereda
+   el trigger pero con su propio --word-delay acumulado desde el
+   índice de la palabra. Resultado: el texto se va "escribiendo"
+   palabra a palabra mientras cada una se enfoca.
+   inline-block es crítico para poder transform individualmente. */
+.section-body .word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(14px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--word-delay, 0s),
+    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--word-delay, 0s),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--word-delay, 0s);
+  will-change: opacity, filter, transform;
+}
+
+.section-body.is-visible .word {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* La sección body usa la animación palabra-a-palabra, por lo que
+   neutralizamos el fade/translate del contenedor (clase .reveal).
+   El observer solo necesita .is-visible para disparar las palabras. */
+.section-body.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* PULL-QUOTE: entrada con scale sutil + blur suave + más duración.
+   Overrides del .reveal base para darle un tratamiento propio. */
+.pullquote.reveal {
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+  filter: blur(3px);
+  transition:
+    opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s),
+    transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s),
+    filter 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s);
+}
+
+.pullquote.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* ===== SECCIÓN 2: PROBLEMA =====
+   Estilo Shopify Sidekick / editorial masivo:
+   Título gigante flush-left con swash Pinyon, cuerpo en serif,
+   whitespace generoso. */
+.section-problema {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--cream);
+  padding: var(--space-xl) clamp(28px, 4vw, 56px);
+  text-align: left;
+  border-top: 1px solid rgba(75, 10, 35, 0.06);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  /* Clipa las fotos del photo-stack cuando están en estado explotado:
+     solo deben verse dentro de la sección 2, nunca desbordando. */
+  overflow: hidden;
+}
+
+.section-problema-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* TÍTULO MASIVO editorial tipo Shopify Sidekick.
+   line-height muy cerrado (0.95), letter-spacing agresivo negativo,
+   weight 400 (peso display natural). */
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(40px, 7vw, 104px);
+  line-height: 0.95;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  color: var(--dark);
+  margin: 0 0 clamp(56px, 8.5vh, 128px) 0;
+  padding: 0;
+}
+
+/* SWASH DROP CAP GIGANTE
+   La H de Pinyon crece 1.4em relativa al título (que ya es masivo).
+   Sin line-height override porque el tamaño base ya es grande y no
+   fuerza altura extra. */
+.section-title .swash-drop {
+  font-size: 1.4em;
+  margin-right: 0.01em;
+  margin-left: -0.03em;
+  color: var(--dark);
+  line-height: 0.8;
+}
+
+/* CUERPO EN SERIF GRANDE
+   Playfair para matchear el título, size medio-grande (estilo editorial
+   paragraph). Max-width limita la medida para buena lectura. */
+.section-body {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(16px, 1.7vw, 26px);
+  line-height: 1.35;
+  font-weight: 400;
+  color: var(--dark);
+  letter-spacing: -0.01em;
+  margin: 0;
+  max-width: 680px;
+}
+
+.section-body .line {
+  display: block;
+}
+
+/* ===== RITMO VERTICAL SECCIÓN II =====
+   Dos espaciados:
+   - --beat-gap: entre beats tipográficos distintos (opener → nota, nota →
+     loud, loud → pullquote, pullquote → cierre). Un único valor consistente.
+   - --line-gap: entre líneas que forman un par (quiet+quiet, cierre+cierre).
+   Ambos centralizados aquí para que todos los elementos del mismo tipo
+   respiren idéntico. */
+.section-problema {
+  --beat-gap: clamp(28px, 4.5vh, 48px);
+  --line-gap: 4px;
+}
+
+.section-body .line + .line {
+  margin-top: var(--beat-gap);
+}
+
+/* Línea "opener": mismo estilo que el setup italic del .line--loud
+   ("La vida en la que estás ya no es del todo..."), para que la frase
+   de apertura y el cierre del bloque compartan el mismo registro Playfair. */
+.section-body .line--open {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.15em;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+}
+
+/* Línea en "voz de nota": mismo tamaño/ritmo exacto que .section-cierre
+   ("Los psicólogos lo llaman transición.") para que el cuerpo y el cierre
+   compartan el registro de nota en DM Sans. */
+.section-body .line--quiet {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(13px, 1.1vw, 15px);
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.6;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
+/* Dos notas quiet consecutivas = par visual (una sola idea), line-gap tight. */
+.section-body .line--quiet + .line--quiet {
+  margin-top: var(--line-gap);
+}
+
+/* Línea en "voz alta": SETUP en italic Playfair para levantar la frase,
+   con el PUNCH (hijo .punch) en Archivo Black. Así el peso sólido cae solo
+   en "la vida que quieres" — el resto respira con el italic del bloque.
+   Mobile-first: em-based para que escale con el body.  */
+.section-body .line--loud {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.15em;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+}
+
+/* Punch: Archivo Black inline para dar UN golpe de peso dentro de líneas
+   Playfair o DM Sans pequeñas. Hereda color del contexto — en quiet/pullquote
+   (muted) el punch también es muted; en loud (dark) el punch es dark. Así
+   solo el peso cambia, no el color. */
+.section-body .punch,
+.pullquote .punch {
+  font-family: 'Archivo Black', 'DM Sans', sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: inherit;
+  text-transform: none;
+  display: inline-block;
+  vertical-align: baseline;
+  font-size: 1.3em;
+}
+
+/* Archivo Black tiene x-height mayor que el Playfair italic: a igual
+   font-size renderiza visualmente más grande. Bajamos a 0.88em para que
+   "la vida que quieres" case con "La vida en la que estás..." como si
+   fueran la misma frase, sin la descompensación de tamaño.
+   Color muted (no dark) para unificar con el resto del bloque — el único
+   acento fuerte de la página lo carga ya la estructura, no el color. */
+.section-body .line--loud .punch {
+  font-size: 0.88em;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.section-body .line--quiet .punch {
+  font-size: 1.1em;
+}
+
+.pullquote .punch {
+  font-size: 1.1em;
+}
+
+/* Invertido en sección III (fondo burgundy) */
+.section-dentro .section-body .line--quiet {
+  color: rgba(250, 245, 235, 0.55);
+}
+
+.section-dentro .section-body .line--loud {
+  color: var(--cream);
+}
+
+.section-body .nowrap,
+.hero-tagline .nowrap {
+  white-space: nowrap;
+}
+
+/* PULL-QUOTE — ya no es "otra línea del cuerpo". Beat editorial propio:
+   italic serif, tamaño display intermedio, con aire generoso arriba.
+   Marca la transición entre "lo que pasa" y "cómo se llama". */
+.pullquote {
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+  margin: var(--beat-gap) 0 0 0;
+  padding: 0;
+  max-width: 560px;
+}
+
+/* ORNAMENTO entre cuerpo y cierre: separación aérea, no decorativa. */
+.ornament {
+  font-size: 14px;
+  color: var(--muted);
+  opacity: 0.5;
+  margin: clamp(48px, 8vh, 96px) 0;
+  letter-spacing: 0.5em;
+  padding-left: 0.5em;
+  user-select: none;
+  text-align: left;
+}
+
+/* CIERRE — DM Sans pequeño, pausado, flush-left. */
+.section-cierre {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+  margin: var(--beat-gap) 0 0;
+  max-width: 560px;
+}
+
+/* Escala reducida en desktop para una lectura más íntima.
+   Padding simétrico a ambos lados para que .section-problema-inner quede
+   centrado y el bloque (texto + photo-stack) forme un grupo visual único. */
+@media (min-width: 769px) {
+  .section-problema {
+    padding-left: clamp(40px, 5vw, 80px);
+    padding-right: clamp(40px, 5vw, 80px);
+  }
+  .section-title {
+    font-size: clamp(40px, 4.8vw, 72px);
+    margin-bottom: clamp(40px, 6vh, 80px);
+  }
+  .section-body {
+    font-size: clamp(15px, 1.2vw, 19px);
+    max-width: 560px;
+  }
+  .pullquote {
+    font-size: clamp(12px, 0.85vw, 13px);
+    max-width: 480px;
+  }
+  .section-cierre,
+  .section-body .line--quiet {
+    font-size: clamp(12px, 0.85vw, 13px);
+  }
+  .section-cierre {
+    max-width: 480px;
+  }
+}
+
+
+.section-cierre .line {
+  display: block;
+}
+
+.section-cierre .line + .line {
+  margin-top: var(--line-gap);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .top-nav { padding: 14px 20px; }
+  .nav-logo img { height: 20px; }
+  .hero { padding: 0 var(--space-sm) calc(22vh + env(safe-area-inset-bottom, 0px)); }
+  .hero-bottom { bottom: calc(5vh + env(safe-area-inset-bottom, 0px)); padding: 0 var(--space-sm); }
+  .hero h1 {
+    font-size: clamp(32px, 8.2vw, 44px);
+    max-width: 100%;
+    letter-spacing: -0.02em;
+  }
+  .hero-tagline { font-size: 14px; }
+  .section-problema {
+    padding: var(--space-xl) clamp(28px, 6vw, 48px);
+  }
+  .section-title {
+    font-size: clamp(38px, 7.5vw, 64px);
+    margin-bottom: clamp(40px, 8vh, 72px);
+    letter-spacing: -0.03em;
+  }
+  .section-title .swash-drop { font-size: 1.3em; }
+  .section-body {
+    font-size: clamp(17px, 3vw, 22px);
+    line-height: 1.4;
+  }
+  /* Pullquote y .line--quiet comparten exactamente el tamaño del cierre
+     en mobile — misma familia DM Sans, mismo beat. */
+  .pullquote,
+  .section-body .line--quiet,
+  .section-cierre { font-size: 13px; line-height: 1.6; }
+  .ornament { margin: clamp(32px, 6vh, 56px) 0; }
+}
+
+@media (max-width: 480px) {
+  .top-nav { padding: 12px 12px; }
+  .nav-back { font-size: 11px; gap: 5px; padding: 0 4px; }
+  .nav-clock { font-size: 11px; gap: 6px; }
+  .nav-logo img { height: 18px; }
+  .hero { padding: 0 var(--space-sm) calc(24vh + env(safe-area-inset-bottom, 0px)); }
+  .hero-bottom { bottom: calc(4vh + env(safe-area-inset-bottom, 0px)); }
+  .hero h1 { font-size: clamp(30px, 8.5vw, 38px); line-height: 1; }
+  .hero-tagline { font-size: 13.5px; line-height: 1.4; }
+  .section-problema { padding: var(--space-xl) 24px; }
+  .section-title {
+    font-size: clamp(34px, 9vw, 48px);
+    margin-bottom: clamp(36px, 7vh, 56px);
+  }
+  .section-title .swash-drop { font-size: 1.25em; }
+  .section-body { font-size: clamp(15px, 4.2vw, 19px); line-height: 1.4; }
+  .pullquote,
+  .section-body .line--quiet,
+  .section-cierre { font-size: 12.5px; line-height: 1.6; }
+}
+
+@media (max-width: 380px) {
+  .nav-back { font-size: 10px; padding: 0 2px; }
+  .nav-clock { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  .reveal,
+  .reveal-swash,
+  .pullquote.reveal,
+  .section-body .word {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+::selection {
+  background: var(--cream);
+  color: var(--dark);
+}
+
+/* ===== CAPA DE GRANO (NOISE) =====
+   Textura premium estilo old money / editorial digital.
+   Estática. Muy sutil. La interactividad la añade el canvas .cursor-trail. */
+.grain-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.294  0 0 0 0 0.039  0 0 0 0 0.137  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
+  background-repeat: repeat;
+}
+
+/* Capa de grano base permanente */
+.grain-base {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='1' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.294  0 0 0 0 0.039  0 0 0 0 0.137  0 0 0 0.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 180px 180px;
+}
+
+/* Asegurar que el contenido del flujo (hero y siguientes) vive por encima
+   de las capas de fondo (granos, vídeo). El nav mantiene su propia
+   regla con position fixed y z-index 100. */
+.hero,
+.section-problema {
+  position: relative;
+  z-index: 10;
+}
+
+/* ===== PHOTO STACK — INVERSE EXPLODE (sección 2) =====
+   Composición final: 4 screenshots macOS solapados (ver referencia),
+   cada uno con su aspect natural, anclado a una posición del cuadro.
+   Estado explotado: cada foto se dispersa fuera y rota. JS interpola. */
+.photo-stack {
+  position: absolute;
+  top: 50%;
+  right: clamp(-80px, -3vw, -32px);
+  width: clamp(340px, 36vw, 560px);
+  aspect-ratio: 5/6;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.photo-stack .photo {
+  position: absolute;
+  height: auto;
+  /* Los PNG traen chrome/redondeado propio. drop-shadow respeta alpha. */
+  filter:
+    drop-shadow(0 24px 48px rgba(30, 10, 20, 0.28))
+    drop-shadow(0 8px 16px rgba(30, 10, 20, 0.18));
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Layout de pila compacta, fotos RECTAS (sin rotación final) con
+   anchos distintos para que unas queden más altas que otras.
+   Mapping imagen → posición:
+     arriba-izquierda = image 173  (→ .photo-4)
+     arriba-derecha   = image 172  (→ .photo-3)
+     abajo-izquierda  = image 170  (→ .photo-1)
+     abajo-derecha    = image 171  (→ .photo-2, FRONT)
+   Z-index de cada clase igual que antes. */
+.photo-stack .photo-1 { /* image 170 — ABAJO-IZQUIERDA */
+  bottom: 0;
+  left: 8%;
+  width: 50%;
+  z-index: 3;
+}
+.photo-stack .photo-2 { /* image 171 — ABAJO-DERECHA, FRONT */
+  bottom: 22%;
+  right: 10%;
+  width: 50%;
+  z-index: 4;
+}
+.photo-stack .photo-3 { /* image 172 — ARRIBA-DERECHA, BACK */
+  top: -5%;
+  right: 15%;
+  width: 50%;
+  z-index: 1;
+}
+.photo-stack .photo-4 { /* image 173 — ARRIBA-IZQUIERDA */
+  top: 0%;
+  left: 0%;
+  width: 50%;
+  z-index: 2;
+}
+
+/* En móvil: texto anclado arriba, fotos ancladas al fondo de la sección.
+   Truco: el inner pasa a flex: 1 para ocupar toda la altura disponible,
+   así .photo-stack (absolute dentro del inner) se posiciona contra el
+   fondo REAL de la sección y no contra el fondo del texto.
+   La sección sigue siendo 100vh → scroll-snap TikTok ok. */
+@media (max-width: 900px) {
+  /* Mobile: ritmo comprimido para que el bloque (title + 4 líneas body +
+     pullquote) quepa en la mitad superior del viewport y deje la mitad
+     inferior a las fotos sin solape. */
+  .section-problema {
+    justify-content: flex-start;
+    padding-top: clamp(52px, 8vh, 92px);
+    padding-bottom: 0;
+    --beat-gap: clamp(14px, 2.2vh, 24px);
+  }
+  .section-problema-inner {
+    flex: 1;
+    width: 100%;
+  }
+  .section-title {
+    margin-top: clamp(32px, 6vh, 72px);
+    margin-bottom: clamp(16px, 3vh, 28px);
+  }
+  .photo-stack {
+    top: auto;
+    bottom: 10%;
+    left: calc(50% + 22px);
+    right: auto;
+    /* Foto-stack comprimido vertical: antes 320px ancho × aspect 5/6 = 384px
+       alto, comiéndose la mitad baja y metiéndose en el pullquote. Bajamos
+       a 220-240px ancho → altura ~270px = margen suficiente. */
+    width: min(52vw, 240px);
+    transform: translateX(-50%);
+    opacity: 1;
+    z-index: 2;
+  }
+  /* El cierre ("Los psicólogos…") choca con el photo-stack en mobile. El
+     photo-stack manda en esta sección en mobile (es el beat visual), así
+     que el cierre y su ornamento se ocultan — quedan para desktop. */
+  .section-problema .section-cierre {
+    display: none;
+  }
+}
+
+/* Viewports intermedios / tablet (900–1280px): el inner se estrecha y el
+   photo-stack (floor 340px + right:-32px) muerde el cierre y lo tapa.
+   Regla dura: el texto del bloque izquierdo no puede cruzar el 48% del
+   viewport, y subimos el z-index del cierre como seguro por si algún
+   descendiente largo se asoma. */
+@media (min-width: 900px) and (max-width: 1280px) {
+  .section-body,
+  .pullquote,
+  .atelier-ornament {
+    max-width: min(46vw, 460px);
+  }
+  .section-cierre {
+    max-width: min(46vw, 440px);
+    position: relative;
+    z-index: 5;
+  }
+  .photo-stack {
+    width: clamp(280px, 32vw, 380px);
+  }
+}
+
+/* Pantallas de poca altura: el texto pisa las fotos. Reducimos tamaños
+   tipográficos y el ancho del photo-stack para que el texto siga siendo
+   legible y las fotos dejen espacio arriba. */
+@media (max-height: 760px) {
+  .section-title {
+    font-size: clamp(28px, 4.6vw, 56px);
+    margin-bottom: clamp(14px, 2.4vh, 28px);
+  }
+  .section-body {
+    font-size: clamp(13px, 1.2vw, 16px);
+    line-height: 1.35;
+  }
+  .pullquote,
+  .section-body .line--quiet,
+  .section-cierre {
+    font-size: clamp(11px, 0.85vw, 13px);
+    line-height: 1.6;
+  }
+  .section-problema {
+    --beat-gap: clamp(16px, 2.6vh, 28px);
+  }
+  .photo-stack {
+    width: clamp(260px, 26vw, 380px);
+  }
+}
+
+@media (max-width: 900px) and (max-height: 760px) {
+  .section-problema {
+    padding-top: clamp(56px, 9vh, 100px);
+  }
+  .section-title {
+    margin-top: clamp(28px, 4.5vh, 60px);
+    font-size: clamp(26px, 7vw, 40px);
+  }
+  .section-body {
+    font-size: clamp(13px, 3.6vw, 16px);
+  }
+  .pullquote,
+  .section-body .line--quiet,
+  .section-cierre {
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  .photo-stack {
+    width: min(52vw, 240px);
+    bottom: 5%;
+  }
+}
+
+/* ===== SECCIÓN III: LADO QUE CRECE =====
+   Payoff emocional entre II (crema) y IV (dentro, dark). Stage pinned
+   (sticky) mientras 4 anchors de 100vh pasan detrás, cada uno con su
+   frase. JS (initLadoReveal) lee scroll progress y conmuta la frase
+   activa con blur+fade. Inspirado en drinksom.eu. */
+.section-lado {
+  position: relative;
+  background: var(--dark);
+  color: var(--cream);
+  height: 400vh;
+  z-index: 10;
+  /* Sin scroll-snap-align a nivel sección: los snap points los aportan
+     los .lado-anchor internos (uno por frase). Así el usuario avanza
+     snap-a-snap por las frases sin romper el mandatory global. */
+}
+
+/* Anchor invisible — cada uno de 100vh define un snap point dentro de
+   la sección. Cuatro anchors → cuatro beats de frase. No tienen contenido
+   visible; son pura "altura" para el scroll. */
+.section-lado .lado-anchor {
+  height: 100vh;
+  height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  pointer-events: none;
+}
+
+/* Stage pinned: sticky top 0, ocupa 100svh. Queda en pantalla mientras
+   los 4 anchors pasan, creando la sensación de "una sola escena" con
+   frases que cambian. margin-top negativo de 400vh compensa la altura
+   total que aportaron los anchors → el sticky arranca desde el top real
+   de la sección. */
+.section-lado .lado-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  margin-top: -400vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: clamp(18px, 3vh, 44px);
+  padding: clamp(72px, 10svh, 120px) clamp(28px, 5vw, 96px) clamp(48px, 7svh, 88px);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Vídeo de fondo: frames de Solomei-night que avanzan con el scroll
+   (scroll-scrubbed). Es el FONDO real de la sección, no un accent.
+   Sin autoplay: JS setea currentTime en función del progreso. */
+.section-lado .lado-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  opacity: 1;
+  filter: grayscale(0.45) contrast(1.1) saturate(0.7);
+  z-index: 0;
+  pointer-events: none;
+  background: #1a0610;
+}
+
+/* Móvil: vídeo landscape crop centrado horizontal + ligeramente alto
+   para evitar que el horizonte del pueblo caiga por debajo del fold. */
+@media (max-width: 720px) {
+  .section-lado .lado-bg {
+    object-position: 55% 40%;
+  }
+}
+
+/* Grano de película vintage — heavy. Dos capas de noise con blend
+   modes diferentes para reproducir la textura de celuloide: una fina
+   granulada (baseFrequency alta) y otra más gruesa (baseFrequency
+   media). Juntas dan esa vibración orgánica que no tiene el grano
+   digital. */
+.section-lado .lado-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.95'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.8 0'/></filter><rect width='100%25' height='100%25' filter='url(%23m)' opacity='0.75'/></svg>");
+  background-size: 200px 200px, 400px 400px;
+  mix-blend-mode: overlay;
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Viñeta suave para legibilidad del texto, sin ocultar el vídeo.
+   Menos agresiva que antes — el vídeo ES el protagonista ahora. */
+.section-lado .lado-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.45) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0%, transparent 40%, rgba(0, 0, 0, 0.25) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Rail vertical: indicador editorial de progreso. Posición fija en el
+   borde izquierdo del stage, 1px de grosor, 38vh de alto. scaleY driven
+   por --lado-progress desde JS. */
+.section-lado .lado-rail {
+  position: absolute;
+  left: clamp(18px, 2.2vw, 32px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 38vh;
+  background: rgba(250, 245, 235, 0.14);
+  z-index: 2;
+}
+
+.section-lado .lado-rail-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--cream);
+  transform-origin: top;
+  transform: scaleY(var(--lado-progress, 0));
+  transition: transform 0.18s linear;
+}
+
+/* Header: eyebrow + título. Viven arriba del stage, pinned durante los
+   4 beats. El título tiene parallax sutil driven por --lado-progress. */
+.section-lado .lado-head {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  transform: translateY(calc(var(--lado-progress, 0) * -28px));
+  transition: transform 0.2s linear;
+}
+
+.section-lado .section-eyebrow {
+  color: rgba(250, 245, 235, 0.55);
+  margin-bottom: clamp(14px, 2.2vh, 28px);
+}
+
+.section-lado .lado-title {
+  font-family: 'Archivo Black', 'Archivo', 'DM Sans', sans-serif;
+  font-weight: 900;
+  font-size: clamp(56px, 9vw, 132px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin: 0;
+}
+
+.section-lado .lado-title-line {
+  display: block;
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(44px);
+  transition:
+    opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1) var(--lado-line-delay, 0s),
+    filter 1.1s cubic-bezier(0.16, 1, 0.3, 1) var(--lado-line-delay, 0s),
+    transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) var(--lado-line-delay, 0s);
+  will-change: opacity, filter, transform;
+}
+
+.section-lado .lado-stage.is-visible .lado-title-line {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+.section-lado .lado-title-line:nth-child(1) { --lado-line-delay: 0.25s; }
+.section-lado .lado-title-line:nth-child(2) { --lado-line-delay: 0.40s; }
+
+/* Eyebrow: entra con el stage. Fade + tiny drop, sin depender del
+   global .reveal (evita translate conflictivo con parallax del head). */
+.section-lado .lado-eyebrow {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.05s,
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
+}
+
+.section-lado .lado-stage.is-visible .lado-eyebrow {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* PHRASES — cada .lado-phrase ocupa el mismo slot (grid stacked) y
+   sólo la activa es visible. Transición blur+fade+translate entre
+   estados: inactiva / .is-active / .is-past. */
+.section-lado .lado-phrases {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  align-self: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.section-lado .lado-phrase {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: clamp(26px, 3.4vw, 48px);
+  line-height: 1.18;
+  letter-spacing: -0.005em;
+  color: var(--cream);
+  max-width: 18ch;
+  padding-left: 0;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(22px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
+  pointer-events: none;
+}
+
+/* Frases alineadas a la izquierda en desktop; en móvil se centran
+   (ver override en @media max-width: 720px). */
+
+/* Frases ocultas hasta que el stage es visible — evita que la primera
+   parpadee en pantalla antes del IntersectionObserver. */
+.section-lado .lado-stage.is-visible .lado-phrase.is-active {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.section-lado .lado-stage.is-visible .lado-phrase.is-past {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(-14px);
+}
+
+/* Counter bottom-right: 01/04 mono. El dígito activo en rojo,
+   el /04 atenuado. margin-top:auto lo empuja al fondo del stage flex. */
+.section-lado .lado-foot {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  max-width: 1100px;
+  margin: auto auto 0;
+  width: 100%;
+}
+
+.section-lado .lado-counter {
+  font-family: 'JetBrains Mono', 'Menlo', monospace;
+  font-size: clamp(11px, 0.85vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(250, 245, 235, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-lado .lado-counter-now {
+  color: var(--red);
+  display: inline-block;
+  transform-origin: center;
+  animation: ladoCounterFlip 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ladoCounterFlip {
+  0%   { opacity: 0.2; filter: blur(3px); transform: scale(0.85); }
+  60%  { opacity: 1;   filter: blur(0);   transform: scale(1.05); }
+  100% { opacity: 1;   filter: blur(0);   transform: scale(1); }
+}
+
+/* Mobile first-class: compactar todo vertical. La vista pequeña debe
+   sentirse densa, no vacía — cerramos gap stage, reducimos padding,
+   acercamos eyebrow al título y título a las frases. Rail pasa a horizontal
+   abajo para liberar el lateral. */
+@media (max-width: 720px) {
+  .section-lado .lado-stage {
+    justify-content: flex-start;
+    gap: clamp(10px, 1.6vh, 16px);
+    padding: clamp(84px, 13svh, 112px) clamp(22px, 6vw, 36px) clamp(48px, 7svh, 72px);
+  }
+  .section-lado .lado-eyebrow {
+    margin-bottom: clamp(6px, 1vh, 10px);
+  }
+  .section-lado .lado-title {
+    font-size: clamp(40px, 12vw, 64px);
+    line-height: 0.94;
+  }
+  .section-lado .lado-phrases {
+    margin-top: clamp(48px, 9vh, 96px);
+    min-height: clamp(160px, 28vh, 220px);
+  }
+  .section-lado .lado-phrase {
+    font-size: clamp(24px, 6.4vw, 34px);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.012em;
+    color: #fff;
+    max-width: 15ch;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+    justify-self: center;
+    text-align: center;
+  }
+  .section-lado .lado-rail {
+    left: clamp(22px, 6vw, 36px);
+    right: clamp(80px, 22vw, 110px);
+    top: auto;
+    bottom: clamp(40px, 6svh, 64px);
+    transform: none;
+    width: auto;
+    height: 1px;
+  }
+  .section-lado .lado-rail-fill {
+    transform: scaleX(var(--lado-progress, 0));
+    transform-origin: left;
+  }
+}
+
+/* Reduced motion: sin blur ni parallax, sólo opacity. */
+@media (prefers-reduced-motion: reduce) {
+  .section-lado .lado-title-line,
+  .section-lado .lado-phrase {
+    filter: none !important;
+    transform: none !important;
+    transition: opacity 0.4s linear !important;
+  }
+  .section-lado .lado-head {
+    transform: none !important;
+  }
+  .section-lado .lado-counter-now {
+    animation: none;
+  }
+}
+
+/* ===== SECCIÓN 3: DENTRO =====
+   Inversa cromática de la sección 2: fondo burgundy, texto cream.
+   Mismo sistema tipográfico (Playfair + Pinyon swash) para cohesión,
+   pero invertido crea un golpe de contraste al hacer scroll-snap. */
+.section-dentro {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--dark);
+  color: var(--cream);
+  padding: var(--space-xl) clamp(28px, 4vw, 56px);
+  text-align: left;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.section-dentro-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 4vh, 48px);
+}
+
+/* FOTO DE PERFIL
+   PNG con fondo transparente: se suelta limpio sobre el burgundy sin
+   bordes ni sombras que revelen el recorte rectangular. Proporción
+   portrait conservada con aspect-ratio, ancho responsive. */
+.section-dentro-photo {
+  margin: 0;
+  width: 100%;
+  max-width: 320px;
+  align-self: center;
+  line-height: 0;
+}
+
+.section-dentro-photo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Reveal propio: fade + translate, mismo timing/easing que el resto. */
+.section-dentro-photo.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.section-dentro-photo.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-dentro-text {
+  min-width: 0;
+}
+
+/* Eyebrow editorial: "II —" / "III —" en DM Sans uppercase, tracking amplio,
+   muy pequeño. Color base para fondo cream (dark al 55%); en .section-dentro
+   se invierte al cream al 55% para fondo burgundy. */
+.section-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(11px, 0.85vw, 13px);
+  font-weight: 500;
+  color: rgba(75, 10, 35, 0.55);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  margin: 0 0 clamp(28px, 4vh, 56px) 0;
+}
+
+/* Respiro extra en la II: el eyebrow entra con más aire arriba para que
+   la II (y el bloque de texto) no queden pegados al nav. En desktop más
+   generoso; en mobile un toque suave, porque la altura la manda el pullquote
+   y el photo-stack abajo. */
+.section-problema .section-eyebrow {
+  margin-top: clamp(16px, 3vh, 32px);
+}
+@media (min-width: 901px) {
+  .section-problema .section-eyebrow {
+    margin-top: clamp(40px, 7vh, 96px);
+  }
+}
+
+.section-dentro .section-eyebrow {
+  color: rgba(250, 245, 235, 0.55);
+}
+
+/* ===== ÁTOMOS EDITORIALES COMPARTIDOS =====
+   Tres primitivas extraídas de la sección IV para sembrar un crescendo
+   desde el hero: marginalia, ornamento y acento display. Diseñadas para
+   apilarse sobre cualquier sección existente sin romper su tipografía base. */
+
+/* Acento display: Archivo Black 900 caps inline, para dar UN golpe awwwards
+   dentro de un párrafo Playfair. Hereda font-size del contexto. */
+.atelier-caps {
+  font-family: 'Archivo Black', 'DM Sans', sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+/* Título invertido: cream sobre burgundy. Hereda del .section-title global. */
+.section-dentro .section-title {
+  color: var(--cream);
+  margin-bottom: clamp(40px, 6vh, 80px);
+}
+
+.section-dentro .section-title .swash-drop {
+  color: var(--cream);
+}
+
+/* Cuerpo invertido. Mismo sistema de variantes que sección II
+   (line--open / line--quiet / line--loud + punch), con ritmo
+   --beat-gap / --line-gap heredado de la misma regla global. */
+.section-dentro {
+  --beat-gap: clamp(28px, 4.5vh, 48px);
+  --line-gap: 4px;
+}
+
+.section-dentro .section-body {
+  color: var(--cream);
+  max-width: 760px;
+}
+
+/* Opener en italic Playfair sobre fondo burgundy → cream. */
+.section-dentro .section-body .line--open {
+  color: var(--cream);
+}
+
+/* Loud (cierre "Ciento once piezas, por fin fuera."): setup Playfair italic
+   cream, punch Archivo Black en tono muted cream — mismo patrón que sec II
+   donde el loud punch se queda muted para no romper el bloque. */
+.section-dentro .section-body .line--loud .punch {
+  color: rgba(250, 245, 235, 0.55);
+}
+
+/* Escala reducida en desktop, alineada con sección 2.
+   Layout: foto a la DERECHA, texto a la izquierda (row-reverse porque el
+   <figure> va primero en el DOM para que en móvil aparezca arriba). */
+@media (min-width: 769px) {
+  .section-dentro {
+    padding-left: clamp(40px, 5vw, 80px);
+    padding-right: clamp(40px, 5vw, 80px);
+  }
+  .section-dentro-inner {
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: clamp(48px, 6vw, 96px);
+  }
+  .section-dentro-text {
+    flex: 1;
+  }
+  .section-dentro-photo {
+    flex-shrink: 0;
+    width: clamp(260px, 26vw, 380px);
+    max-width: none;
+    align-self: center;
+  }
+  .section-dentro .section-title {
+    font-size: clamp(40px, 4.8vw, 72px);
+    margin-bottom: clamp(32px, 5vh, 64px);
+  }
+  .section-dentro .section-body {
+    font-size: clamp(15px, 1.2vw, 19px);
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 900px) {
+  .section-dentro {
+    padding: clamp(88px, 13vh, 128px) clamp(24px, 6vw, 48px) clamp(32px, 5vh, 56px);
+    justify-content: flex-start;
+  }
+  .section-dentro-inner {
+    gap: clamp(16px, 2.5vh, 32px);
+  }
+  .section-dentro .section-title {
+    font-size: clamp(30px, 7.5vw, 44px);
+    margin-bottom: clamp(18px, 3vh, 32px);
+  }
+  .section-dentro .section-body {
+    font-size: clamp(14px, 3.8vw, 18px);
+    line-height: 1.4;
+  }
+  .section-eyebrow {
+    margin-bottom: clamp(14px, 2vh, 28px);
+  }
+  .section-dentro-photo {
+    width: min(44vw, 200px);
+    align-self: center;
+  }
+}
+
+/* Pantallas muy pequeñas (iPhone SE, Galaxy Fold, etc.): apretamos todo
+   para que título + cuerpo + CTA quepan en el mismo snap de 100vh. */
+@media (max-width: 480px) {
+  .section-dentro {
+    padding-top: clamp(76px, 11vh, 104px);
+  }
+  .section-dentro-photo {
+    width: min(38vw, 160px);
+  }
+  .section-dentro .section-title {
+    font-size: clamp(26px, 7vw, 36px);
+    line-height: 1;
+  }
+  .section-dentro .section-body {
+    font-size: clamp(13.5px, 3.6vw, 16px);
+  }
+}
+
+/* Pantallas de poca altura: el contenido de la sección 3 no cabía y el CTA
+   quedaba fuera del snap de 100vh. Reducimos foto y tipografías igual
+   que hicimos en la sección 2. */
+@media (max-width: 900px) and (max-height: 760px) {
+  .section-dentro {
+    padding-top: clamp(64px, 10vh, 96px);
+    padding-bottom: clamp(24px, 4vh, 40px);
+  }
+  .section-dentro-inner {
+    gap: clamp(12px, 2vh, 20px);
+  }
+  .section-dentro-photo {
+    width: min(32vw, 140px);
+  }
+  .section-dentro .section-title {
+    font-size: clamp(22px, 6vw, 32px);
+    margin-bottom: clamp(12px, 1.8vh, 20px);
+  }
+  .section-dentro .section-body {
+    font-size: clamp(13px, 3.4vw, 15px);
+    line-height: 1.35;
+  }
+  .section-eyebrow {
+    margin-bottom: clamp(10px, 1.5vh, 18px);
+  }
+}
+
+/* ===== SECCIÓN IV: ARQUITECTURA =====
+   Homenaje a adcker.com (Awwwards): tipografía display masiva, paréntesis
+   con imágenes tiny dentro, anotaciones "Click me" dispuestas como
+   marginalia. Mismo fondo cream y tinta dark que la sección 2. */
+.section-arq {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: var(--cream);
+  color: var(--dark);
+  padding: clamp(72px, 10vh, 120px) clamp(28px, 4vw, 56px) clamp(72px, 13vh, 150px);
+  text-align: left;
+  border-top: 1px solid rgba(75, 10, 35, 0.06);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.section-arq-inner {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* TÍTULO-ARTE: tipografía display gigante tipo Archivo Black.
+   Line-height 0.88 para que las líneas se "empotren" una sobre otra,
+   letter-spacing negativo para compactar. Mayúsculas forzadas.
+   Cada bloque de capa tiene su propio display (una sola capa por bloque),
+   así la tarjeta descriptiva cae directamente debajo de su título loud. */
+.arq-display-layer {
+  font-family: 'Archivo', 'DM Sans', sans-serif;
+  font-weight: 900;
+  font-size: min(7vw, 9.5vh, 96px);
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  text-transform: uppercase;
+  margin: 0 0 clamp(14px, 2vh, 24px);
+  position: relative;
+  text-align: center;
+}
+
+.arq-display-layer .arq-line {
+  display: block;
+}
+
+/* Paréntesis: tipográficos, no bordes. Las parens son caracteres reales
+   renderizados por la fuente, así mantienen peso y grosor coherentes. */
+.arq-paren {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12em;
+  vertical-align: baseline;
+}
+
+/* Imagen tiny dentro de los paréntesis. Altura relativa al font-size.
+   filter para saturar ligeramente y encajar con la paleta cream/dark. */
+.arq-paren img {
+  display: inline-block;
+  height: 0.62em;
+  width: 0.62em;
+  object-fit: cover;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin: 0 0.02em;
+  transform: translateY(-0.08em);
+  box-shadow: 0 1px 4px rgba(30, 10, 20, 0.18);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.arq-paren:hover img {
+  transform: translateY(-0.08em) scale(1.35);
+}
+
+/* LAYOUT DE CAPAS: dos bloques apilados verticalmente, cada uno
+   con su display loud arriba y su tarjeta descriptiva debajo. */
+.arq-layout {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vh, 40px);
+  margin: clamp(12px, 1.8vh, 24px) auto 0;
+  max-width: 820px;
+}
+
+.arq-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arq-block .arq-capa {
+  width: 100%;
+  max-width: 640px;
+}
+
+.arq-capa {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(14px, 1.05vw, 17px);
+  line-height: 1.42;
+  color: var(--dark);
+  letter-spacing: -0.01em;
+  margin: 0;
+  padding: clamp(14px, 1.8vw, 22px) clamp(16px, 1.9vw, 24px);
+  border: 1px solid rgba(75, 10, 35, 0.18);
+  border-radius: 3px;
+  background: rgba(250, 240, 222, 0.45);
+  position: relative;
+}
+
+.arq-capa-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(10.5px, 0.8vw, 12.5px);
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.65em;
+  padding-bottom: 0.65em;
+  border-bottom: 1px solid rgba(75, 10, 35, 0.12);
+}
+
+
+/* CIERRE destacado: punchline en serif grande centrado. */
+.arq-closer {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(17px, 1.75vw, 26px);
+  line-height: 1.25;
+  font-weight: 400;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin: clamp(16px, 2.2vh, 30px) auto 0;
+  max-width: 720px;
+}
+
+.arq-closer .accent {
+  font-style: normal;
+  font-weight: 700;
+  font-family: 'Archivo Black', sans-serif;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  font-size: 0.92em;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .section-arq {
+    padding: clamp(80px, 12vh, 120px) clamp(20px, 5vw, 40px) clamp(72px, 14vh, 140px);
+    justify-content: flex-start;
+  }
+  .arq-display-layer {
+    font-size: clamp(36px, 10.5vw, 72px);
+    line-height: 0.9;
+    margin-bottom: clamp(10px, 1.6vh, 18px);
+  }
+  .arq-layout {
+    gap: clamp(18px, 2.6vh, 28px);
+    margin-top: clamp(14px, 2vh, 24px);
+  }
+  .arq-closer {
+    font-size: clamp(16px, 4vw, 24px);
+    margin-top: clamp(18px, 2.6vh, 32px);
+  }
+  .arq-capa { padding: clamp(12px, 2.2vh, 18px) clamp(14px, 3.5vw, 20px); }
+}
+
+@media (max-width: 480px) {
+  .arq-display-layer {
+    font-size: clamp(32px, 11vw, 60px);
+    letter-spacing: -0.025em;
+  }
+  .arq-capa { font-size: clamp(13px, 3.6vw, 15.5px); line-height: 1.35; }
+  .arq-closer { font-size: clamp(15px, 4.2vw, 20px); }
+}
+
+@media (max-width: 900px) and (max-height: 760px) {
+  .section-arq {
+    padding-top: clamp(60px, 9vh, 96px);
+    padding-bottom: clamp(56px, 11vh, 110px);
+  }
+  .arq-display-layer {
+    font-size: clamp(28px, 8.5vw, 56px);
+    margin-bottom: clamp(8px, 1.2vh, 14px);
+  }
+  .arq-capa { font-size: clamp(12px, 3vw, 14.5px); line-height: 1.32; padding: 12px 14px; }
+  .arq-closer { font-size: clamp(14px, 3.6vw, 18px); margin-top: clamp(12px, 2vh, 22px); }
+  .arq-layout { margin-top: clamp(10px, 1.6vh, 18px); gap: clamp(14px, 2vh, 22px); }
+}
+
+/* ===== SECCIÓN VI — CIERRE / CTA =====
+   Último beat del scroll. Fondo burgundy para cerrar con el mismo registro
+   visual del hero: SVG 111 + "Originale" en Playfair Display (la fuente de
+   "Prompts" en el hero). El botón es el único punto de conversión de la
+   página, por eso tiene contraste máximo cream sobre dark. */
+.section-cta {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--dark);
+  color: var(--cream);
+  padding: clamp(72px, 10vh, 120px) clamp(28px, 4vw, 56px);
+  text-align: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.section-cta-inner {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(28px, 4vh, 48px);
+}
+
+.section-cta .section-eyebrow {
+  color: rgba(250, 245, 235, 0.55);
+  margin: 0;
+}
+
+/* Título del cierre. Una sola frase, mismo peso y registro en todo el
+   bloque: Playfair Display igual que .hero h1, con "Originale" en italic
+   replicando el tratamiento de "Prompts". */
+.cta-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: clamp(26px, 3.4vw, 44px);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin: 0;
+  max-width: 820px;
+}
+
+/* SVG 111 anclado a baseline, misma mecánica que en el hero. */
+.cta-svg-111 {
+  display: inline-block;
+  height: 1em;
+  width: auto;
+  vertical-align: baseline;
+  margin-right: 0.14em;
+  margin-bottom: -0.04em;
+}
+
+/* "Originale" — mismo tratamiento serif-display que "Prompts" en el hero,
+   pero integrado en la frase sin salto de tamaño. */
+.cta-originale {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.15em;
+  letter-spacing: -0.03em;
+}
+
+.cta-title em {
+  font-style: italic;
+  color: var(--cream);
+}
+
+/* BOTÓN STRONG — cream sobre dark, la única conversión real de la página. */
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dark);
+  background: var(--cream);
+  padding: clamp(16px, 2vh, 22px) clamp(28px, 3.2vw, 40px);
+  border: 1px solid var(--cream);
+  border-radius: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s ease,
+              color 0.3s ease;
+}
+
+.cta-button:hover {
+  background: transparent;
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+.cta-button-arrow {
+  display: inline-block;
+  font-weight: 400;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cta-button:hover .cta-button-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 900px) {
+  .section-cta {
+    padding: clamp(80px, 12vh, 120px) clamp(20px, 5vw, 40px);
+  }
+  .cta-title {
+    font-size: clamp(22px, 5.6vw, 34px);
+    line-height: 1.22;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta-title {
+    font-size: clamp(20px, 6vw, 28px);
+  }
+  .cta-button {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 12px 20px;
+    gap: 0.6em;
+  }
+}
+
+/* ===== SECCIÓN VIII — EL PRECIO =====
+   Última beat conversiva. Fondo cream, texto dark. La imagen Patek Philippe
+   es la referencia compositiva: nombre → precio → producto → claim → botón.
+   El 11€ se revela sólo dentro del quote del autor (editorial, no ecommerce).
+   Contador en naranja (var(--red)) alimentado por webhook de Stripe. */
+.section-precio {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--cream);
+  color: var(--dark);
+  padding: clamp(80px, 12vh, 140px) clamp(28px, 4vw, 56px);
+  text-align: center;
+  border-top: 1px solid rgba(75, 10, 35, 0.06);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Columna centrada, composición Patek Philippe: marca → precio →
+   producto → claim → botón → nota de autor → contador. Espacio
+   generoso y aire: lo opuesto al ruido. */
+.section-precio-inner {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 3vh, 32px);
+}
+
+.section-precio .section-eyebrow {
+  color: var(--muted);
+  margin: 0 0 clamp(24px, 4vh, 48px) 0;
+}
+
+/* Marca — Playfair refinado, restrained. */
+.precio-brand {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0;
+}
+.precio-svg-111 {
+  display: inline-block;
+  height: 1em;
+  width: auto;
+  vertical-align: baseline;
+  margin-right: 0.14em;
+  margin-bottom: -0.04em;
+  filter: brightness(0) saturate(100%) invert(9%) sepia(62%) saturate(3500%) hue-rotate(324deg) brightness(85%) contrast(105%);
+}
+.precio-originale {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.1em;
+  letter-spacing: -0.03em;
+}
+
+/* Precio — Playfair Display en dark sólido, escala editorial
+   no brutal. El € sube como superscripto italic tenue. */
+.precio-amount {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: clamp(40px, 4.4vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--dark);
+  margin: clamp(4px, 0.6vh, 10px) 0 0;
+}
+.precio-amount .cur {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.38em;
+  vertical-align: top;
+  margin-left: 0.12em;
+  color: rgba(75, 10, 35, 0.58);
+  letter-spacing: 0;
+}
+
+/* Imagen producto. */
+.precio-figure {
+  margin: clamp(8px, 1.4vh, 16px) 0 0;
+  width: 100%;
+  max-width: 340px;
+}
+.precio-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 24px 48px rgba(30, 10, 20, 0.14))
+          drop-shadow(0 8px 16px rgba(30, 10, 20, 0.08));
+}
+
+/* Claim — Playfair italic con hairline centrada encima,
+   lenguaje editorial de ficha de alta joyería. */
+.precio-claim {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--dark);
+  margin: clamp(4px, 0.6vh, 10px) 0 0;
+  padding-top: clamp(18px, 2.4vh, 26px);
+  position: relative;
+}
+.precio-claim::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 1px;
+  background: rgba(75, 10, 35, 0.28);
+}
+
+/* Botón — intacto, al usuario le gusta tal cual. */
+.precio-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--dark);
+  padding: clamp(16px, 2vh, 22px) clamp(28px, 3.2vw, 40px);
+  border: 1px solid var(--dark);
+  border-radius: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s ease,
+              color 0.3s ease;
+}
+.precio-button:hover {
+  background: transparent;
+  color: var(--dark);
+  transform: translateY(-2px);
+}
+.precio-button-arrow {
+  display: inline-block;
+  font-weight: 400;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.precio-button:hover .precio-button-arrow {
+  transform: translateX(4px);
+}
+
+/* Nota de autor — Playfair italic pequeño, comilla sutil en dark
+   translúcido (no rojo aparatoso). El único rojo contenido es
+   el 11€, gesto autorial voluntario. */
+.precio-quote {
+  position: relative;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(14px, 1.15vw, 17px);
+  line-height: 1.55;
+  color: rgba(75, 10, 35, 0.78);
+  max-width: 440px;
+  margin: clamp(8px, 1.2vh, 16px) auto 0;
+  padding: 0;
+  border: 0;
+  text-align: center;
+}
+.precio-quote::before {
+  content: "\201C";
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2em;
+  line-height: 0.5;
+  color: rgba(75, 10, 35, 0.3);
+  margin: 0 auto 0.35em;
+}
+.precio-quote p { margin: 0; }
+.precio-quote p + p { margin-top: 0.35em; }
+
+.precio-quote .precio-11 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1em;
+  color: var(--red);
+  letter-spacing: 0;
+}
+
+/* Contador — línea discreta con em-rule, sin pulso ni chip. */
+.precio-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(10px, 0.78vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(75, 10, 35, 0.55);
+}
+.precio-counter::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: rgba(75, 10, 35, 0.4);
+  flex-shrink: 0;
+}
+.precio-counter-value {
+  color: var(--dark);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 768px) {
+  .section-precio {
+    padding: clamp(72px, 10vh, 96px) clamp(24px, 6vw, 40px);
+  }
+  .section-precio-inner { gap: clamp(18px, 2.5vh, 28px); max-width: 560px; }
+  .precio-figure { max-width: 300px; }
+}
+
+@media (max-width: 480px) {
+  .section-precio { padding: 72px 24px; }
+  .precio-figure { max-width: 240px; }
+  .precio-amount { font-size: clamp(36px, 9vw, 52px); }
+  .precio-button {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    padding: 12px 20px;
+    gap: 0.6em;
+  }
+  .precio-quote { font-size: 13px; }
+  .precio-counter { font-size: 11px; letter-spacing: 0.12em; }
+}
+
+/* ===== SECCIÓN VII — FILTRO =====
+   Misma familia visual que la V (cream/dark, eyebrow, Archivo Black,
+   Playfair) pero con layout notablemente distinto: split de dos columnas
+   con divisor vertical que enfrenta los disqualificadores (tenues,
+   tachados) con los predictores psicológicos (afirmativos, firmes).
+   La dualidad "no es para ti / es para ti" se transmite por contraste
+   visual, nunca se nombra la segunda parte. */
+.section-filtro {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--cream);
+  color: var(--dark);
+  padding: clamp(72px, 10vh, 120px) clamp(28px, 4vw, 56px);
+  text-align: left;
+  border-top: 1px solid rgba(75, 10, 35, 0.06);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.section-filtro-inner {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.filtro-split {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: clamp(28px, 4.5vw, 72px);
+  align-items: start;
+  margin-top: clamp(24px, 4vh, 56px);
+}
+
+/* Divisor vertical: hairline burgundy muy tenue, del alto del grid. */
+.filtro-divider {
+  align-self: stretch;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    rgba(75, 10, 35, 0) 0%,
+    rgba(75, 10, 35, 0.22) 18%,
+    rgba(75, 10, 35, 0.22) 82%,
+    rgba(75, 10, 35, 0) 100%
+  );
+}
+
+.filtro-block {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Display tipográfico: Archivo Black igual que la V, pero más contenido
+   (menos ancho disponible por el split). El bloque --no arranca con peso
+   visual reducido (tinta al 52%) para comunicar "aléjate"; el --si va a
+   tinta plena para comunicar firmeza. */
+.filtro-head {
+  font-family: 'Archivo', 'DM Sans', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(28px, 4.2vw, 58px);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  margin: 0 0 clamp(18px, 2.4vh, 30px);
+}
+
+.filtro-head .filtro-line {
+  display: block;
+}
+
+.filtro-block--no .filtro-head {
+  color: var(--dark);
+}
+
+.filtro-block--si .filtro-head {
+  color: var(--dark);
+  text-align: left;
+  font-size: clamp(26px, 3.8vw, 52px);
+  letter-spacing: -0.022em;
+}
+
+.filtro-block--si .filtro-intro {
+  text-align: left;
+}
+
+/* Headline largo (4 líneas) para el lado derecho: reducimos el tamaño
+   para equilibrar visualmente con el headline corto "NO ES / PARA TI."
+   del lado izquierdo. */
+.filtro-head--long {
+  font-size: clamp(22px, 3.1vw, 42px);
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+}
+
+/* Sub-línea bajo el headline: DM Sans regular. Peso fino (400) para
+   contrastar con el Archivo Black del loud; mismo tamaño grande pero
+   liviano. */
+.filtro-intro {
+  font-family: 'Archivo', 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(22px, 2.05vw, 34px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--dark);
+  margin: 0 0 clamp(16px, 2.2vh, 22px);
+}
+
+/* Pre-setup chiquitito "No es para ti si:" que cuelga del headline
+   izquierdo. DM Sans tracked, casi una etiqueta, con espacio cómodo
+   antes de la lista. */
+.filtro-setup {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: clamp(11px, 0.85vw, 13px);
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(75, 10, 35, 0.6);
+  margin: 0 0 clamp(16px, 2.2vh, 24px);
+}
+
+/* Prosa: cada frase es un párrafo con gap mínimo, sin bullets, sin guion.
+   La cadencia es narrativa, de monólogo interior. */
+.filtro-prose {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.3vh, 14px);
+}
+
+.filtro-line-p {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(15px, 1.1vw, 18px);
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+/* Izquierda: tinta plena. */
+.filtro-block--no .filtro-line-p {
+  color: var(--dark);
+}
+
+/* Derecha: tinta plena con ligero peso extra. Afirma, alineado al lado
+   opuesto del izquierdo para leerse como espejo. */
+.filtro-block--si .filtro-line-p {
+  color: var(--dark);
+  font-weight: 500;
+  text-align: left;
+}
+
+/* RESPONSIVE: en mobile colapsa a una sola columna y el divisor pasa a
+   ser un hairline horizontal entre bloques. */
+@media (max-width: 820px) {
+  .section-filtro {
+    padding: clamp(72px, 11vh, 110px) clamp(22px, 5vw, 44px);
+    justify-content: flex-start;
+  }
+  .filtro-split {
+    grid-template-columns: 1fr;
+    gap: clamp(28px, 4.5vh, 44px);
+    margin-top: clamp(22px, 3.4vh, 36px);
+  }
+  .filtro-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      rgba(75, 10, 35, 0) 0%,
+      rgba(75, 10, 35, 0.22) 18%,
+      rgba(75, 10, 35, 0.22) 82%,
+      rgba(75, 10, 35, 0) 100%
+    );
+  }
+  .filtro-head {
+    font-size: clamp(30px, 9vw, 54px);
+    line-height: 0.94;
+  }
+  .filtro-block--si .filtro-head {
+    font-size: clamp(28px, 8.2vw, 48px);
+  }
+}
+
+@media (max-width: 480px) {
+  .filtro-head {
+    font-size: clamp(28px, 10vw, 46px);
+    letter-spacing: -0.03em;
+  }
+  .filtro-block--si .filtro-head {
+    font-size: clamp(26px, 9vw, 42px);
+  }
+  .filtro-line-p {
+    font-size: clamp(14px, 4vw, 16px);
+  }
+  .filtro-intro {
+    font-size: clamp(20px, 5.6vw, 26px);
+    line-height: 1.22;
+  }
+}
+
+/* ===== SECCIÓN IX — VOCES · CIFRA · MÉTODO =====
+   Hereda el sistema editorial global: .section-title con swash drop cap
+   y .section-body con line--open / line--quiet / line--loud + punch.
+   Fondo burgundy invertido como section-dentro / section-cta. */
+.section-voces {
+  --beat-gap: clamp(28px, 4.5vh, 48px);
+  --line-gap: 4px;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--dark);
+  color: var(--cream);
+  padding: clamp(72px, 10vh, 120px) 0;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  border-top: 1px solid rgba(250, 245, 235, 0.06);
+}
+
+.section-voces-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 clamp(28px, 4vw, 56px);
+}
+
+/* Inversión cream-sobre-burgundy, misma pauta que .section-dentro */
+.section-voces .section-eyebrow { color: rgba(250, 245, 235, 0.55); }
+.section-voces .section-title { color: var(--cream); margin-bottom: clamp(32px, 5vh, 56px); }
+.section-voces .section-title .swash-drop { color: var(--cream); }
+.section-voces .section-body { color: var(--cream); max-width: 760px; }
+.section-voces .section-body .line--open { color: var(--cream); }
+.section-voces .section-body .line--quiet { color: rgba(250, 245, 235, 0.55); }
+.section-voces .section-body .line--loud { color: var(--cream); }
+.section-voces .section-body .line--loud .punch { color: rgba(250, 245, 235, 0.55); }
+
+/* Pinyon sutil en el opener de "La cifra." — eco más pequeño del swash
+   del título, un solo acento. Sin margin negativo ni escala grande: la L
+   crece un poco por encima de la italic pero respira dentro del flujo. */
+.section-voces .section-body .line--open .swash-inline {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 1.6em;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0;
+  display: inline-block;
+  vertical-align: baseline;
+  margin-right: 0.04em;
+  color: var(--cream);
+}
+
+/* Ritmo entre los tres beats de esta sección (voces → cifra → método).
+   Respeta --beat-gap pero añade aire extra porque son "sub-bloques". */
+.section-voces .voces-beat + .voces-beat {
+  margin-top: clamp(56px, 8vh, 96px);
+}
+
+/* Lista de autores/frameworks: marginalia en DM Sans muted, como una nota
+   al pie editorial. Hereda el muted de .line--quiet. */
+.section-voces .metodo-list {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(12px, 1vw, 14px);
+  line-height: 1.9;
+  color: rgba(250, 245, 235, 0.5);
+  letter-spacing: 0.01em;
+  max-width: 760px;
+  margin: clamp(20px, 3vh, 28px) 0 0 0;
+}
+.section-voces .metodo-list .sep {
+  color: rgba(250, 245, 235, 0.28);
+  margin: 0 6px;
+}
+
+/* --- Marquee de testimonios (full-width, rompe el inner) --- */
+.marquee-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  margin: clamp(40px, 6vh, 72px) 0;
+}
+.marquee-wrapper::before,
+.marquee-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.marquee-wrapper::before { left: 0;  background: linear-gradient(to right, var(--dark) 15%, transparent); }
+.marquee-wrapper::after  { right: 0; background: linear-gradient(to left,  var(--dark) 15%, transparent); }
+
+.marquee-track { overflow: hidden; position: relative; }
+.marquee-inner { display: flex; gap: 14px; width: max-content; }
+
+.marquee-left  { animation: marqueeLeft  42s linear infinite; }
+.marquee-right { animation: marqueeRight 42s linear infinite; }
+
+@keyframes marqueeLeft  { from { transform: translate3d(0,0,0); }    to { transform: translate3d(-50%,0,0); } }
+@keyframes marqueeRight { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+
+.marquee-img {
+  height: 140px;
+  width: auto;
+  border-radius: 10px;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@media (max-width: 900px) {
+  .section-voces { padding: 72px 0; }
+  .section-voces-inner { padding: 0 20px; }
+  .marquee-wrapper { gap: 10px; }
+  .marquee-inner { gap: 10px; }
+  .marquee-img { height: 105px; border-radius: 8px; }
+  .marquee-wrapper::before, .marquee-wrapper::after { width: 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-left, .marquee-right { animation: none; }
+}
+
+/* ============================================================
+   SECCIÓN IX · CAPA DE REDISEÑO EDITORIAL BRUTAL
+   Añade por encima del layout base: numeral fantasma de fondo,
+   beat labels numerados, display gigante de cifra/método y
+   quote "de verdad" con comilla tipográfica + atribución tight.
+   ============================================================ */
+
+/* "IX" fantasma detrás del contenido. Outline stroke hairline
+   para que no compita con el texto, solo dé peso al fondo. */
+.voces-numeral {
+  position: absolute;
+  top: 50%;
+  right: clamp(-4vw, -2vw, 0px);
+  transform: translateY(-48%);
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(320px, 62vh, 860px);
+  line-height: 0.78;
+  font-weight: 900;
+  letter-spacing: -0.07em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(250, 245, 235, 0.07);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+.section-voces > .section-voces-inner,
+.section-voces > .marquee-wrapper { position: relative; z-index: 1; }
+
+/* Etiqueta de beat: /01 VOCES — hairline al final.
+   Monospace para contraste con el Playfair italic del título. */
+.voces-beat-label {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.8vw, 20px);
+  font-family: 'JetBrains Mono', 'DM Sans', monospace;
+  font-size: clamp(10px, 0.8vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(250, 245, 235, 0.5);
+  margin-bottom: clamp(24px, 3.5vh, 40px);
+}
+.voces-beat-label .idx {
+  color: var(--red);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.voces-beat-label .rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(250, 245, 235, 0.18);
+}
+
+/* En el beat del marquee el label cierra, no abre. Margen superior
+   en vez de inferior para que respire con la foto de arriba. */
+.voces-beat--marquee .voces-beat-label {
+  margin: clamp(18px, 2.5vh, 28px) 0 0;
+}
+
+/* ===== Beat 2: LA CIFRA — grid editorial ===== */
+.cifra-block,
+.metodo-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+
+.cifra-display,
+.metodo-display {
+  position: relative;
+  line-height: 0.82;
+}
+
+/* 56% — fill sólido en rojo, el % con el cream para crear dos pesos
+   visuales dentro del mismo número. Kerning negativo agresivo. */
+.cifra-number {
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 900;
+  font-size: clamp(140px, 20vw, 280px);
+  letter-spacing: -0.07em;
+  line-height: 0.82;
+  color: var(--red);
+  display: inline-block;
+}
+.cifra-number .pct {
+  font-size: 0.55em;
+  color: var(--cream);
+  vertical-align: top;
+  margin-left: 0.02em;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* 35+ — outline stroke, mismo tamaño exacto que 56% para que
+   cifra y método hablen con la misma voz tipográfica. */
+.metodo-number {
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 900;
+  font-size: clamp(140px, 20vw, 280px);
+  letter-spacing: -0.07em;
+  line-height: 0.82;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--cream);
+  display: inline-block;
+}
+.metodo-number .plus {
+  color: var(--red);
+  -webkit-text-stroke: 0;
+  margin-left: 0.04em;
+  font-size: 0.62em;
+  vertical-align: top;
+}
+
+/* Tagline mono bajo el número — ancla el display en algo legible. */
+.cifra-tagline {
+  margin-top: clamp(10px, 1.5vh, 16px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(10px, 0.78vw, 12px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(250, 245, 235, 0.5);
+}
+
+/* EL QUOTE — ahora parece un quote. Hairline top, comilla tipográfica
+   gigante en rojo como abertura, Playfair italic, y atribución tight
+   con em-rule pegada debajo. */
+.cifra-quote {
+  position: relative;
+  padding-top: clamp(24px, 4vh, 44px);
+  border-top: 1px solid rgba(250, 245, 235, 0.18);
+  margin: 0;
+}
+.cifra-quote::before {
+  content: "\201C";
+  position: absolute;
+  top: clamp(-26px, -2.2vh, -14px);
+  left: -0.04em;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(88px, 8vw, 140px);
+  line-height: 1;
+  color: var(--red);
+  pointer-events: none;
+}
+.cifra-quote p {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, 2.3vw, 36px);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin: 0;
+  max-width: 520px;
+}
+.cifra-quote p .punch {
+  font-family: 'Archivo Black', sans-serif;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 0.92em;
+  letter-spacing: -0.025em;
+  color: var(--red);
+  display: inline-block;
+  vertical-align: baseline;
+  line-height: 1;
+}
+
+/* Atribución — pegada al quote (14-20px), no a beat-gap. Em-rule
+   a la izquierda, mono para contraste. */
+.cifra-attr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(14px, 2vh, 22px);
+  font-family: 'JetBrains Mono', monospace;
+  font-style: normal;
+  font-size: clamp(11px, 0.82vw, 13px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(250, 245, 235, 0.62);
+}
+.cifra-attr::before {
+  content: "";
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+
+/* ===== Beat 3: EL MÉTODO — mismo lenguaje ===== */
+.metodo-claim {
+  position: relative;
+  padding-top: clamp(24px, 4vh, 44px);
+  border-top: 1px solid rgba(250, 245, 235, 0.18);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, 2.3vw, 36px);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin: 0;
+  max-width: 520px;
+}
+.metodo-claim .punch {
+  font-family: 'Archivo Black', sans-serif;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 0.92em;
+  letter-spacing: -0.025em;
+  color: var(--red);
+  display: inline-block;
+  vertical-align: baseline;
+  line-height: 1;
+}
+.metodo-claim .sub {
+  display: block;
+  margin-top: clamp(12px, 1.8vh, 18px);
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(13px, 0.98vw, 15px);
+  letter-spacing: 0.01em;
+  color: rgba(250, 245, 235, 0.58);
+  line-height: 1.55;
+}
+
+/* Cierre del beat método — nota final en DM Sans. El "cada una
+   operativa" va en rojo como guiño al 56%. */
+.voces-closer {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 1.4vw, 22px);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--cream);
+  max-width: 620px;
+  margin: clamp(32px, 4.5vh, 52px) 0 0;
+}
+.voces-closer .punch {
+  font-family: 'Archivo Black', sans-serif;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 0.9em;
+  letter-spacing: -0.02em;
+  color: var(--red);
+}
+
+/* Ritmo de beats más tight que el base ahora que cada uno ya se
+   autoanuncia con su etiqueta numerada. */
+.section-voces .voces-beat + .voces-beat {
+  margin-top: clamp(56px, 9vh, 104px);
+}
+
+/* ===== Mobile: columna única, número arriba, quote debajo ===== */
+@media (max-width: 820px) {
+  .cifra-block,
+  .metodo-block {
+    grid-template-columns: 1fr;
+    gap: clamp(18px, 3vh, 28px);
+  }
+  .cifra-number,
+  .metodo-number {
+    font-size: clamp(108px, 32vw, 180px);
+  }
+  .cifra-quote p,
+  .metodo-claim {
+    font-size: clamp(19px, 5.2vw, 26px);
+    max-width: none;
+  }
+  .cifra-quote::before {
+    font-size: clamp(70px, 16vw, 110px);
+    top: clamp(-18px, -2vh, -10px);
+  }
+  .voces-numeral {
+    right: -12vw;
+    font-size: clamp(260px, 72vh, 520px);
+    opacity: 0.75;
+  }
+  .voces-beat-label { gap: 10px; }
+}
+
+/* ============================================================
+   MÉTODO · TICKER DE REFERENCIAS
+   Los 35+ autores dejan de ser un párrafo muted y pasan a un marquee
+   doble de chips (opuesto entre filas) — eco tipográfico del marquee
+   de testimonials del beat 1. Full-bleed para sentir "catálogo".
+   ============================================================ */
+.metodo-ticker {
+  position: relative;
+  margin: clamp(28px, 4vh, 48px) 0 0;
+  /* Rompe el inner para tocar los edges del viewport */
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  --_ticker-mask: clamp(60px, 8vw, 120px);
+}
+
+.metodo-ticker-row {
+  overflow: hidden;
+  position: relative;
+}
+.metodo-ticker-row + .metodo-ticker-row {
+  margin-top: 10px;
+}
+
+.metodo-ticker-track {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  animation-duration: 90s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.metodo-ticker-row:nth-child(1) .metodo-ticker-track { animation-name: metodoLeft; }
+.metodo-ticker-row:nth-child(2) .metodo-ticker-track { animation-name: metodoRight; }
+
+@keyframes metodoLeft  { from { transform: translate3d(0,0,0); }    to { transform: translate3d(-50%,0,0); } }
+@keyframes metodoRight { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+
+/* Fade de bordes — gradiente al burgundy para disolver el loop */
+.metodo-ticker-row::before,
+.metodo-ticker-row::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: var(--_ticker-mask);
+  z-index: 2;
+  pointer-events: none;
+}
+.metodo-ticker-row::before { left: 0;  background: linear-gradient(to right, var(--dark) 10%, transparent); }
+.metodo-ticker-row::after  { right: 0; background: linear-gradient(to left,  var(--dark) 10%, transparent); }
+
+/* Chip: hairline cream tracked JetBrains Mono. Punto delante como viñeta. */
+.metodo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  border: 1px solid rgba(250, 245, 235, 0.22);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(11px, 0.88vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(250, 245, 235, 0.78);
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: transparent;
+  transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+}
+.metodo-chip::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(250, 245, 235, 0.32);
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+.metodo-chip:hover {
+  border-color: var(--red);
+  color: var(--cream);
+  background: rgba(254, 70, 41, 0.06);
+}
+.metodo-chip:hover::before { background: var(--red); }
+
+/* Punch chip — autoridad canónica resaltada. Solo 4–5 en toda la lista
+   para que el ojo pille el ritmo sin que se pierdan los otros. */
+.metodo-chip--punch {
+  border-color: var(--red);
+  color: var(--red);
+}
+.metodo-chip--punch::before { background: var(--red); }
+.metodo-chip--punch:hover {
+  background: var(--red);
+  color: var(--dark);
+  border-color: var(--red);
+}
+.metodo-chip--punch:hover::before { background: var(--dark); }
+
+@media (max-width: 820px) {
+  .metodo-chip {
+    padding: 7px 14px;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    gap: 8px;
+  }
+  .metodo-chip::before { width: 4px; height: 4px; }
+  .metodo-ticker-track { animation-duration: 60s; }
+  .metodo-ticker-row + .metodo-ticker-row { margin-top: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metodo-ticker-track { animation: none; }
+}
+
+/* ============================================================
+   SECCIÓN X · LO QUE QUEDA POR SABER (FAQ + CIERRE FINAL)
+   Fondo cream. Accordion de 5 preguntas con grid-template-rows
+   animation (sin max-height "adivinado"), cierre con pitch
+   display de 3 líneas y CTA a Stripe. Awwwards-style editorial.
+   ============================================================ */
+.section-saber {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: var(--cream);
+  color: var(--dark);
+  padding: clamp(80px, 12vh, 140px) clamp(28px, 4vw, 56px) clamp(72px, 10vh, 120px);
+  text-align: left;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  border-top: 1px solid rgba(75, 10, 35, 0.06);
+}
+
+/* Reset del margin-bottom del eyebrow dentro del header para que la
+   pauta vertical la controle exclusivamente el gap del saber-inner. */
+.section-saber .saber-header .section-eyebrow {
+  margin-bottom: clamp(12px, 1.8vh, 20px);
+}
+
+.section-saber-inner {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 6vh, 72px);
+}
+
+.section-saber .section-title {
+  margin: 0;
+}
+
+/* FAQ — 5 items, hairline top/bottom, expand con + → × (45°) */
+.faq-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid rgba(75, 10, 35, 0.18);
+}
+.faq-item {
+  border-bottom: 1px solid rgba(75, 10, 35, 0.18);
+}
+
+.faq-summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(16px, 2vw, 28px);
+  width: 100%;
+  padding: clamp(22px, 3vh, 32px) 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  transition: color 0.25s ease;
+}
+.faq-summary:hover { color: var(--red); }
+.faq-summary:hover .faq-q { color: var(--red); }
+
+.faq-idx {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(11px, 0.85vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--red);
+  min-width: 2.4em;
+  align-self: center;
+}
+
+.faq-q {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(18px, 2vw, 30px);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--dark);
+  transition: color 0.25s ease;
+}
+
+.faq-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--dark);
+  border-radius: 50%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--dark);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s ease,
+              color 0.3s ease;
+  flex-shrink: 0;
+}
+.faq-item.is-open .faq-icon {
+  transform: rotate(45deg);
+  background: var(--dark);
+  color: var(--cream);
+}
+
+/* Animación de apertura — grid-template-rows es natively animatable
+   y no requiere adivinar max-height del contenido. */
+.faq-answer-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.faq-item.is-open .faq-answer-wrap { grid-template-rows: 1fr; }
+.faq-answer { overflow: hidden; }
+.faq-answer-inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: clamp(16px, 2vw, 28px);
+  padding: 0 0 clamp(26px, 3.5vh, 40px);
+}
+.faq-answer-inner > p {
+  grid-column: 2 / 3;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(14px, 1vw, 16px);
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 680px;
+  margin: 0;
+}
+
+/* CIERRE · pitch 3 líneas + CTA */
+.saber-cierre {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(28px, 4vh, 48px);
+  margin-top: clamp(8px, 1.2vh, 16px);
+}
+
+.saber-pitch {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: clamp(36px, 6vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  color: var(--dark);
+  margin: 0;
+}
+.saber-pitch .line { display: block; }
+.saber-pitch .line--accent {
+  font-style: italic;
+  color: var(--red);
+}
+
+.saber-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--dark);
+  padding: clamp(16px, 2vh, 22px) clamp(28px, 3.2vw, 40px);
+  border: 1px solid var(--dark);
+  border-radius: 2px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.3s ease,
+              color 0.3s ease;
+}
+.saber-button:hover {
+  background: transparent;
+  color: var(--dark);
+  transform: translateY(-2px);
+}
+.saber-button-arrow {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.saber-button:hover .saber-button-arrow {
+  transform: translateX(4px);
+}
+
+/* Numeral "X" fantasma — colocado top-right para que no pise el CTA */
+.section-saber .section-numeral {
+  top: clamp(40px, 6vh, 80px);
+  right: -2vw;
+  font-size: clamp(220px, 46vh, 560px);
+}
+
+@media (max-width: 820px) {
+  .section-saber { padding: 64px 20px; }
+  .section-saber-inner { gap: clamp(28px, 5vh, 44px); }
+  .faq-summary { gap: 12px; padding: 18px 0; }
+  .faq-idx { font-size: 10.5px; letter-spacing: 0.14em; min-width: 2.2em; }
+  .faq-q { font-size: clamp(16px, 4.6vw, 22px); }
+  .faq-icon { width: 28px; height: 28px; font-size: 16px; }
+  .faq-answer-inner { gap: 12px; padding-bottom: 20px; }
+  .saber-pitch { font-size: clamp(32px, 9vw, 48px); }
+}
+
+/* ============================================================
+   CAPA EDITORIAL GLOBAL · eco sutil de la IX sobre toda la página
+   Tres firmas compartidas para crear serie tipográfica sin rediseñar
+   cada sección:
+     (a) numeral romano fantasma de fondo (outline hairline)
+     (b) acento rojo en el ordinal del eyebrow
+     (c) hairline rule de cierre tras el eyebrow
+   Subtle por diseño — no compite con el contenido.
+   ============================================================ */
+
+/* Numeral fantasma. Stroke hairline, sin fill, puramente decorativo. */
+.section-numeral {
+  position: absolute;
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 900;
+  line-height: 0.78;
+  letter-spacing: -0.07em;
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+.section-numeral--dark  { -webkit-text-stroke: 1px rgba(75, 10, 35, 0.07); }
+.section-numeral--cream { -webkit-text-stroke: 1px rgba(250, 245, 235, 0.06); }
+
+/* Containing block + clipping para alojar el numeral */
+.section-problema,
+.section-dentro,
+.section-arq,
+.section-cta,
+.section-filtro,
+.section-precio { position: relative; }
+.section-dentro,
+.section-arq,
+.section-cta,
+.section-filtro,
+.section-precio { overflow: hidden; } /* problema ya hidden */
+
+/* Contenido por encima del numeral */
+.section-problema-inner,
+.section-dentro-inner,
+.section-arq-inner,
+.section-cta-inner,
+.section-filtro-inner,
+.section-precio-inner { position: relative; z-index: 1; }
+
+/* Colocación puntual — cada numeral en un corner distinto para
+   crear ritmo al scroll (página derecha/izquierda de revista). */
+.section-problema .section-numeral { top: clamp(40px, 6vh, 80px);  right: -3vw; font-size: clamp(200px, 42vh, 520px); }
+.section-dentro   .section-numeral { bottom: -5vh;                  right: -2vw; font-size: clamp(220px, 48vh, 600px); }
+.section-arq      .section-numeral { top: clamp(40px, 8vh, 100px); right: -2vw; font-size: clamp(200px, 44vh, 540px); }
+.section-cta      .section-numeral { bottom: -5vh;                  left: -3vw;  font-size: clamp(240px, 52vh, 640px); }
+.section-filtro   .section-numeral { top: clamp(40px, 6vh, 80px);  right: -2vw; font-size: clamp(200px, 44vh, 540px); }
+.section-precio   .section-numeral { bottom: -4vh;                  right: -2vw; font-size: clamp(220px, 46vh, 560px); }
+
+/* Rojo en el ordinal del eyebrow — guiño compartido a lo largo del scroll.
+   Solo color + tracking ligeramente más abierto; sin cambio de peso
+   o tamaño para no desnivelar la línea. */
+.section-eyebrow .num {
+  color: var(--red);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+/* Hairline rule tras el eyebrow en secciones con alineación a la
+   izquierda. Inline-block para no reparentar text nodes del eyebrow
+   (flex crearía gaps inesperados entre "VII", "—" y el texto). */
+.section-problema .section-eyebrow::after,
+.section-dentro .section-eyebrow::after,
+.section-arq .section-eyebrow::after,
+.section-filtro .section-eyebrow::after,
+.section-saber .section-eyebrow::after {
+  content: "";
+  display: inline-block;
+  width: clamp(60px, 14vw, 180px);
+  height: 1px;
+  vertical-align: middle;
+  background: currentColor;
+  opacity: 0.22;
+  margin-left: clamp(14px, 1.8vw, 22px);
+  transform: translateY(-0.06em);
+}
+
+/* Mobile — reduce peso del numeral y longitud de la regla */
+@media (max-width: 820px) {
+  .section-problema .section-numeral,
+  .section-dentro .section-numeral,
+  .section-arq .section-numeral,
+  .section-cta .section-numeral,
+  .section-filtro .section-numeral,
+  .section-precio .section-numeral {
+    font-size: clamp(150px, 34vh, 300px);
+  }
+  .section-numeral--dark,
+  .section-numeral--cream { -webkit-text-stroke-width: 0.8px; }
+  .section-problema .section-eyebrow::after,
+  .section-dentro .section-eyebrow::after,
+  .section-arq .section-eyebrow::after,
+  .section-filtro .section-eyebrow::after {
+    max-width: clamp(30px, 10vw, 80px);
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Capas de grano (noise) old money / editorial digital.
+     .grain-base = grano sutil estático permanente.
+     .grain-layer = grano principal estático.
+     .cursor-trail = canvas que dibuja la estela del cursor encima del grano. -->
+<div class="grain-base" aria-hidden="true"></div>
+<div class="grain-layer" id="grainLayer" aria-hidden="true"></div>
+<!-- Foto de fondo del hero como capa absoluta del body.
+     Así puede cubrir también el espacio de la nav sin ser recortada
+     por el overflow:hidden del hero. -->
+<div class="hero-bg" aria-hidden="true">
+  <video class="hero-video" id="heroVideo"
+         src="/prompts2/assets/videos/Solomei-night-pingpong.mp4"
+         autoplay muted loop playsinline
+         preload="auto"></video>
+  <div class="hero-photo-overlay"></div>
+</div>
+
+<nav class="top-nav">
+  <a href="#hero" class="nav-logo" aria-label="111 Originale">
+    <img src="/prompts2/assets/logos/111.svg" alt="111">
+  </a>
+  <div class="nav-clock" id="navClock" aria-label="Hora actual">
+    <span id="clockTime">--:--:--</span>
+  </div>
+  <a href="https://javiggil.com" class="nav-back" aria-label="Volver a la página principal de javigil">
+    <span>javigil</span>
+  </a>
+</nav>
+
+<section class="hero" id="hero">
+
+  <h1>
+    <span class="line"><img src="/prompts2/assets/logos/111.svg" alt="111" class="svg-111"> <span class="word-prompts">Pr<em>o</em>mpts</span></span>
+    <span class="line line-gap">Un <em>sistema</em>.</span>
+    <span class="line">Para vivir y trabajar<br class="mobile-break"> con <span class="hl">IA</span></span>
+  </h1>
+
+  <div class="hero-bottom">
+    <p class="hero-tagline">
+      <span class="line">Diseñado dentro de la IA bancaria.</span>
+      <span class="line">Probado en startups.</span>
+      <span class="line">Construido para tu vida.</span>
+    </p>
+
+    <a href="#problema" class="hero-cta" aria-label="Continuar al sistema">
+      <span class="hero-cta-label">Continuar. El sistema. Adentro.</span>
+      <span class="hero-arrow" aria-hidden="true">↓</span>
+    </a>
+  </div>
+
+
+</section>
+
+<section class="section-problema" id="problema">
+  <div class="section-numeral section-numeral--dark" aria-hidden="true">II</div>
+  <div class="section-problema-inner">
+
+    <p class="section-eyebrow reveal" style="--reveal-delay: 0s"><span class="num">II</span> —</p>
+
+    <h2 class="section-title reveal" style="--reveal-delay: 0.15s"><span class="swash swash-drop reveal-swash" style="--reveal-delay: 0.3s">H</span>ay un momento.</h2>
+
+
+    <p class="section-body reveal" style="--reveal-delay: 0.3s" data-split>
+      <span class="line line--open">Las cosas siguen funcionando.</span>
+      <span class="line line--quiet">El trabajo, la rutina, las decisiones de <span class="punch">siempre</span>.</span>
+      <span class="line line--quiet">Pero por dentro algo se ha movido.</span>
+      <span class="line line--loud">La vida en la que estás ya no es del todo <span class="punch nowrap">la vida que quieres.</span></span>
+    </p>
+
+    <!-- Pullquote ahora en el mismo registro DM Sans pequeño que las notas;
+         el "no tiene forma" es el único que sube en Archivo Black. -->
+    <blockquote class="pullquote reveal" style="--reveal-delay: 3.2s">
+      Y la vida que quieres todavía <span class="punch">no tiene forma</span>.
+    </blockquote>
+
+    <p class="section-cierre">
+      <span class="line reveal" style="--reveal-delay: 3.9s">Los psicólogos lo llaman <span class="atelier-caps">transición</span>.</span>
+      <span class="line reveal" style="--reveal-delay: 4.1s">Cualquiera que lo ha vivido sabe que es más que eso.</span>
+    </p>
+
+    <!-- PHOTO STACK — 4 fotos que se comprimen con el scroll (inverse explode).
+         Las posiciones inicial/final las controla el JS initPhotoExplode. -->
+    <div class="photo-stack" id="photoStack" aria-hidden="true">
+      <img class="photo photo-1" src="/prompts2/assets/images/image 170.png" alt="" loading="lazy">
+      <img class="photo photo-2" src="/prompts2/assets/images/image 171.png" alt="" loading="lazy">
+      <img class="photo photo-3" src="/prompts2/assets/images/image 172.png" alt="" loading="lazy">
+      <img class="photo photo-4" src="/prompts2/assets/images/image 173.png" alt="" loading="lazy">
+    </div>
+  </div>
+
+</section>
+
+<!-- SECCIÓN III: LADO QUE CRECE — payoff emocional.
+     4 anchors × 100vh aportan snap points internos. Stage pinned (sticky)
+     mantiene título fijo mientras frases cambian según progreso scroll.
+     JS initLadoReveal conmuta .is-active en .lado-phrase. -->
+<section class="section-lado" id="lado" aria-label="El lado que crece">
+  <div class="lado-anchor" data-phrase="0"></div>
+  <div class="lado-anchor" data-phrase="1"></div>
+  <div class="lado-anchor" data-phrase="2"></div>
+  <div class="lado-anchor" data-phrase="3"></div>
+
+  <div class="lado-stage">
+    <video class="lado-bg" src="/prompts2/assets/videos/Solomei-night.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <div class="lado-rail" aria-hidden="true"><span class="lado-rail-fill"></span></div>
+
+    <header class="lado-head">
+      <p class="section-eyebrow lado-eyebrow"><span class="num">III</span> — El lado que crece</p>
+      <h2 class="lado-title">
+        <span class="lado-title-line">El lado</span>
+        <span class="lado-title-line">que crece.</span>
+      </h2>
+    </header>
+
+    <div class="lado-phrases" aria-live="polite">
+      <p class="lado-phrase is-active" data-idx="01">Ya no vas tarde al cambio.</p>
+      <p class="lado-phrase" data-idx="02">Sabes exactamente QUÉ quieres hacer y CÓMO hacerlo.</p>
+      <p class="lado-phrase" data-idx="03">Operas con IA. El día aprieta menos. Lo que ganas, también.</p>
+      <p class="lado-phrase" data-idx="04">Estás en el lado que crece. El que el mercado paga un 23% más.</p>
+    </div>
+
+    <footer class="lado-foot">
+      <span class="lado-counter"><span class="lado-counter-now">01</span><span class="lado-counter-sep">/04</span></span>
+    </footer>
+  </div>
+</section>
+
+<!-- SECCIÓN 3: DENTRO — contraste cromático con la sección 2. -->
+<section class="section-dentro" id="dentro">
+  <div class="section-numeral section-numeral--cream" aria-hidden="true">IV</div>
+  <div class="section-dentro-inner">
+
+    <figure class="section-dentro-photo reveal" style="--reveal-delay: 0.2s">
+      <img src="/prompts2/assets/images/perfil.png" alt="Javi Gil" loading="lazy">
+    </figure>
+
+    <div class="section-dentro-text">
+      <p class="section-eyebrow reveal" style="--reveal-delay: 0s"><span class="num">IV</span> —</p>
+
+      <h2 class="section-title reveal" style="--reveal-delay: 0.2s"><span class="swash swash-drop reveal-swash" style="--reveal-delay: 0.35s">L</span>o que aprendí dentro.</h2>
+
+      <p class="section-body reveal" style="--reveal-delay: 0.3s" data-split>
+        <span class="line line--open">Llevo años diseñando la IA hipotecaria de uno de los mayores bancos de Europa.</span>
+        <span class="line line--quiet">Y construyo dos empresas más con ella: una que automatiza Airbnbs, otra que valida correos a escala.</span>
+        <span class="line line--quiet">Todo lo que funciona, funciona <span class="punch">dentro</span>.</span>
+        <span class="line line--quiet">Fuera se venden atajos de una tarde.</span>
+        <span class="line line--loud">Ciento once piezas, <span class="punch nowrap">por fin fuera</span>.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN IV: ARQUITECTURA — homenaje awwwards (adcker).
+     Tipografía display masiva con paréntesis que contienen imágenes
+     tiny. -->
+<section class="section-arq" id="arquitectura">
+  <div class="section-numeral section-numeral--dark" aria-hidden="true">V</div>
+  <div class="section-arq-inner">
+
+    <p class="section-eyebrow reveal" style="--reveal-delay: 0s"><span class="num">V</span> — Arquitectura del cambio</p>
+
+    <div class="arq-layout">
+      <div class="arq-block arq-block--one">
+        <h2 class="arq-display-layer">
+          <span class="arq-line reveal" style="--reveal-delay: 0.1s">UNA</span>
+          <span class="arq-line reveal" style="--reveal-delay: 0.2s">
+            CAMBIA
+            <span class="arq-paren">(<img src="/prompts2/assets/images/1_sq.png" alt="">)</span>
+          </span>
+          <span class="arq-line reveal" style="--reveal-delay: 0.35s; white-space: nowrap;">QUIEN&nbsp;ERES.</span>
+        </h2>
+        <p class="arq-capa reveal" style="--reveal-delay: 0.5s">
+          <span class="arq-capa-label">Capa I · Quién eres</span>
+          Un viaje en cinco fases encadenadas.<br>
+          Para saber QUÉ quieres hacer y CÓMO hacerlo.
+        </p>
+      </div>
+
+      <div class="arq-block arq-block--two">
+        <h2 class="arq-display-layer">
+          <span class="arq-line reveal" style="--reveal-delay: 0.55s">
+            LA OTRA
+            <span class="arq-paren">(<img src="/prompts2/assets/images/2_sq.png" alt="">)</span>
+          </span>
+          <span class="arq-line reveal" style="--reveal-delay: 0.7s">
+            COMO
+            <span class="arq-paren">(<img src="/prompts2/assets/images/3_sq.png" alt="">)</span>
+            OPERAS.
+          </span>
+        </h2>
+        <p class="arq-capa reveal" style="--reveal-delay: 0.9s">
+          <span class="arq-capa-label">Capa II · Cómo operas</span>
+          Te enseña a usar IA usándola. Herramientas probadas en empresas serias, listas desde el primer día.
+        </p>
+      </div>
+    </div>
+
+    <p class="arq-closer reveal" style="--reveal-delay: 1.1s">
+      No es un curso. Es una <span class="accent">arquitectura</span>.
+    </p>
+
+  </div>
+</section>
+
+<!-- SECCIÓN VI — CIERRE / CTA
+     Único punto de conversión de la página. Cierra el círculo visual con
+     el hero (SVG 111 + "Originale" en Playfair Display, la misma fuente
+     que "Prompts"). -->
+<section class="section-cta" id="originale" aria-label="Acceder a 111 Originale">
+  <div class="section-numeral section-numeral--cream" aria-hidden="true">VI</div>
+  <div class="section-cta-inner">
+
+    <p class="section-eyebrow reveal" style="--reveal-delay: 0s"><span class="num">VI</span> —</p>
+
+    <h2 class="cta-title reveal" style="--reveal-delay: 0.15s">
+      <img src="/prompts2/assets/logos/111.svg" alt="111" class="cta-svg-111">
+      <span class="cta-originale">Originale</span>
+      no es un cambio. Es el cambio con <em>IA</em> que se mantiene.
+    </h2>
+
+    <a class="cta-button reveal" style="--reveal-delay: 0.4s"
+       href="https://buy.stripe.com/cNi5kv2Sx2T616G70T9EI05?prefilled_promo_code=EARLY"
+       target="_blank" rel="noopener">
+      <span class="cta-button-label">Acceder a 111 Originale</span>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- SECCIÓN VII — FILTRO
+     Recuerda a la V (cream/dark, eyebrow, Archivo Black, Playfair) pero
+     con layout propio: split de dos columnas con divisor vertical. El
+     bloque izquierdo disqualifica (tinta rebajada + strike); el derecho
+     afirma los tres predictores psicológicos (tinta plena, peso 500).
+     El lector siente de qué lado está sin que se nombre "es para ti si". -->
+<section class="section-filtro" id="filtro">
+  <div class="section-numeral section-numeral--dark" aria-hidden="true">VII</div>
+  <div class="section-filtro-inner">
+
+    <p class="section-eyebrow reveal" style="--reveal-delay: 0s"><span class="num">VII</span> — No es para cualquiera</p>
+
+    <div class="filtro-split">
+      <div class="filtro-block filtro-block--no">
+        <h2 class="filtro-head">
+          <span class="filtro-line reveal" style="--reveal-delay: 0.1s">
+            NO ES PARA
+            <span class="arq-paren">(<img src="/prompts2/assets/images/4_sq.png" alt="">)</span>
+          </span>
+          <span class="filtro-line reveal" style="--reveal-delay: 0.2s">CUALQUIERA.</span>
+        </h2>
+        <p class="filtro-setup reveal" style="--reveal-delay: 0.35s">No es para ti si:</p>
+        <div class="filtro-prose">
+          <p class="filtro-line-p reveal" style="--reveal-delay: 0.45s">Esperas que la IA piense por ti.</p>
+          <p class="filtro-line-p reveal" style="--reveal-delay: 0.55s">Quieres 10 prompts que te cambien la vida.</p>
+          <p class="filtro-line-p reveal" style="--reveal-delay: 0.65s">Quieres resultados esta semana.</p>
+        </div>
+      </div>
+
+      <div class="filtro-divider" aria-hidden="true"></div>
+
+      <div class="filtro-block filtro-block--si">
+        <h2 class="filtro-head">
+          <span class="filtro-line reveal" style="--reveal-delay: 0.45s">UNA PERSONA</span>
+          <span class="filtro-line reveal" style="--reveal-delay: 0.6s">
+            EXITOSA
+            <span class="arq-paren">(<img src="/prompts2/assets/images/5_sq.png" alt="">)</span>.
+          </span>
+        </h2>
+        <p class="filtro-intro reveal" style="--reveal-delay: 0.75s">
+          Se caracteriza por dos cosas:
+        </p>
+        <div class="filtro-prose">
+          <p class="filtro-line-p reveal" style="--reveal-delay: 0.9s">Sabe qué quiere.</p>
+          <p class="filtro-line-p reveal" style="--reveal-delay: 1s">Sabe cómo conseguirlo.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SECCIÓN VIII — EL PRECIO
+     Último beat de la página. Cierra con la oferta real: 297€ como precio
+     oficial, y en la cita del autor se revela el gesto de mantenerlo en 11€
+     para los primeros 100. Contador en naranja alimentado por webhook Stripe.
+     Referencia compositiva: página de producto Patek Philippe (nombre → precio
+     → producto → claim → botón), traducida al sistema visual de 111 Originale. -->
+<section class="section-precio" id="precio" aria-label="Precio de 111 Originale">
+  <div class="section-numeral section-numeral--dark" aria-hidden="true">VIII</div>
+  <div class="section-precio-inner">
+
+    <h2 class="precio-brand reveal" style="--reveal-delay: 0.15s">
+      <img src="/prompts2/assets/logos/111.svg" alt="111" class="precio-svg-111">
+      <span class="precio-originale">Originale</span>
+    </h2>
+
+    <p class="precio-amount reveal" style="--reveal-delay: 0.3s">297<span class="cur">€</span></p>
+
+    <figure class="precio-figure reveal" style="--reveal-delay: 0.4s">
+      <img src="/prompts2/assets/images/product.png" alt="111 Originale" class="precio-image" loading="lazy">
+    </figure>
+
+    <p class="precio-claim reveal" style="--reveal-delay: 0.55s">Un pago. Para siempre.</p>
+
+    <a class="precio-button reveal" style="--reveal-delay: 0.7s"
+       href="https://buy.stripe.com/cNi5kv2Sx2T616G70T9EI05?prefilled_promo_code=EARLY"
+       target="_blank" rel="noopener">
+      <span class="precio-button-label">Acceder a 111 Originale</span>
+    </a>
+
+    <blockquote class="precio-quote reveal" style="--reveal-delay: 0.85s">
+      <p>Mi equipo estableció el precio.</p>
+      <p>Pero me han dejado mantenerlo en <span class="precio-11">11,1€</span> para los primeros 100.</p>
+    </blockquote>
+
+    <!-- CONTADOR DE COMPRAS
+         ============================================================
+         DEV: el número dentro de [data-stripe-counter] debe ser dinámico.
+         Integración esperada:
+           1. Webhook de Stripe (evento `checkout.session.completed`)
+              incrementa un contador persistente (DB / KV / edge config).
+           2. Endpoint público (p. ej. GET /api/counter) devuelve
+              { sold: <number> } — cacheable corto (stale-while-revalidate).
+           3. El script al final del HTML (hydrateStripeCounter)
+              hidrata el valor al cargar la página.
+         Valor inicial hardcoded: 21. Si el endpoint falla, se mantiene el 21.
+         ============================================================ -->
+    <p class="precio-counter reveal" style="--reveal-delay: 1s">
+      100 unidades a 11,1€ · van <span class="precio-counter-value" data-stripe-counter>21</span>
+    </p>
+
+  </div>
+</section>
+
+
+<!-- SECCIÓN IX — VOCES · LA CIFRA · EL MÉTODO
+     Cierre tras el precio. Tres beats editoriales sobre fondo burgundy:
+     (1) marquee doble de testimonios, (2) dato PwC 56%, (3) lista de 35
+     frameworks. Usa el sistema tipográfico global: .section-title con
+     swash drop cap + .section-body con .line--open/.line--quiet/.line--loud
+     y .punch, como el resto de secciones. -->
+<section class="section-voces" id="voces" aria-label="Voces, la cifra y el método">
+
+  <div class="voces-numeral" aria-hidden="true">IX</div>
+
+  <div class="section-voces-inner voces-beat voces-beat--marquee" style="padding-top: clamp(20px, 3vh, 40px);">
+    <h2 class="section-title reveal" style="--reveal-delay: 0s; margin-bottom: 0;">
+      <span class="swash swash-drop reveal-swash" style="--reveal-delay: 0.15s">L</span>o dicen ellos.
+    </h2>
+    <div class="voces-beat-label reveal" style="--reveal-delay: 0.25s">
+      <span class="idx">/01</span><span>Voces</span><span class="rule" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <!-- Marquee full-width, rompe el inner -->
+  <div class="marquee-wrapper reveal" style="--reveal-delay: 0.25s; margin-top: clamp(16px, 2vh, 24px);">
+    <div class="marquee-track">
+      <div class="marquee-inner marquee-left">
+        <img src="/prompts2/assets/testimonials/Text%20box.png"   class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-1.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-2.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-3.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-4.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box.png"   class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-1.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-2.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-3.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-4.png" class="marquee-img" alt="Testimonio">
+      </div>
+    </div>
+    <div class="marquee-track">
+      <div class="marquee-inner marquee-right">
+        <img src="/prompts2/assets/testimonials/Text%20box-5.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-6.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-7.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-8.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-9.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-5.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-6.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-7.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-8.png" class="marquee-img" alt="Testimonio">
+        <img src="/prompts2/assets/testimonials/Text%20box-9.png" class="marquee-img" alt="Testimonio">
+      </div>
+    </div>
+  </div>
+
+  <!-- Beat 2: La cifra — display brutal + quote editorial -->
+  <div class="section-voces-inner voces-beat">
+    <div class="voces-beat-label reveal" style="--reveal-delay: 0s">
+      <span class="idx">/02</span><span>La cifra</span><span class="rule" aria-hidden="true"></span>
+    </div>
+
+    <div class="cifra-block">
+      <div class="cifra-display reveal" style="--reveal-delay: 0.1s">
+        <span class="cifra-number" aria-hidden="true">56<span class="pct">%</span></span>
+        <div class="cifra-tagline">Skill premium · PwC 2025</div>
+      </div>
+
+      <blockquote class="cifra-quote reveal" style="--reveal-delay: 0.25s">
+        <p>Las personas con skills de IA cobran un <span class="punch">56% más</span> por el mismo rol.</p>
+        <cite class="cifra-attr">PwC · Global AI Jobs Barometer · 2025</cite>
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- Beat 3: El método -->
+  <div class="section-voces-inner voces-beat">
+    <div class="voces-beat-label reveal" style="--reveal-delay: 0s">
+      <span class="idx">/03</span><span>El método</span><span class="rule" aria-hidden="true"></span>
+    </div>
+
+    <div class="metodo-block">
+      <div class="metodo-display reveal" style="--reveal-delay: 0.1s">
+        <span class="metodo-number" aria-hidden="true">35<span class="plus">+</span></span>
+        <div class="cifra-tagline">Frameworks validados</div>
+      </div>
+
+      <p class="metodo-claim reveal" style="--reveal-delay: 0.25s">
+        El sistema integra más de <span class="punch">35 frameworks</span> validados.
+        <span class="sub">Cada uno cumple una función específica en el viaje.</span>
+      </p>
+    </div>
+
+    <!-- TICKER DOBLE DE REFERENCIAS
+         Fila 1 ← scroll a la izquierda (18 chips + duplicado para loop seamless).
+         Fila 2 → scroll a la derecha (18 chips + duplicado).
+         Los chips --punch (Clear, Taleb, Kahneman, Munger) rompen el ritmo
+         con borde+texto rojo; actúan como anclas al lector que reconoce
+         autoridades canónicas. -->
+    <div class="metodo-ticker reveal" style="--reveal-delay: 0.35s" role="list" aria-label="Más de 35 frameworks y autores validados">
+      <div class="metodo-ticker-row">
+        <div class="metodo-ticker-track">
+          <span class="metodo-chip" role="listitem">Prochaska</span>
+          <span class="metodo-chip" role="listitem">Pennebaker</span>
+          <span class="metodo-chip" role="listitem">Marlatt</span>
+          <span class="metodo-chip" role="listitem">Gollwitzer</span>
+          <span class="metodo-chip" role="listitem">Lally</span>
+          <span class="metodo-chip" role="listitem">Knowles</span>
+          <span class="metodo-chip" role="listitem">Peter&nbsp;Attia</span>
+          <span class="metodo-chip" role="listitem">Levine&nbsp;&amp;&nbsp;Heller</span>
+          <span class="metodo-chip metodo-chip--punch" role="listitem">James&nbsp;Clear</span>
+          <span class="metodo-chip" role="listitem">Dan&nbsp;McAdams</span>
+          <span class="metodo-chip" role="listitem">Tiago&nbsp;Forte</span>
+          <span class="metodo-chip" role="listitem">Daniel&nbsp;Pink</span>
+          <span class="metodo-chip" role="listitem">Stephen&nbsp;Covey</span>
+          <span class="metodo-chip" role="listitem">Angela&nbsp;Duckworth</span>
+          <span class="metodo-chip metodo-chip--punch" role="listitem">Nassim&nbsp;Taleb</span>
+          <span class="metodo-chip" role="listitem">Morgan&nbsp;Housel</span>
+          <span class="metodo-chip" role="listitem">Greg&nbsp;McKeown</span>
+          <span class="metodo-chip" role="listitem">Tim&nbsp;Ferriss</span>
+          <!-- duplicado para loop -->
+          <span class="metodo-chip" aria-hidden="true">Prochaska</span>
+          <span class="metodo-chip" aria-hidden="true">Pennebaker</span>
+          <span class="metodo-chip" aria-hidden="true">Marlatt</span>
+          <span class="metodo-chip" aria-hidden="true">Gollwitzer</span>
+          <span class="metodo-chip" aria-hidden="true">Lally</span>
+          <span class="metodo-chip" aria-hidden="true">Knowles</span>
+          <span class="metodo-chip" aria-hidden="true">Peter&nbsp;Attia</span>
+          <span class="metodo-chip" aria-hidden="true">Levine&nbsp;&amp;&nbsp;Heller</span>
+          <span class="metodo-chip metodo-chip--punch" aria-hidden="true">James&nbsp;Clear</span>
+          <span class="metodo-chip" aria-hidden="true">Dan&nbsp;McAdams</span>
+          <span class="metodo-chip" aria-hidden="true">Tiago&nbsp;Forte</span>
+          <span class="metodo-chip" aria-hidden="true">Daniel&nbsp;Pink</span>
+          <span class="metodo-chip" aria-hidden="true">Stephen&nbsp;Covey</span>
+          <span class="metodo-chip" aria-hidden="true">Angela&nbsp;Duckworth</span>
+          <span class="metodo-chip metodo-chip--punch" aria-hidden="true">Nassim&nbsp;Taleb</span>
+          <span class="metodo-chip" aria-hidden="true">Morgan&nbsp;Housel</span>
+          <span class="metodo-chip" aria-hidden="true">Greg&nbsp;McKeown</span>
+          <span class="metodo-chip" aria-hidden="true">Tim&nbsp;Ferriss</span>
+        </div>
+      </div>
+      <div class="metodo-ticker-row">
+        <div class="metodo-ticker-track">
+          <span class="metodo-chip" role="listitem">Robert&nbsp;Kiyosaki</span>
+          <span class="metodo-chip" role="listitem">Josh&nbsp;Waitzkin</span>
+          <span class="metodo-chip" role="listitem">David&nbsp;Epstein</span>
+          <span class="metodo-chip" role="listitem">Cal&nbsp;Newport</span>
+          <span class="metodo-chip" role="listitem">Peter&nbsp;Drucker</span>
+          <span class="metodo-chip" role="listitem">Marco&nbsp;Aurelio</span>
+          <span class="metodo-chip" role="listitem">Brian&nbsp;Tracy</span>
+          <span class="metodo-chip" role="listitem">Scott&nbsp;Young</span>
+          <span class="metodo-chip metodo-chip--punch" role="listitem">Richard&nbsp;Feynman</span>
+          <span class="metodo-chip" role="listitem">Anders&nbsp;Ericsson</span>
+          <span class="metodo-chip metodo-chip--punch" role="listitem">Charlie&nbsp;Munger</span>
+          <span class="metodo-chip metodo-chip--punch" role="listitem">Daniel&nbsp;Kahneman</span>
+          <span class="metodo-chip" role="listitem">David&nbsp;Allen</span>
+          <span class="metodo-chip" role="listitem">Alex&nbsp;Hormozi</span>
+          <span class="metodo-chip" role="listitem">Robert&nbsp;Cialdini</span>
+          <span class="metodo-chip" role="listitem">Eric&nbsp;Ries</span>
+          <span class="metodo-chip" role="listitem">Chris&nbsp;Voss</span>
+          <span class="metodo-chip" role="listitem">Brown,&nbsp;Roediger&nbsp;&amp;&nbsp;McDaniel</span>
+          <!-- duplicado para loop -->
+          <span class="metodo-chip" aria-hidden="true">Robert&nbsp;Kiyosaki</span>
+          <span class="metodo-chip" aria-hidden="true">Josh&nbsp;Waitzkin</span>
+          <span class="metodo-chip" aria-hidden="true">David&nbsp;Epstein</span>
+          <span class="metodo-chip" aria-hidden="true">Cal&nbsp;Newport</span>
+          <span class="metodo-chip" aria-hidden="true">Peter&nbsp;Drucker</span>
+          <span class="metodo-chip" aria-hidden="true">Marco&nbsp;Aurelio</span>
+          <span class="metodo-chip" aria-hidden="true">Brian&nbsp;Tracy</span>
+          <span class="metodo-chip" aria-hidden="true">Scott&nbsp;Young</span>
+          <span class="metodo-chip metodo-chip--punch" aria-hidden="true">Richard&nbsp;Feynman</span>
+          <span class="metodo-chip" aria-hidden="true">Anders&nbsp;Ericsson</span>
+          <span class="metodo-chip metodo-chip--punch" aria-hidden="true">Charlie&nbsp;Munger</span>
+          <span class="metodo-chip metodo-chip--punch" aria-hidden="true">Daniel&nbsp;Kahneman</span>
+          <span class="metodo-chip" aria-hidden="true">David&nbsp;Allen</span>
+          <span class="metodo-chip" aria-hidden="true">Alex&nbsp;Hormozi</span>
+          <span class="metodo-chip" aria-hidden="true">Robert&nbsp;Cialdini</span>
+          <span class="metodo-chip" aria-hidden="true">Eric&nbsp;Ries</span>
+          <span class="metodo-chip" aria-hidden="true">Chris&nbsp;Voss</span>
+          <span class="metodo-chip" aria-hidden="true">Brown,&nbsp;Roediger&nbsp;&amp;&nbsp;McDaniel</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="voces-closer reveal" style="--reveal-delay: 0.5s">
+      Más de 35 referencias. <span class="punch">Cada una operativa</span>, no decorativa.
+    </p>
+  </div>
+
+</section>
+
+
+<!-- SECCIÓN X — LO QUE QUEDA POR SABER · FAQ + CIERRE FINAL
+     Fondo cream tras el burgundy de la IX: vuelta a la base visual
+     para cerrar la página. Accordion de 5 preguntas con grid-template
+     animation (sin adivinar max-height). Al final, pitch display de
+     3 líneas y CTA directa a Stripe. -->
+<section class="section-saber" id="saber" aria-label="Preguntas frecuentes y acceso">
+  <div class="section-numeral section-numeral--dark" aria-hidden="true">X</div>
+
+  <div class="section-saber-inner">
+
+    <header class="saber-header">
+      <h2 class="section-title reveal" style="--reveal-delay: 0s">
+        <span class="swash swash-drop reveal-swash" style="--reveal-delay: 0.15s">L</span>o que queda por saber.
+      </h2>
+    </header>
+
+    <ul class="faq-list reveal" style="--reveal-delay: 0.3s">
+      <li class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false" aria-controls="faq-a-1">
+          <span class="faq-idx">/01</span>
+          <span class="faq-q">¿Cómo accedo y dónde puedo usarlo?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-answer-wrap" id="faq-a-1" role="region">
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Acceso inmediato tras el pago. El sistema vive en HTML navegable más PDF de respaldo. Funciona en móvil, ordenador y tablet. Los prompts se copian con un clic y se pegan en cualquier IA: ChatGPT, Claude, Gemini, la que uses.</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false" aria-controls="faq-a-2">
+          <span class="faq-idx">/02</span>
+          <span class="faq-q">¿Tengo que saber de IA para usarlo?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-answer-wrap" id="faq-a-2" role="region">
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>No. El sistema asume que partes de cero. Cada prompt está diseñado para que la primera vez que lo uses sea también la primera que entiendes qué le estás pidiendo a la IA. La curva de aprendizaje sucede usando, no estudiando.</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false" aria-controls="faq-a-3">
+          <span class="faq-idx">/03</span>
+          <span class="faq-q">¿Cuánto tiempo necesito dedicarle?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-answer-wrap" id="faq-a-3" role="region">
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Depende de qué fase del sistema estés. Las primeras semanas, sesiones de 30 a 60 minutos cuando decidas abrir un prompt nuevo. Después, uso recurrente de minutos en momentos concretos del día. No es un curso. No hay temario que terminar.</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false" aria-controls="faq-a-4">
+          <span class="faq-idx">/04</span>
+          <span class="faq-q">¿Es pago único? ¿Mi acceso se mantiene si subes el precio?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-answer-wrap" id="faq-a-4" role="region">
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Pago único. Para siempre. Mantienes acceso completo cuando el precio suba. Las actualizaciones del sistema futuras también te llegan sin coste adicional.</p>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false" aria-controls="faq-a-5">
+          <span class="faq-idx">/05</span>
+          <span class="faq-q">¿Hay alguien si me atasco?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="faq-answer-wrap" id="faq-a-5" role="region">
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Soporte por email directo conmigo. No hay comunidad, no hay foro, no hay grupo de Telegram. Si tienes un problema técnico o no entiendes cómo aplicar un prompt a tu caso, escribes y respondo.</p>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="saber-cierre reveal" style="--reveal-delay: 0.4s">
+      <h3 class="saber-pitch">
+        <span class="line">111 prompts.</span>
+        <span class="line">Un sistema.</span>
+        <span class="line line--accent">El lado que crece.</span>
+      </h3>
+      <a class="saber-button"
+         href="https://buy.stripe.com/cNi5kv2Sx2T616G70T9EI05?prefilled_promo_code=EARLY"
+         target="_blank" rel="noopener">
+        <span class="saber-button-label">Entrar</span>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- El vídeo Solomei-night-pingpong.mp4 ya contiene forward+reverse
+     concatenado en el propio archivo (preprocesado con ffmpeg), así que
+     el loop nativo del elemento <video> basta para el efecto ping-pong
+     sin JS ni canvas. Ligero y perfectamente fluido. -->
+
+
+<!-- INFO TRIGGER (ya eliminado - placeholder por si vuelve) -->
+
+<!-- FAQ · ACCORDION TOGGLE
+     Un solo item abierto a la vez (más limpio visualmente que
+     multi-open). Toggle con aria-expanded para a11y; el CSS se
+     encarga del visual vía .is-open + grid-template-rows. -->
+<script>
+  (function initFAQ() {
+    const items = document.querySelectorAll('.faq-item');
+    if (!items.length) return;
+
+    items.forEach(function (item) {
+      const btn = item.querySelector('.faq-summary');
+      if (!btn) return;
+
+      btn.addEventListener('click', function () {
+        const willOpen = !item.classList.contains('is-open');
+
+        // Cierra los demás — acordeón single-open
+        items.forEach(function (other) {
+          if (other !== item) {
+            other.classList.remove('is-open');
+            const otherBtn = other.querySelector('.faq-summary');
+            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        item.classList.toggle('is-open', willOpen);
+        btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      });
+    });
+  })();
+</script>
+
+<!-- RELOJ EN VIVO
+     Actualiza la hora local del usuario cada segundo.
+     Formato HH:MM:SS con padding 0 para mantener anchura constante.
+     Tabular-nums en CSS asegura que los dígitos no salten visualmente.
+     Cada secuencia "11" se destaca en naranja como guiño al branding 111 Originale. -->
+<script>
+  (function initLiveClock() {
+    const el = document.getElementById('clockTime');
+    if (!el) return;
+
+    function pad(n) {
+      return n < 10 ? '0' + n : '' + n;
+    }
+
+    function highlightElevens(timeStr) {
+      // Reemplaza cada "11" con span naranja sin afectar a "1" sueltos.
+      // En HH:MM:SS un segmento de 2 dígitos solo puede tener un "11" como mucho.
+      return timeStr.replace(/11/g, '<span class="dgt-11">11</span>');
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const timeStr = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+      el.innerHTML = highlightElevens(timeStr);
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  })();
+
+  /* HIDRATACIÓN DEL CONTADOR DE COMPRAS
+     Lee el número actual desde /api/counter y lo pinta en
+     [data-stripe-counter]. Si el endpoint no responde o no existe, se
+     queda el valor estático del HTML (21). Sin polling — una sola vez al cargar.
+     El endpoint debe alimentarse desde el webhook de Stripe
+     (checkout.session.completed) incrementando un contador persistente. */
+  (async function hydrateStripeCounter() {
+    const el = document.querySelector('[data-stripe-counter]');
+    if (!el) return;
+    try {
+      const res = await fetch('/api/counter', { cache: 'no-store' });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data && typeof data.sold === 'number') {
+        el.textContent = String(data.sold);
+      }
+    } catch (_) {
+      /* fallback silencioso al valor estático */
+    }
+  })();
+</script>
+
+<!-- Scroll nativo con scroll-snap CSS (TikTok-style). Sin Lenis, que
+     interfiere con scroll-snap-type. Los anchors a#hash usan el smooth
+     scroll nativo vía html { scroll-behavior: smooth }. -->
+
+<!-- NAV COLOR SWITCH
+     Cuando el hero sale del viewport (menos de 10% visible),
+     la nav cambia a colores oscuros para fondo claro. -->
+<script>
+  (function initNavSwitch() {
+    const nav = document.querySelector('.top-nav');
+    const hero = document.getElementById('hero');
+    if (!nav || !hero) return;
+
+    // Secciones "oscuras" donde el nav debe mantener colores claros (cream),
+    // no pasar a nav-light (dark). Se unen al hero en la misma lógica.
+    // La section-lado mide 400vh (anchors × 4) — observar el contenedor
+    // haría que threshold 0.3 nunca dispare (sólo 25% es visible). Por eso
+    // observamos el .lado-stage (100vh), que es el elemento realmente en
+    // pantalla cuando el usuario está "dentro" de esa sección.
+    const darkSections = Array.from(document.querySelectorAll('.section-lado .lado-stage, .section-dentro, .section-cta, .section-voces'));
+    const lightTargets = new Set(); // secciones oscuras actualmente visibles
+
+    function refresh() {
+      const heroVisible = hero.__visible;
+      if (heroVisible || lightTargets.size > 0) {
+        nav.classList.remove('nav-light');
+      } else {
+        nav.classList.add('nav-light');
+      }
+    }
+
+    const heroObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        hero.__visible = entry.isIntersecting;
+        refresh();
+      });
+    }, { threshold: 0.1 });
+    heroObserver.observe(hero);
+
+    if (darkSections.length) {
+      const darkObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) lightTargets.add(entry.target);
+          else lightTargets.delete(entry.target);
+        });
+        refresh();
+      }, { threshold: 0.3 });
+      darkSections.forEach(function(s) { darkObserver.observe(s); });
+    }
+  })();
+</script>
+
+<!-- SAFARI AUTOPLAY FIX
+     Safari es estricto con autoplay: el atributo `autoplay` sólo dispara
+     si el vídeo ya está muted en el momento en que el navegador lo evalúa.
+     Forzamos muted + play() defensivo para cubrir los casos en los que
+     Safari ignora el atributo declarativo. -->
+<script>
+  (function forceVideoAutoplay() {
+    var vids = document.querySelectorAll('video[autoplay]');
+    vids.forEach(function (v) {
+      v.muted = true;
+      v.setAttribute('muted', '');
+      v.playsInline = true;
+      var p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(function () {});
+    });
+    // Retry en el primer gesto del usuario si Safari sigue bloqueando.
+    function retry() {
+      vids.forEach(function (v) { if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function(){}); } });
+      document.removeEventListener('touchstart', retry);
+      document.removeEventListener('click', retry);
+    }
+    document.addEventListener('touchstart', retry, { once: true, passive: true });
+    document.addEventListener('click', retry, { once: true });
+  })();
+</script>
+
+<!-- HERO PARALLAX EXIT
+     Al hacer scroll, el título sube con parallax y se desvanece.
+     El vídeo hace un zoom sutil (1.0 → 1.15) creando profundidad.
+     requestAnimationFrame para 60fps sin jank. -->
+<script>
+  (function initHeroParallax() {
+    const hero = document.getElementById('hero');
+    const video = document.querySelector('.hero-video');
+    const title = hero ? hero.querySelector('h1') : null;
+    const bottom = hero ? hero.querySelector('.hero-bottom') : null;
+    if (!hero) return;
+
+    var ticking = false;
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    function update() {
+      ticking = false;
+      var scrollY = window.scrollY || window.pageYOffset;
+      var heroH = hero.offsetHeight;
+      // progress 0 → 1 a medida que el hero sale del viewport
+      var progress = Math.min(Math.max(scrollY / heroH, 0), 1);
+
+      // Título: sube 80px y se desvanece
+      var drift = -progress * 80;
+      var opacity = 1 - progress * 1.2; // desvanece rápido
+      if (opacity < 0) opacity = 0;
+
+      if (title) {
+        title.style.setProperty('--hero-drift', drift + 'px');
+        title.style.setProperty('--hero-opacity', opacity);
+      }
+      if (bottom) {
+        // El bottom se desvanece más rápido
+        var botOpacity = 1 - progress * 2;
+        if (botOpacity < 0) botOpacity = 0;
+        bottom.style.setProperty('--hero-drift', (drift * 0.5) + 'px');
+        bottom.style.setProperty('--hero-opacity', botOpacity);
+      }
+
+      // Vídeo: zoom sutil 1.0 → 1.15
+      if (video) {
+        var scale = 1 + progress * 0.15;
+        video.style.setProperty('--scroll-scale', scale);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update(); // estado inicial
+  })();
+</script>
+
+<!-- WORD SPLIT
+     Convierte cada palabra dentro de [data-split] en un <span class="word">
+     con un --word-delay incremental, preservando los nodos hijos (como
+     .nowrap). Se ejecuta antes del IntersectionObserver para que las
+     palabras estén listas cuando se dispare el reveal. */ -->
+<script>
+  (function splitWords() {
+    var containers = document.querySelectorAll('[data-split]');
+    if (!containers.length) return;
+
+    // Timing de la cascada palabra-a-palabra. Antes todo salía en ~1.5s y
+    // se percibía como un "dump" ilegible — el ojo no tenía ritmo.
+    //   baseDelay  → espera a que el título se asiente antes de empezar.
+    //   delayStep  → separación entre palabras dentro de la misma línea.
+    //   lineStep   → pausa extra al terminar cada línea (marca sentencia).
+    // Con 0.40 + 0.045 + 0.25 el body de la sección II cae en ~2.8-3.0s,
+    // que es la ventana donde el lector realmente lee en vez de barrer.
+    var baseDelay = 0.40;
+    var delayStep = 0.045;
+    var lineStep  = 0.25;
+
+    containers.forEach(function(container) {
+      // Delay acumulativo dentro de ESTE contenedor. Empieza en baseDelay
+      // y cada palabra/línea lo incrementa — así las pausas son reales,
+      // no sumas indirectas de un índice global.
+      var currentDelay = baseDelay;
+      var lines = container.querySelectorAll('.line');
+      lines.forEach(function(line, lineIdx) {
+        if (lineIdx > 0) currentDelay += lineStep; // pausa entre líneas
+        var children = Array.from(line.childNodes);
+        line.innerHTML = '';
+        children.forEach(function(node) {
+          if (node.nodeType === Node.TEXT_NODE) {
+            var words = node.textContent.split(/(\s+)/);
+            words.forEach(function(chunk) {
+              if (chunk.trim() === '') {
+                // Mantener espacios como nodos de texto simples.
+                line.appendChild(document.createTextNode(chunk));
+              } else {
+                var span = document.createElement('span');
+                span.className = 'word';
+                span.textContent = chunk;
+                span.style.setProperty('--word-delay', currentDelay.toFixed(3) + 's');
+                currentDelay += delayStep;
+                line.appendChild(span);
+              }
+            });
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+            // Elementos existentes (.nowrap) se tratan como una sola palabra.
+            var span = document.createElement('span');
+            span.className = 'word';
+            span.style.setProperty('--word-delay', currentDelay.toFixed(3) + 's');
+            currentDelay += delayStep;
+            span.appendChild(node);
+            line.appendChild(span);
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+<!-- PHOTO STACK — INVERSE EXPLODE
+     Interpola transform de cada foto según el progreso de entrada de la
+     sección 2 al viewport. progress=0 (sección aún fuera) → estado
+     explotado (fotos dispersas y lejos). progress=1 (sección ocupa
+     viewport) → estado comprimido (pila solapada centrada).
+     Scroll arriba invierte naturalmente (progress decrece).
+     rAF para 60fps, sin forzar layout. -->
+<script>
+  (function initPhotoExplode() {
+    var section = document.getElementById('problema');
+    var stack = document.getElementById('photoStack');
+    if (!section || !stack) return;
+    var photos = stack.querySelectorAll('.photo');
+    if (!photos.length) return;
+
+    // Configuración por foto. La posición final de cada foto la fija el
+    // CSS (top/left/width). Aquí solo definimos el offset explotado:
+    // sx/sy = translate inicial en % del propio ancho de la foto,
+    // ssc   = scale inicial, srot = rotación inicial en grados,
+    // erot  = rotación FINAL (pequeña, tipo pila tiltada).
+    var configs = [
+      // Photo 1 (image 170) — BOTTOM-LEFT, rotación final 0 (recta)
+      { sx: -200, sy:  180, ssc: 0.68, srot: -28, erot: 0 },
+      // Photo 2 (image 171) — BOTTOM-RIGHT, FRONT, recta
+      { sx:  200, sy:  190, ssc: 0.7,  srot:  26, erot: 0 },
+      // Photo 3 (image 172) — TOP-RIGHT, BACK, recta
+      { sx:  210, sy: -170, ssc: 0.66, srot:  32, erot: 0 },
+      // Photo 4 (image 173) — TOP-LEFT, recta
+      { sx: -190, sy: -150, ssc: 0.68, srot: -30, erot: 0 }
+    ];
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    // targetT = progreso que dicta el scroll (0..1).
+    // currentT = progreso realmente aplicado, suavizado con lerp hacia target.
+    // El lerp desacopla la velocidad de animación de la velocidad de scroll,
+    // así el efecto se siente más lento y fluido aunque scroll-snap avance rápido.
+    var targetT = 0;
+    var currentT = 0;
+    var rafId = null;
+
+    function computeTarget() {
+      var rect = section.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var DELAY = 0.55;
+      var raw = (1 - rect.top / vh - DELAY) / (1 - DELAY);
+      if (raw < 0) raw = 0;
+      if (raw > 1) raw = 1;
+      targetT = easeOutCubic(raw);
+      if (rafId == null) rafId = requestAnimationFrame(tick);
+    }
+
+    function apply(t) {
+      var inv = 1 - t;
+      for (var i = 0; i < photos.length; i++) {
+        var c = configs[i];
+        var tx  = c.sx  * inv;
+        var ty  = c.sy  * inv;
+        var sc  = c.ssc * inv + 1 * t;
+        var rot = c.srot * inv + c.erot * t;
+        photos[i].style.transform =
+          'translate(' + tx.toFixed(2) + '%, ' + ty.toFixed(2) + '%) ' +
+          'rotate(' + rot.toFixed(2) + 'deg) scale(' + sc.toFixed(3) + ')';
+      }
+    }
+
+    function tick() {
+      // Lerp: factor bajo = animación más lenta/suave.
+      var diff = targetT - currentT;
+      if (Math.abs(diff) < 0.0005) {
+        currentT = targetT;
+        apply(currentT);
+        rafId = null;
+        return;
+      }
+      currentT += diff * 0.06;
+      apply(currentT);
+      rafId = requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('scroll', computeTarget, { passive: true });
+    window.addEventListener('resize', computeTarget, { passive: true });
+    computeTarget();
+  })();
+</script>
+
+<!-- LADO QUE CRECE — SCROLL PROGRESS DRIVER
+     Lee el progreso de la .section-lado en el viewport (0..1 a lo largo
+     de los ~400vh de scroll) y:
+       - escribe --lado-progress en el stage para el rail y parallax CSS,
+       - calcula el índice de frase activa (0..3) y aplica .is-active /
+         .is-past a cada .lado-phrase,
+       - actualiza el counter 01..04 con micro-flip animado (clase).
+     rAF + lerp: el scroll puede llegar en saltos (snap), el lerp suaviza. -->
+<script>
+  (function initLadoReveal() {
+    var section = document.getElementById('lado');
+    if (!section) return;
+    var stage = section.querySelector('.lado-stage');
+    var phrases = section.querySelectorAll('.lado-phrase');
+    var counter = section.querySelector('.lado-counter-now');
+    var video = section.querySelector('.lado-bg');
+    if (!stage || !phrases.length) return;
+    var N = phrases.length;
+
+    // Vídeo scroll-scrubbed: NO autoplay. currentTime se mapea al
+    // progreso scroll de la sección (0..1 → 0..duration). Así, quieto
+    // es estático (primer frame), pero al scrollear avanza frame a
+    // frame mostrando la transición día→noche.
+    // Safari iOS requiere un play()+pause() inicial para desbloquear
+    // el decoder y permitir seeks suaves — el primer frame queda visible.
+    var videoReady = false;
+    var videoDur = 0;
+    if (video) {
+      var unlock = function() {
+        try {
+          var p = video.play();
+          if (p && p.then) {
+            p.then(function() { video.pause(); }).catch(function() {});
+          } else {
+            video.pause();
+          }
+        } catch (e) {}
+      };
+      var onReady = function() {
+        if (!isFinite(video.duration)) return;
+        videoDur = video.duration;
+        videoReady = true;
+        unlock();
+        applyVideo(currentT);
+      };
+      if (video.readyState >= 1 && isFinite(video.duration)) {
+        onReady();
+      } else {
+        video.addEventListener('loadedmetadata', onReady, { once: true });
+      }
+    }
+
+    function applyVideo(t) {
+      if (!videoReady || !video) return;
+      // Invertido: progreso 0 → fin del vídeo (noche); progreso 1 →
+      // inicio (día). Al scrollear la sección, el pueblo amanece.
+      var target = (1 - t) * videoDur;
+      if (Math.abs(video.currentTime - target) > 0.03) {
+        try { video.currentTime = target; } catch (e) {}
+      }
+    }
+
+    // Marca el stage con .is-visible cuando entra (reutilizamos clase
+    // para el delay de primera frase). IntersectionObserver separado
+    // del de .reveal porque aquí observamos el contenedor, no un reveal.
+    if ('IntersectionObserver' in window) {
+      var visObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            stage.classList.add('is-visible');
+            visObs.unobserve(stage);
+          }
+        });
+      }, { threshold: 0.1 });
+      visObs.observe(stage);
+    } else {
+      stage.classList.add('is-visible');
+    }
+
+    var rafId = null, targetT = 0, currentT = 0, lastIdx = -1;
+
+    function computeTarget() {
+      var rect = section.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      // Total scrollable = altura total - viewport. Fuera de ese rango
+      // el progreso se clampa a 0 o 1.
+      var total = rect.height - vh;
+      if (total <= 0) { targetT = 0; }
+      else {
+        var raw = (-rect.top) / total;
+        if (raw < 0) raw = 0;
+        if (raw > 1) raw = 1;
+        targetT = raw;
+      }
+      if (rafId == null) rafId = requestAnimationFrame(tick);
+    }
+
+    function apply(t) {
+      stage.style.setProperty('--lado-progress', t.toFixed(4));
+      applyVideo(t);
+      // Índice de frase activa: divide el progreso en N bandas iguales.
+      // El clamp al final evita índice N cuando t === 1 exacto.
+      var idx = Math.floor(t * N);
+      if (idx >= N) idx = N - 1;
+      if (idx < 0) idx = 0;
+
+      for (var i = 0; i < N; i++) {
+        var el = phrases[i];
+        if (i === idx) {
+          el.classList.add('is-active');
+          el.classList.remove('is-past');
+        } else if (i < idx) {
+          el.classList.remove('is-active');
+          el.classList.add('is-past');
+        } else {
+          el.classList.remove('is-active', 'is-past');
+        }
+      }
+
+      if (counter && idx !== lastIdx) {
+        var label = (idx + 1) < 10 ? '0' + (idx + 1) : '' + (idx + 1);
+        counter.textContent = label;
+        // Re-trigger animación: quitar y añadir clase en el siguiente frame.
+        counter.style.animation = 'none';
+        // eslint-disable-next-line no-unused-expressions
+        counter.offsetHeight; // force reflow para reiniciar animación CSS
+        counter.style.animation = '';
+        lastIdx = idx;
+      }
+    }
+
+    function tick() {
+      var diff = targetT - currentT;
+      if (Math.abs(diff) < 0.0005) {
+        currentT = targetT;
+        apply(currentT);
+        rafId = null;
+        return;
+      }
+      currentT += diff * 0.10;
+      apply(currentT);
+      rafId = requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('scroll', computeTarget, { passive: true });
+    window.addEventListener('resize', computeTarget, { passive: true });
+    computeTarget();
+  })();
+</script>
+
+<!-- SCROLL REVEAL
+     IntersectionObserver añade .is-visible a cada .reveal y .reveal-swash
+     cuando entran en el viewport (20% visible). Una vez visible, se
+     desconecta para no volver a ocultar al hacer scroll arriba. -->
+<script>
+  (function initScrollReveal() {
+    var reveals = document.querySelectorAll('.reveal, .reveal-swash');
+    if (!reveals.length) return;
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.2,
+      rootMargin: '0px 0px -60px 0px'
+    });
+
+    reveals.forEach(function(el) {
+      observer.observe(el);
+    });
+  })();
+</script>
+
+<script>
+// Marquee Sección IX: rAF (override de las keyframes CSS)
+(function () {
+  var leftEl  = document.querySelector('.marquee-left');
+  var rightEl = document.querySelector('.marquee-right');
+  if (!leftEl || !rightEl) return;
+
+  var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return;
+
+  [leftEl, rightEl].forEach(function (el) {
+    el.style.animation = 'none';
+    el.style.webkitAnimation = 'none';
+  });
+
+  var leftPos = 0, rightPos = 0;
+  var SPEED = 0.25;
+
+  function step() {
+    var lHalf = leftEl.scrollWidth  / 2;
+    var rHalf = rightEl.scrollWidth / 2;
+    leftPos -= SPEED;
+    if (leftPos <= -lHalf) leftPos += lHalf;
+    rightPos += SPEED;
+    if (rightPos >= 0) rightPos -= rHalf;
+    leftEl.style.transform  = 'translateX(' + leftPos  + 'px)';
+    rightEl.style.transform = 'translateX(' + rightPos + 'px)';
+    requestAnimationFrame(step);
+  }
+
+  function init() {
+    rightPos = -(rightEl.scrollWidth / 2);
+    requestAnimationFrame(step);
+  }
+
+  if (document.readyState === 'complete') init();
+  else window.addEventListener('load', init);
+})();
+</script>
+
+<!-- ===== ANALYTICS TRACKING =====
+     Replica el comportamiento de contexts/analytics-provider.tsx pero en
+     vanilla JS, para que esta landing (servida como HTML estático) emita
+     los mismos eventos (page_view, scroll_depth, click, session_end) al
+     endpoint /api/track. También reescribe los botones de Stripe para
+     incluir client_reference_id = analytics_session_id, que el webhook
+     usa como fallback para atribuir la compra a la sesión. -->
+<script>
+(function () {
+  var SESSION_KEY = 'analytics_session_id';
+  var SESSION_TS_KEY = 'analytics_session_ts';
+  var SESSION_TTL_MS = 30 * 60 * 1000; // 30 min
+  var PAGE = '/prompts2';
+  var ENDPOINT = '/api/track';
+
+  function uuid() {
+    if (window.crypto && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    // Fallback RFC4122 v4
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (Math.random() * 16) | 0;
+      var v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+
+  function getOrCreateSession() {
+    try {
+      var now = Date.now();
+      var existing = localStorage.getItem(SESSION_KEY);
+      var ts = Number(localStorage.getItem(SESSION_TS_KEY) || 0);
+      if (existing && now - ts < SESSION_TTL_MS) {
+        localStorage.setItem(SESSION_TS_KEY, String(now));
+        return existing;
+      }
+      var id = uuid();
+      localStorage.setItem(SESSION_KEY, id);
+      localStorage.setItem(SESSION_TS_KEY, String(now));
+      return id;
+    } catch (e) {
+      return uuid();
+    }
+  }
+
+  function getUtms() {
+    var params = new URLSearchParams(window.location.search);
+    return {
+      utmSource: params.get('utm_source') || undefined,
+      utmMedium: params.get('utm_medium') || undefined,
+      utmCampaign: params.get('utm_campaign') || undefined,
+      utmContent: params.get('utm_content') || undefined,
+      utmTerm: params.get('utm_term') || undefined,
+    };
+  }
+
+  var sessionId = getOrCreateSession();
+  var milestonesHit = {};
+  var maxScroll = 0;
+
+  function send(payload, viaBeacon) {
+    if (!payload.sessionId) return;
+    try {
+      var body = JSON.stringify(payload);
+      if (viaBeacon && navigator.sendBeacon) {
+        navigator.sendBeacon(ENDPOINT, body);
+      } else {
+        fetch(ENDPOINT, { method: 'POST', body: body, keepalive: true }).catch(function () {});
+      }
+      try { localStorage.setItem(SESSION_TS_KEY, String(Date.now())); } catch (e) {}
+    } catch (e) {}
+  }
+
+  // 1) page_view inicial con datos de sesión
+  var utms = getUtms();
+  send({
+    sessionId: sessionId,
+    eventType: 'page_view',
+    page: PAGE,
+    landingPage: PAGE,
+    referrer: document.referrer || undefined,
+    utmSource: utms.utmSource,
+    utmMedium: utms.utmMedium,
+    utmCampaign: utms.utmCampaign,
+    utmContent: utms.utmContent,
+    utmTerm: utms.utmTerm,
+  });
+
+  // 2) Stripe href rewrite: añadir client_reference_id sin romper params existentes
+  function rewriteStripeLinks() {
+    var links = document.querySelectorAll('a[href^="https://buy.stripe.com/"]');
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i];
+      try {
+        var url = new URL(a.href);
+        if (!url.searchParams.get('client_reference_id')) {
+          url.searchParams.set('client_reference_id', sessionId);
+          a.href = url.toString();
+        }
+      } catch (e) {}
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', rewriteStripeLinks);
+  } else {
+    rewriteStripeLinks();
+  }
+
+  // 3) scroll_depth milestones
+  var MILESTONES = [25, 50, 75, 90, 100];
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      var scrolled = window.scrollY + window.innerHeight;
+      var total = document.documentElement.scrollHeight;
+      if (total <= 0) return;
+      var pct = Math.round((scrolled / total) * 100);
+      if (pct > maxScroll) maxScroll = pct;
+      for (var i = 0; i < MILESTONES.length; i++) {
+        var m = MILESTONES[i];
+        if (pct >= m && !milestonesHit[m]) {
+          milestonesHit[m] = true;
+          send({
+            sessionId: sessionId,
+            eventType: 'scroll_depth',
+            page: PAGE,
+            properties: { depth: m },
+          });
+        }
+      }
+    });
+  }, { passive: true });
+
+  // 4) click tracking via event delegation
+  document.addEventListener('click', function (e) {
+    var target = e.target;
+    if (!target || !target.closest) return;
+    var el = target.closest('a, button, [data-track]');
+    if (!el) return;
+    var text = (el.textContent || '').trim().slice(0, 100);
+    send({
+      sessionId: sessionId,
+      eventType: 'click',
+      page: PAGE,
+      properties: {
+        tag: el.tagName.toLowerCase(),
+        text: text,
+        href: el.tagName === 'A' ? el.href : undefined,
+        id: el.id || undefined,
+        dataTrack: el.dataset ? el.dataset.track : undefined,
+      },
+    });
+  }, true);
+
+  // 5) session_end via beforeunload + sendBeacon
+  window.addEventListener('beforeunload', function () {
+    send({
+      sessionId: sessionId,
+      eventType: 'session_end',
+      page: PAGE,
+      properties: { maxScroll: maxScroll },
+    }, true);
+  });
+})();
+</script>
+
+</body>
+</html>

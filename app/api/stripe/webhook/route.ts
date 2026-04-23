@@ -40,8 +40,13 @@ export async function POST(req: Request) {
       return new Response("No email found", { status: 200 })
     }
 
-    // Track purchase in analytics
-    const analyticsSessionId = session.metadata?.analytics_session_id ?? null
+    // Track purchase in analytics. client_reference_id is used as fallback
+    // so pre-built Stripe Payment Links (que no permiten inyectar metadata
+    // desde el cliente) igual puedan atribuir la compra a la sesión.
+    const analyticsSessionId =
+      session.metadata?.analytics_session_id ??
+      session.client_reference_id ??
+      null
     const amountTotal = session.amount_total ? session.amount_total / 100 : null
     await trackServerEvent(analyticsSessionId, 'purchase', '/', {
       email,
@@ -57,6 +62,12 @@ export async function POST(req: Request) {
       // Email 2: tripwire - upsell sesión 1:1
       await sendTripwireEmail(email, name ?? "")
       console.log(`Tripwire email sent to ${email}`)
+    } else if (product === "prompts_111_v2") {
+      // 111 Originale (nueva landing /prompts2, nuevo diseño de producto)
+      await sendOriginaleEmail(email, name ?? "")
+      console.log(`Originale email sent to ${email}`)
+      await sendOriginaleTripwireEmail(email, name ?? "")
+      console.log(`Originale tripwire email sent to ${email}`)
     } else if (product === "one_to_one") {
       // Email de confirmación de la sesión 1:1
       await sendOneToOneConfirmationEmail(email, name ?? "")
@@ -891,5 +902,216 @@ Un saludo,
 Javi
 
 ¿Dudas? Escríbenos a contact@javiggil.com
+  `.trim()
+}
+
+// ===== 111 Originale (producto rediseñado — /prompts2) =====
+// Paleta y tono editorial nuevos: cream #FAF5EB, dark #4B0A23, red #FE4629,
+// Playfair Display para titulares, DM Sans para texto.
+
+async function sendOriginaleEmail(email: string, name: string) {
+  // Si los archivos nuevos del producto no están subidos a
+  // public/prompts2/product/ todavía, caemos a los actuales para no romper
+  // el envío. El usuario reemplazará los paths cuando los tenga listos.
+  const newHtmlPath = path.join(process.cwd(), "public/prompts2/product/111-Originale.html")
+  const newPdfPath = path.join(process.cwd(), "public/prompts2/product/111-Originale.pdf")
+  const legacyHtmlPath = path.join(process.cwd(), "public/prompts/111_originale.html")
+  const legacyPdfPath = path.join(process.cwd(), "public/prompts/111Originale-JaviGil.pdf")
+
+  const htmlFilePath = fs.existsSync(newHtmlPath) ? newHtmlPath : legacyHtmlPath
+  const pdfFilePath = fs.existsSync(newPdfPath) ? newPdfPath : legacyPdfPath
+
+  const htmlContent = fs.readFileSync(htmlFilePath)
+  const pdfContent = fs.readFileSync(pdfFilePath)
+
+  const greeting = name ? `Hola ${name},` : "Hola,"
+
+  await resend.emails.send({
+    from: "Javi Gil <contact@javiggil.com>",
+    to: [email],
+    subject: "111 Originale está dentro",
+    attachments: [
+      { filename: "111-Originale.html", content: htmlContent },
+      { filename: "111-Originale.pdf", content: pdfContent },
+    ],
+    html: buildOriginaleEmailHtml(greeting),
+    text: buildOriginaleEmailText(greeting),
+  })
+}
+
+function buildOriginaleEmailHtml(greeting: string) {
+  return `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>111 Originale está dentro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;padding:0;background:#FAF5EB;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;color:#4B0A23;line-height:1.65;">
+  <div style="max-width:560px;margin:0 auto;padding:48px 28px;">
+
+    <div style="text-align:center;margin-bottom:36px;">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8B7355;margin:0;">Ciento once piezas</p>
+      <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:36px;line-height:1.15;color:#4B0A23;margin:16px 0 0;">111 Originale<br/><span style="font-style:italic;color:#FE4629;">ya está dentro.</span></h1>
+    </div>
+
+    <p style="font-size:16px;margin:0 0 18px;">${greeting}</p>
+
+    <p style="font-size:16px;margin:0 0 18px;">Gracias por confiar. Aquí tienes tu acceso a 111 Originale, el sistema completo. Llega en dos formatos adjuntos a este email:</p>
+
+    <div style="border-left:2px solid #FE4629;padding:4px 0 4px 18px;margin:0 0 24px;">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:17px;color:#4B0A23;margin:0;">No es un curso. Es una arquitectura.</p>
+    </div>
+
+    <div style="background:#F3EBD9;border:1px solid rgba(75,10,35,0.08);border-radius:4px;padding:22px 24px;margin:0 0 28px;">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#FE4629;margin:0 0 14px;">Aviso importante</p>
+      <p style="font-size:14.5px;margin:0;"><strong style="color:#4B0A23;">Revisa la carpeta de spam si no lo ves en bandeja de entrada.</strong> Ábrelo, márcalo como "no es spam" y ya lo tendrás siempre a mano.</p>
+    </div>
+
+    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:22px;color:#4B0A23;margin:32px 0 18px;">Cómo abrirlo</h2>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 14px;">
+      <tr>
+        <td style="width:28px;vertical-align:top;padding-top:2px;"><span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#FE4629;color:#FAF5EB;font-size:13px;font-weight:700;">1</span></td>
+        <td style="padding-left:14px;"><p style="font-size:15px;margin:0;"><strong>El archivo .html</strong> es la forma principal. Descárgalo, ábrelo en tu navegador (Chrome, Safari, Firefox) y tendrás la arquitectura entera, navegable, lista para usar.</p></td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 14px;">
+      <tr>
+        <td style="width:28px;vertical-align:top;padding-top:2px;"><span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#FE4629;color:#FAF5EB;font-size:13px;font-weight:700;">2</span></td>
+        <td style="padding-left:14px;"><p style="font-size:15px;margin:0;"><strong>En iPhone</strong>, Vista Previa funciona pero a veces falla al copiar. Si te pasa, ábrelo en un ordenador.</p></td>
+      </tr>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 28px;">
+      <tr>
+        <td style="width:28px;vertical-align:top;padding-top:2px;"><span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#FE4629;color:#FAF5EB;font-size:13px;font-weight:700;">3</span></td>
+        <td style="padding-left:14px;"><p style="font-size:15px;margin:0;"><strong>El PDF adjunto</strong> es tu respaldo. Lee y copia desde ahí si prefieres.</p></td>
+      </tr>
+    </table>
+
+    <div style="border-top:1px solid rgba(75,10,35,0.12);padding-top:24px;margin:32px 0 0;">
+      <p style="font-size:14.5px;margin:0 0 12px;">Pago único. Acceso para siempre. Las actualizaciones futuras del sistema también te llegan sin coste.</p>
+      <p style="font-size:14.5px;margin:0;">Si algo no llega o no abre, contesta a este email o escribe a <a href="mailto:contact@javiggil.com" style="color:#FE4629;text-decoration:none;">contact@javiggil.com</a> y lo resolvemos.</p>
+    </div>
+
+    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:15px;color:#8B7355;margin:36px 0 0;text-align:center;">— Javi</p>
+
+  </div>
+</body>
+</html>
+  `.trim()
+}
+
+function buildOriginaleEmailText(greeting: string) {
+  return `
+${greeting}
+
+Gracias por confiar. Aquí tienes tu acceso a 111 Originale, el sistema completo. Llega en dos formatos adjuntos:
+
+No es un curso. Es una arquitectura.
+
+IMPORTANTE: Revisa la carpeta de spam si no lo ves en bandeja de entrada. Márcalo como "no es spam" para tenerlo siempre a mano.
+
+CÓMO ABRIRLO
+
+1. El archivo .html es la forma principal. Descárgalo, ábrelo en tu navegador (Chrome, Safari, Firefox) y tendrás la arquitectura entera, navegable.
+
+2. En iPhone, Vista Previa funciona pero a veces falla al copiar. Si te pasa, ábrelo en un ordenador.
+
+3. El PDF adjunto es tu respaldo. Lee y copia desde ahí si prefieres.
+
+Pago único. Acceso para siempre. Las actualizaciones futuras del sistema también te llegan sin coste.
+
+Si algo no llega o no abre, contesta a este email o escribe a contact@javiggil.com.
+
+— Javi
+  `.trim()
+}
+
+async function sendOriginaleTripwireEmail(email: string, name: string) {
+  const greeting = name ? `Hola ${name},` : "Hola,"
+  const ONE_TO_ONE_URL = "https://buy.stripe.com/7sY7sDdxbaly02C4SL9EI04"
+
+  await resend.emails.send({
+    from: "Javi Gil <contact@javiggil.com>",
+    to: [email],
+    subject: "Una cosa más",
+    html: buildOriginaleTripwireEmailHtml(greeting, ONE_TO_ONE_URL),
+    text: buildOriginaleTripwireEmailText(greeting, ONE_TO_ONE_URL),
+  })
+}
+
+function buildOriginaleTripwireEmailHtml(greeting: string, url: string) {
+  return `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una cosa más</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;padding:0;background:#FAF5EB;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;color:#4B0A23;line-height:1.65;">
+  <div style="max-width:560px;margin:0 auto;padding:48px 28px;">
+
+    <div style="text-align:center;margin-bottom:30px;">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8B7355;margin:0;">Antes de cerrar</p>
+      <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:32px;line-height:1.2;color:#4B0A23;margin:14px 0 0;">Una cosa <span style="font-style:italic;color:#FE4629;">más</span>.</h1>
+    </div>
+
+    <p style="font-size:16px;margin:0 0 18px;">${greeting}</p>
+
+    <p style="font-size:16px;margin:0 0 16px;">El sistema está diseñado para que funcione por ti solo. La mayoría de gente llega lejos sin ayuda. Pero hay un atajo.</p>
+
+    <p style="font-size:16px;margin:0 0 16px;">Una sesión 1:1 conmigo. 45 minutos. Miramos tu caso real — negocio, rol, cuello de botella específico — y diseñamos cómo aplicar 111 Originale a tu situación. Sin plantillas genéricas.</p>
+
+    <div style="background:#F3EBD9;border:1px solid rgba(75,10,35,0.08);border-radius:4px;padding:22px 24px;margin:24px 0;">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:17px;color:#4B0A23;margin:0 0 10px;">Solo para quien ya ha comprado.</p>
+      <p style="font-size:14.5px;margin:0;">Usa el código <strong style="font-family:'JetBrains Mono',monospace;background:#4B0A23;color:#FAF5EB;padding:2px 8px;border-radius:3px;">MISTERY</strong> en el checkout. Descuento aplicado.</p>
+    </div>
+
+    <div style="text-align:center;margin:32px 0 24px;">
+      <a href="${url}" style="display:inline-block;background:#FE4629;color:#FAF5EB;padding:16px 36px;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;border-radius:2px;">Reservar mi sesión →</a>
+    </div>
+
+    <p style="font-size:14.5px;color:#8B7355;margin:0 0 24px;text-align:center;">Si prefieres, primero mira mi calendario: <a href="https://calendar.app.google/JCXhGkyfqKp1ekRq5" style="color:#FE4629;text-decoration:none;">calendar.app.google/JCXhGkyfqKp1ekRq5</a></p>
+
+    <div style="border-top:1px solid rgba(75,10,35,0.12);padding-top:20px;margin:24px 0 0;">
+      <p style="font-size:14px;color:#8B7355;margin:0;">Si no te interesa, ignora este email y disfruta de 111 Originale. Lo tienes todo dentro.</p>
+    </div>
+
+    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:15px;color:#8B7355;margin:30px 0 0;text-align:center;">— Javi</p>
+
+  </div>
+</body>
+</html>
+  `.trim()
+}
+
+function buildOriginaleTripwireEmailText(greeting: string, url: string) {
+  return `
+${greeting}
+
+El sistema está diseñado para que funcione por ti solo. La mayoría de gente llega lejos sin ayuda. Pero hay un atajo.
+
+Una sesión 1:1 conmigo. 45 minutos. Miramos tu caso real — negocio, rol, cuello de botella específico — y diseñamos cómo aplicar 111 Originale a tu situación. Sin plantillas genéricas.
+
+Solo para quien ya ha comprado. Usa el código MISTERY en el checkout.
+
+Reserva aquí: ${url}
+
+Mira mi calendario antes si quieres: https://calendar.app.google/JCXhGkyfqKp1ekRq5
+
+Si no te interesa, ignora este email y disfruta de 111 Originale. Lo tienes todo dentro.
+
+— Javi
   `.trim()
 }

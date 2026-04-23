@@ -10,6 +10,10 @@ const nextConfig = {
           missing: [{ type: 'query', key: 'r' }],
           destination: '/prompts/111_originale_venta.html',
         },
+        {
+          source: '/prompts2',
+          destination: '/prompts2/index.html',
+        },
       ],
       afterFiles: [],
       fallback: [],
