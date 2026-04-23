@@ -33,12 +33,12 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
         <!DOCTYPE html>
         <html>
           <head><meta charset="utf-8"><style>
-            body { font-family: -apple-system, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #4B0A23 0%, #8B1538 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; text-align: center; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .field { margin-bottom: 16px; background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #FE4629; }
+            body { font-family: -apple-system, sans-serif; line-height: 1.6; color: #4B0A23; max-width: 600px; margin: 0 auto; padding: 20px; background: #FAF5EB; }
+            .header { background: #4B0A23; color: #FAF5EB; padding: 30px; border-radius: 10px 10px 0 0; text-align: center; }
+            .content { background: #FAF5EB; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid rgba(75,10,35,0.08); border-top: 0; }
+            .field { margin-bottom: 16px; background: #ffffff; padding: 15px; border-radius: 8px; border-left: 4px solid #FE4629; }
             .label { font-weight: 600; color: #4B0A23; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-            .value { color: #333; font-size: 16px; }
+            .value { color: #4B0A23; font-size: 16px; }
           </style></head>
           <body>
             <div class="header"><h1 style="margin:0;font-size:22px;">Nueva pre-reserva - The AI Playbook</h1></div>
@@ -66,12 +66,12 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
         <!DOCTYPE html>
         <html>
           <head><meta charset="utf-8"><style>
-            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #222; max-width: 600px; margin: 0 auto; padding: 0; background: #ffffff; }
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #4B0A23; max-width: 600px; margin: 0 auto; padding: 0; background: #FAF5EB; }
             .wrapper { padding: 40px 32px; }
             p { margin: 0 0 20px; font-size: 16px; }
             .cta-block { margin: 32px 0; }
-            .cta-btn { display: inline-block; background: #FE4629; color: #ffffff !important; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; }
-            .footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid #eee; color: #888; font-size: 14px; }
+            .cta-btn { display: inline-block; background: #FE4629; color: #FAF5EB !important; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; }
+            .footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(75,10,35,0.12); color: rgba(75,10,35,0.55); font-size: 14px; }
           </style></head>
           <body>
             <div class="wrapper">
@@ -86,7 +86,7 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
               </div>
               <p>Si prefieres saber más antes de decidir, no hagas nada. Mañana te cuento más.</p>
               <p>Un saludo,<br><strong>Javi</strong></p>
-              <p style="margin-top:8px;color:#666;font-size:14px;"><em>P.D.: El curso empieza próximamente. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.</em></p>
+              <p style="margin-top:8px;color:rgba(75,10,35,0.7);font-size:14px;"><em>P.D.: El curso empieza próximamente. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.</em></p>
               <div class="footer">The AI Playbook · contact@javiggil.com</div>
             </div>
           </body>
@@ -173,14 +173,15 @@ export async function sendFormEmail(formData: FormData) {
               body {
                 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 line-height: 1.6;
-                color: #333;
+                color: #4B0A23;
                 max-width: 600px;
                 margin: 0 auto;
                 padding: 20px;
+                background: #FAF5EB;
               }
               .header {
-                background: linear-gradient(135deg, #4B0A23 0%, #8B1538 100%);
-                color: white;
+                background: #4B0A23;
+                color: #FAF5EB;
                 padding: 30px;
                 border-radius: 10px 10px 0 0;
                 text-align: center;
@@ -190,13 +191,15 @@ export async function sendFormEmail(formData: FormData) {
                 font-size: 24px;
               }
               .content {
-                background: #f9f9f9;
+                background: #FAF5EB;
                 padding: 30px;
                 border-radius: 0 0 10px 10px;
+                border: 1px solid rgba(75,10,35,0.08);
+                border-top: 0;
               }
               .field {
                 margin-bottom: 20px;
-                background: white;
+                background: #ffffff;
                 padding: 15px;
                 border-radius: 8px;
                 border-left: 4px solid #FE4629;
@@ -210,13 +213,13 @@ export async function sendFormEmail(formData: FormData) {
                 margin-bottom: 5px;
               }
               .value {
-                color: #333;
+                color: #4B0A23;
                 font-size: 16px;
               }
               .footer {
                 text-align: center;
                 margin-top: 20px;
-                color: #666;
+                color: rgba(75,10,35,0.55);
                 font-size: 14px;
               }
             </style>

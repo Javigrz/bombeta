@@ -430,11 +430,17 @@ body {
     opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s),
     transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s);
   will-change: opacity, transform;
+  /* Mientras está oculto NO debe capturar clicks. Antes pasaba: si el
+     IntersectionObserver se retrasaba (Safari iOS + scroll-snap), el
+     botón quedaba invisible pero clickable, desplazado 30px hacia
+     abajo del lugar donde el usuario espera verlo → clicks fantasma. */
+  pointer-events: none;
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
   /* Libera la capa GPU tras la animación. Si se queda en will-change
      permanentemente el compositor puede pintar un halo ~1px en los edges
      con alpha (Safari/WebKit): el "borde negro intermitente" alrededor
@@ -3596,7 +3602,7 @@ body {
       no es un cambio. Es el cambio con <em>IA</em> que se mantiene.
     </h2>
 
-    <a class="cta-button reveal" style="--reveal-delay: 0.4s"
+    <a class="cta-button"
        href="https://buy.stripe.com/cNi5kv2Sx2T616G70T9EI05?prefilled_promo_code=EARLY"
        target="_blank" rel="noopener">
       <span class="cta-button-label">Acceder a 111 Originale</span>
@@ -4542,6 +4548,19 @@ body {
     reveals.forEach(function(el) {
       observer.observe(el);
     });
+
+    // Fallback: si tras 2.5s un .reveal sigue sin disparar (Safari iOS +
+    // scroll-snap puede saltarse intersecciones rápidas), forzamos
+    // .is-visible. Sin esto, elementos interactivos (botones, FAQ) podrían
+    // quedar invisibles y no clickables.
+    setTimeout(function () {
+      reveals.forEach(function (el) {
+        if (!el.classList.contains('is-visible')) {
+          el.classList.add('is-visible');
+          observer.unobserve(el);
+        }
+      });
+    }, 2500);
   })();
 </script>
 

@@ -955,7 +955,7 @@ function buildOriginaleEmailHtml(greeting: string) {
   <div style="max-width:560px;margin:0 auto;padding:48px 28px;">
 
     <div style="text-align:center;margin-bottom:36px;">
-      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8B7355;margin:0;">Ciento once piezas</p>
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(75,10,35,0.55);margin:0;">Ciento once piezas</p>
       <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:36px;line-height:1.15;color:#4B0A23;margin:16px 0 0;">111 Originale<br/><span style="font-style:italic;color:#FE4629;">ya está dentro.</span></h1>
     </div>
 
@@ -996,11 +996,11 @@ function buildOriginaleEmailHtml(greeting: string) {
     </table>
 
     <div style="border-top:1px solid rgba(75,10,35,0.12);padding-top:24px;margin:32px 0 0;">
-      <p style="font-size:14.5px;margin:0 0 12px;">Pago único. Acceso para siempre. Las actualizaciones futuras del sistema también te llegan sin coste.</p>
+      <p style="font-size:14.5px;margin:0 0 12px;">Pago único. Acceso para siempre.</p>
       <p style="font-size:14.5px;margin:0;">Si algo no llega o no abre, contesta a este email o escribe a <a href="mailto:contact@javiggil.com" style="color:#FE4629;text-decoration:none;">contact@javiggil.com</a> y lo resolvemos.</p>
     </div>
 
-    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:15px;color:#8B7355;margin:36px 0 0;text-align:center;">— Javi</p>
+    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:15px;color:rgba(75,10,35,0.55);margin:36px 0 0;text-align:center;">— Javi</p>
 
   </div>
 </body>
@@ -1026,7 +1026,7 @@ CÓMO ABRIRLO
 
 3. El PDF adjunto es tu respaldo. Lee y copia desde ahí si prefieres.
 
-Pago único. Acceso para siempre. Las actualizaciones futuras del sistema también te llegan sin coste.
+Pago único. Acceso para siempre.
 
 Si algo no llega o no abre, contesta a este email o escribe a contact@javiggil.com.
 
@@ -1063,7 +1063,7 @@ function buildOriginaleTripwireEmailHtml(greeting: string, url: string) {
   <div style="max-width:560px;margin:0 auto;padding:48px 28px;">
 
     <div style="text-align:center;margin-bottom:30px;">
-      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8B7355;margin:0;">Antes de cerrar</p>
+      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(75,10,35,0.55);margin:0;">Antes de cerrar</p>
       <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:32px;line-height:1.2;color:#4B0A23;margin:14px 0 0;">Una cosa <span style="font-style:italic;color:#FE4629;">más</span>.</h1>
     </div>
 
@@ -1071,7 +1071,7 @@ function buildOriginaleTripwireEmailHtml(greeting: string, url: string) {
 
     <p style="font-size:16px;margin:0 0 16px;">El sistema está diseñado para que funcione por ti solo. La mayoría de gente llega lejos sin ayuda. Pero hay un atajo.</p>
 
-    <p style="font-size:16px;margin:0 0 16px;">Una sesión 1:1 conmigo. 45 minutos. Miramos tu caso real — negocio, rol, cuello de botella específico — y diseñamos cómo aplicar 111 Originale a tu situación. Sin plantillas genéricas.</p>
+    <p style="font-size:16px;margin:0 0 16px;">Una sesión 1:1 conmigo. 1 hora. Miramos tu caso real — negocio, rol, cuello de botella específico — y diseñamos cómo aplicar 111 Originale a tu situación. Sin plantillas genéricas.</p>
 
     <div style="background:#F3EBD9;border:1px solid rgba(75,10,35,0.08);border-radius:4px;padding:22px 24px;margin:24px 0;">
       <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:17px;color:#4B0A23;margin:0 0 10px;">Solo para quien ya ha comprado.</p>
@@ -1082,13 +1082,13 @@ function buildOriginaleTripwireEmailHtml(greeting: string, url: string) {
       <a href="${url}" style="display:inline-block;background:#FE4629;color:#FAF5EB;padding:16px 36px;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;border-radius:2px;">Reservar mi sesión →</a>
     </div>
 
-    <p style="font-size:14.5px;color:#8B7355;margin:0 0 24px;text-align:center;">Si prefieres, primero mira mi calendario: <a href="https://calendar.app.google/JCXhGkyfqKp1ekRq5" style="color:#FE4629;text-decoration:none;">calendar.app.google/JCXhGkyfqKp1ekRq5</a></p>
+    <p style="font-size:14.5px;color:rgba(75,10,35,0.55);margin:0 0 24px;text-align:center;">Si prefieres, primero mira mi calendario: <a href="https://calendar.app.google/JCXhGkyfqKp1ekRq5" style="color:#FE4629;text-decoration:none;">calendar.app.google/JCXhGkyfqKp1ekRq5</a></p>
 
     <div style="border-top:1px solid rgba(75,10,35,0.12);padding-top:20px;margin:24px 0 0;">
-      <p style="font-size:14px;color:#8B7355;margin:0;">Si no te interesa, ignora este email y disfruta de 111 Originale. Lo tienes todo dentro.</p>
+      <p style="font-size:14px;color:rgba(75,10,35,0.55);margin:0;">Si no te interesa, ignora este email y disfruta de 111 Originale. Lo tienes todo dentro.</p>
     </div>
 
-    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:15px;color:#8B7355;margin:30px 0 0;text-align:center;">— Javi</p>
+    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:15px;color:rgba(75,10,35,0.55);margin:30px 0 0;text-align:center;">— Javi</p>
 
   </div>
 </body>
@@ -1102,7 +1102,7 @@ ${greeting}
 
 El sistema está diseñado para que funcione por ti solo. La mayoría de gente llega lejos sin ayuda. Pero hay un atajo.
 
-Una sesión 1:1 conmigo. 45 minutos. Miramos tu caso real — negocio, rol, cuello de botella específico — y diseñamos cómo aplicar 111 Originale a tu situación. Sin plantillas genéricas.
+Una sesión 1:1 conmigo. 1 hora. Miramos tu caso real — negocio, rol, cuello de botella específico — y diseñamos cómo aplicar 111 Originale a tu situación. Sin plantillas genéricas.
 
 Solo para quien ya ha comprado. Usa el código MISTERY en el checkout.
 

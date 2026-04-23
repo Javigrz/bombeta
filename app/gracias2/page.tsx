@@ -34,7 +34,7 @@ export default function Gracias2Page() {
         >
           {/* Overline */}
           <p
-            className="text-xs uppercase tracking-[0.25em] text-[#8B7355]"
+            className="text-xs uppercase tracking-[0.25em] text-[#4B0A23]/55"
             style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }}
           >
             Ciento once piezas
@@ -113,7 +113,7 @@ export default function Gracias2Page() {
             </Step>
 
             <div className="rounded border border-[#4B0A23]/10 bg-[#FAF5EB] px-5 py-4 mt-2">
-              <p className="text-xs text-[#8B7355] leading-relaxed">
+              <p className="text-xs text-[#4B0A23]/55 leading-relaxed">
                 ¿Sigue sin aparecer tras revisar spam? Escribe a{" "}
                 <a
                   href="mailto:contact@javiggil.com"
@@ -129,10 +129,10 @@ export default function Gracias2Page() {
           {/* Footer */}
           <div className="w-16 h-px bg-[#4B0A23]/15" />
           <p
-            className="text-sm italic text-[#8B7355]"
+            className="text-sm italic text-[#4B0A23]/55"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Un pago. Para siempre. Las actualizaciones también te llegan.
+            Un pago. Para siempre.
           </p>
         </div>
       </div>
