@@ -552,19 +552,41 @@ body {
   letter-spacing: -0.035em;
   color: var(--dark);
   margin: 0 0 clamp(56px, 8.5vh, 128px) 0;
-  padding: 0;
+  /* padding-top generoso para que los adornos superiores del Pinyon
+     swash-drop (bucle decorativo ~0.3em sobre cap-height) tengan
+     margen dentro del section padre con overflow:hidden. */
+  padding: 0.4em 0 0 0;
 }
 
 /* SWASH DROP CAP GIGANTE
    La H de Pinyon crece 1.4em relativa al título (que ya es masivo).
-   Sin line-height override porque el tamaño base ya es grande y no
-   fuerza altura extra. */
+
+   Pinyon Script tiene ink bounds (área real de tinta) superiores al
+   em-box: el bucle superior sobresale ~0.3em sobre cap-height y la
+   cola horizontal se extiende ~0.15em más allá del advance-width.
+   Sin protección, WebKit (Safari macOS/iOS) y Chrome mobile recortan
+   esa tinta — Desktop Chrome es más permisivo.
+
+   Remedios combinados:
+   - line-height 1.3 + padding-top 0.3em → espacio para el bucle arriba
+   - overflow: visible explícito → anula cualquier clip implícito
+   - position: relative + z-index: 2 → el glyph pinta sobre la letra
+     contigua, cuya advance-box se solapa con la cola del L
+   - margin-right 0.08em → empuja un pelín la letra siguiente para que
+     la cola del L tenga territorio propio
+   - letter-spacing: 0 → el letter-spacing negativo del .section-title
+     (-0.035em) no tira de la letra siguiente hacia la tinta del L */
 .section-title .swash-drop {
   font-size: 1.4em;
-  margin-right: 0.01em;
   margin-left: -0.03em;
+  margin-right: 0.08em;
   color: var(--dark);
-  line-height: 0.8;
+  line-height: 1.3;
+  padding-top: 0.3em;
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+  letter-spacing: 0;
 }
 
 /* CUERPO EN SERIF GRANDE
