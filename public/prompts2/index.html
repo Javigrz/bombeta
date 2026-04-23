@@ -455,6 +455,10 @@ body {
 .reveal-swash.is-visible {
   opacity: 1;
   transform: scale(1) translateY(0);
+  /* Soltar la capa GPU tras la animación: evita que el compositor
+     mantenga un layer con bounds = content-box que recorta la tinta
+     extra del Pinyon (cola horizontal del H/L). */
+  will-change: auto;
 }
 
 /* Las líneas del cierre entran con opacidad parcial extra */
@@ -579,10 +583,16 @@ body {
 .section-title .swash-drop {
   font-size: 1.4em;
   margin-left: -0.03em;
-  margin-right: 0.08em;
+  /* margin-right negativo compensa el padding-right → la letra
+     siguiente vuelve a su posición visual original */
+  margin-right: -0.35em;
   color: var(--dark);
   line-height: 1.3;
-  padding-top: 0.3em;
+  /* padding asimétrico = "territorio" dentro de la capa GPU para que
+     la tinta del Pinyon (cola a la derecha + bucle arriba) no sea
+     recortada al content-box cuando el elemento está en su propia
+     layer (creada por transform + will-change de .reveal-swash) */
+  padding: 0.35em 0.4em 0.1em 0.1em;
   overflow: visible;
   position: relative;
   z-index: 2;
