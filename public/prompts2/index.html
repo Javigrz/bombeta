@@ -32,17 +32,14 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html {
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-}
-
-body {
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 0;
+  overscroll-behavior-y: none;
 }
 
 .hero {
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
 }
 
 body {
@@ -521,7 +518,7 @@ body {
    Título gigante flush-left con swash Pinyon, cuerpo en serif,
    whitespace generoso. */
 .section-problema {
-  height: 100dvh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -530,7 +527,7 @@ body {
   text-align: left;
   border-top: 1px solid rgba(75, 10, 35, 0.06);
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   /* Clipa las fotos del photo-stack cuando están en estado explotado:
      solo deben verse dentro de la sección 2, nunca desbordando. */
   overflow: hidden;
@@ -866,6 +863,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+  }
   * {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
@@ -1120,7 +1120,7 @@ body {
 .section-lado .lado-anchor {
   height: 100svh;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   pointer-events: none;
 }
 
@@ -1457,7 +1457,7 @@ body {
   padding: var(--space-xl) clamp(28px, 4vw, 56px);
   text-align: left;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   position: relative;
   z-index: 10;
   overflow: hidden;
@@ -1707,7 +1707,7 @@ body {
   text-align: left;
   border-top: 1px solid rgba(75, 10, 35, 0.06);
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   position: relative;
   z-index: 10;
   overflow: hidden;
@@ -1904,7 +1904,7 @@ body {
   padding: clamp(72px, 10vh, 120px) clamp(28px, 4vw, 56px);
   text-align: center;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   position: relative;
   z-index: 10;
   overflow: hidden;
@@ -2040,7 +2040,7 @@ body {
   text-align: center;
   border-top: 1px solid rgba(75, 10, 35, 0.06);
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   position: relative;
   z-index: 10;
   overflow: hidden;
@@ -2294,7 +2294,7 @@ body {
   text-align: left;
   border-top: 1px solid rgba(75, 10, 35, 0.06);
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   position: relative;
   z-index: 10;
   overflow: hidden;
@@ -2500,7 +2500,7 @@ body {
   z-index: 10;
   overflow: hidden;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   border-top: 1px solid rgba(250, 245, 235, 0.06);
 }
 
@@ -3033,7 +3033,7 @@ body {
   z-index: 10;
   overflow: hidden;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   border-top: 1px solid rgba(75, 10, 35, 0.06);
 }
 
@@ -4069,6 +4069,33 @@ body {
      interfiere con scroll-snap-type. Los anchors a#hash usan el smooth
      scroll nativo vía html { scroll-behavior: smooth }. -->
 
+<!-- SCROLL DISPATCHER
+     Un único listener de scroll que dispara un solo rAF por frame y
+     llama a todos los suscriptores. Reemplaza los listeners
+     independientes de cada feature para reducir contención del main
+     thread durante el snap nativo de iOS. Uso: window.__addScroll(fn). -->
+<script>
+  (function initScrollDispatcher() {
+    var subs = [];
+    var ticking = false;
+    function flush() {
+      ticking = false;
+      for (var i = 0; i < subs.length; i++) {
+        try { subs[i](); } catch (e) {}
+      }
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(flush);
+    }
+    window.__addScroll = function (fn) {
+      if (typeof fn === 'function') subs.push(fn);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>
+
 <!-- NAV COLOR SWITCH
      Cuando el hero sale del viewport (menos de 10% visible),
      la nav cambia a colores oscuros para fondo claro. -->
@@ -4155,17 +4182,7 @@ body {
     const bottom = hero ? hero.querySelector('.hero-bottom') : null;
     if (!hero) return;
 
-    var ticking = false;
-
-    function onScroll() {
-      if (!ticking) {
-        requestAnimationFrame(update);
-        ticking = true;
-      }
-    }
-
     function update() {
-      ticking = false;
       var scrollY = window.scrollY || window.pageYOffset;
       var heroH = hero.offsetHeight;
       // progress 0 → 1 a medida que el hero sale del viewport
@@ -4195,7 +4212,8 @@ body {
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    if (window.__addScroll) window.__addScroll(update);
+    else window.addEventListener('scroll', update, { passive: true });
     update(); // estado inicial
   })();
 </script>
@@ -4344,7 +4362,8 @@ body {
       rafId = requestAnimationFrame(tick);
     }
 
-    window.addEventListener('scroll', computeTarget, { passive: true });
+    if (window.__addScroll) window.__addScroll(computeTarget);
+    else window.addEventListener('scroll', computeTarget, { passive: true });
     window.addEventListener('resize', computeTarget, { passive: true });
     computeTarget();
   })();
@@ -4494,7 +4513,8 @@ body {
       rafId = requestAnimationFrame(tick);
     }
 
-    window.addEventListener('scroll', computeTarget, { passive: true });
+    if (window.__addScroll) window.__addScroll(computeTarget);
+    else window.addEventListener('scroll', computeTarget, { passive: true });
     window.addEventListener('resize', computeTarget, { passive: true });
     computeTarget();
   })();
@@ -4677,31 +4697,27 @@ body {
 
   // 3) scroll_depth milestones
   var MILESTONES = [25, 50, 75, 90, 100];
-  var ticking = false;
-  window.addEventListener('scroll', function () {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(function () {
-      ticking = false;
-      var scrolled = window.scrollY + window.innerHeight;
-      var total = document.documentElement.scrollHeight;
-      if (total <= 0) return;
-      var pct = Math.round((scrolled / total) * 100);
-      if (pct > maxScroll) maxScroll = pct;
-      for (var i = 0; i < MILESTONES.length; i++) {
-        var m = MILESTONES[i];
-        if (pct >= m && !milestonesHit[m]) {
-          milestonesHit[m] = true;
-          send({
-            sessionId: sessionId,
-            eventType: 'scroll_depth',
-            page: PAGE,
-            properties: { depth: m },
-          });
-        }
+  function scrollDepthCheck() {
+    var scrolled = window.scrollY + window.innerHeight;
+    var total = document.documentElement.scrollHeight;
+    if (total <= 0) return;
+    var pct = Math.round((scrolled / total) * 100);
+    if (pct > maxScroll) maxScroll = pct;
+    for (var i = 0; i < MILESTONES.length; i++) {
+      var m = MILESTONES[i];
+      if (pct >= m && !milestonesHit[m]) {
+        milestonesHit[m] = true;
+        send({
+          sessionId: sessionId,
+          eventType: 'scroll_depth',
+          page: PAGE,
+          properties: { depth: m },
+        });
       }
-    });
-  }, { passive: true });
+    }
+  }
+  if (window.__addScroll) window.__addScroll(scrollDepthCheck);
+  else window.addEventListener('scroll', scrollDepthCheck, { passive: true });
 
   // 4) click tracking via event delegation
   document.addEventListener('click', function (e) {
