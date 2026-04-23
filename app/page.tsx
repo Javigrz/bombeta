@@ -426,7 +426,7 @@ export default function HomePage() {
     <div
       ref={containerRef}
       className={`w-full relative transition-all duration-1000 ease-in-out cursor-auto ${
-        (showWeeklyBuildsContent || showMainContent) ? 'min-h-dvh overflow-y-auto' : 'h-dvh overflow-hidden'
+        (showWeeklyBuildsContent || showMainContent) ? 'min-h-svh' : 'h-svh overflow-hidden'
       }`}
       style={{
         backgroundColor: mounted && introStage === 3 ? '#4B0A23' : '#000000',
@@ -528,7 +528,7 @@ export default function HomePage() {
         </div>
 
         {/* Contenido principal (texto, botón) - separado del logo */}
-        <div className="relative h-dvh flex items-center justify-center px-4" style={{ zIndex: 5 }}>
+        <div className="relative h-svh flex items-center justify-center px-4" style={{ zIndex: 5 }}>
           <div className="text-center max-w-4xl w-full">
             {/* Título del curso */}
             <div
@@ -1761,7 +1761,7 @@ export default function HomePage() {
           </div>
 
           {/* Weekly Builds Content - Scrollable */}
-          <div className="min-h-dvh pt-32 pb-20 px-4 md:px-8 max-w-6xl mx-auto overflow-y-auto">
+          <div className="min-h-svh pt-32 pb-20 px-4 md:px-8 max-w-6xl mx-auto overflow-y-auto">
             {/* TOP 3 BUILDS */}
             <div className="mb-16 transition-all duration-1000 ease-out" style={{ 
               opacity: isExitingWeeklyBuilds ? 0 : (isTop3Entering ? 1 : 0), 
