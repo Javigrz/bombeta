@@ -1143,27 +1143,36 @@ body {
   isolation: isolate;
 }
 
-/* Vídeo de fondo: frames de Solomei-night que avanzan con el scroll
-   (scroll-scrubbed). Es el FONDO real de la sección, no un accent.
-   Sin autoplay: JS setea currentTime en función del progreso. */
-.section-lado .lado-bg {
+/* Stack de fondos: 4 imágenes apiladas (una por phase). El JS conmuta
+   .is-active según el índice de phase activa; transición de opacity da
+   crossfade limpio. Reemplaza al vídeo scroll-scrubbed anterior — sin
+   problemas de autoplay/Low Power Mode y sin coste de seek. */
+.section-lado .lado-bg-stack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: #1a0610;
+}
+.section-lado .lado-bg-frame {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 50% 50%;
-  opacity: 1;
   filter: grayscale(0.45) contrast(1.1) saturate(0.7);
-  z-index: 0;
-  pointer-events: none;
-  background: #1a0610;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  will-change: opacity;
+}
+.section-lado .lado-bg-frame.is-active {
+  opacity: 1;
 }
 
-/* Móvil: vídeo landscape crop centrado horizontal + ligeramente alto
-   para evitar que el horizonte del pueblo caiga por debajo del fold. */
+/* Móvil: landscape crop centrado horizontal + ligeramente alto. */
 @media (max-width: 720px) {
-  .section-lado .lado-bg {
+  .section-lado .lado-bg-frame {
     object-position: 55% 40%;
   }
 }
@@ -1850,12 +1859,20 @@ body {
     padding: clamp(80px, 12vh, 120px) clamp(20px, 5vw, 40px) clamp(72px, 14vh, 140px);
     justify-content: flex-start;
   }
+  .section-arq-inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
   .arq-display-layer {
     font-size: clamp(36px, 10.5vw, 72px);
     line-height: 0.9;
     margin-bottom: clamp(10px, 1.6vh, 18px);
   }
   .arq-layout {
+    flex: 1;
+    justify-content: space-evenly;
     gap: clamp(18px, 2.6vh, 28px);
     margin-top: clamp(14px, 2vh, 24px);
   }
@@ -2440,10 +2457,18 @@ body {
     padding: clamp(72px, 11vh, 110px) clamp(22px, 5vw, 44px);
     justify-content: flex-start;
   }
+  .section-filtro-inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
   .filtro-split {
     grid-template-columns: 1fr;
     gap: clamp(28px, 4.5vh, 44px);
     margin-top: clamp(22px, 3.4vh, 36px);
+    flex: 1;
+    align-content: space-evenly;
   }
   .filtro-divider {
     width: 100%;
@@ -2599,7 +2624,10 @@ body {
 }
 
 @media (max-width: 900px) {
-  .section-voces { padding: 72px 0; }
+  .section-voces {
+    padding: clamp(72px, 11vh, 110px) 0;
+    justify-content: flex-start;
+  }
   .section-voces-inner { padding: 0 20px; }
   .marquee-wrapper { gap: 10px; }
   .marquee-inner { gap: 10px; }
@@ -3351,6 +3379,7 @@ body {
 <div class="hero-bg" aria-hidden="true">
   <video class="hero-video" id="heroVideo"
          src="/prompts2/assets/videos/Solomei-night-pingpong.mp4"
+         poster="/prompts2/assets/images/hero-poster.jpg"
          autoplay muted loop playsinline
          preload="auto"></video>
   <div class="hero-photo-overlay"></div>
@@ -3442,7 +3471,12 @@ body {
   <div class="lado-anchor" data-phrase="3"></div>
 
   <div class="lado-stage">
-    <video class="lado-bg" src="/prompts2/assets/videos/Solomei-night.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <div class="lado-bg-stack" aria-hidden="true">
+      <img class="lado-bg-frame is-active" data-frame="0" src="/prompts2/assets/images/lado-frame-0.jpg" alt="">
+      <img class="lado-bg-frame"           data-frame="1" src="/prompts2/assets/images/lado-frame-1.jpg" alt="" loading="lazy">
+      <img class="lado-bg-frame"           data-frame="2" src="/prompts2/assets/images/lado-frame-2.jpg" alt="" loading="lazy">
+      <img class="lado-bg-frame"           data-frame="3" src="/prompts2/assets/images/lado-frame-3.jpg" alt="" loading="lazy">
+    </div>
     <div class="lado-rail" aria-hidden="true"><span class="lado-rail-fill"></span></div>
 
     <header class="lado-head">
@@ -4384,52 +4418,9 @@ body {
     var stage = section.querySelector('.lado-stage');
     var phrases = section.querySelectorAll('.lado-phrase');
     var counter = section.querySelector('.lado-counter-now');
-    var video = section.querySelector('.lado-bg');
+    var bgFrames = section.querySelectorAll('.lado-bg-frame');
     if (!stage || !phrases.length) return;
     var N = phrases.length;
-
-    // Vídeo scroll-scrubbed: NO autoplay. currentTime se mapea al
-    // progreso scroll de la sección (0..1 → 0..duration). Así, quieto
-    // es estático (primer frame), pero al scrollear avanza frame a
-    // frame mostrando la transición día→noche.
-    // Safari iOS requiere un play()+pause() inicial para desbloquear
-    // el decoder y permitir seeks suaves — el primer frame queda visible.
-    var videoReady = false;
-    var videoDur = 0;
-    if (video) {
-      var unlock = function() {
-        try {
-          var p = video.play();
-          if (p && p.then) {
-            p.then(function() { video.pause(); }).catch(function() {});
-          } else {
-            video.pause();
-          }
-        } catch (e) {}
-      };
-      var onReady = function() {
-        if (!isFinite(video.duration)) return;
-        videoDur = video.duration;
-        videoReady = true;
-        unlock();
-        applyVideo(currentT);
-      };
-      if (video.readyState >= 1 && isFinite(video.duration)) {
-        onReady();
-      } else {
-        video.addEventListener('loadedmetadata', onReady, { once: true });
-      }
-    }
-
-    function applyVideo(t) {
-      if (!videoReady || !video) return;
-      // Invertido: progreso 0 → fin del vídeo (noche); progreso 1 →
-      // inicio (día). Al scrollear la sección, el pueblo amanece.
-      var target = (1 - t) * videoDur;
-      if (Math.abs(video.currentTime - target) > 0.03) {
-        try { video.currentTime = target; } catch (e) {}
-      }
-    }
 
     // Marca el stage con .is-visible cuando entra (reutilizamos clase
     // para el delay de primera frase). IntersectionObserver separado
@@ -4468,7 +4459,6 @@ body {
 
     function apply(t) {
       stage.style.setProperty('--lado-progress', t.toFixed(4));
-      applyVideo(t);
       // Índice de frase activa: divide el progreso en N bandas iguales.
       // El clamp al final evita índice N cuando t === 1 exacto.
       var idx = Math.floor(t * N);
@@ -4486,6 +4476,11 @@ body {
         } else {
           el.classList.remove('is-active', 'is-past');
         }
+      }
+
+      // Conmutar imagen de fondo activa (mismo índice que la phrase).
+      for (var k = 0; k < bgFrames.length; k++) {
+        bgFrames[k].classList.toggle('is-active', k === idx);
       }
 
       if (counter && idx !== lastIdx) {
