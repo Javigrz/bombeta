@@ -927,9 +927,9 @@ async function sendOriginaleEmail(email: string, name: string) {
   const greeting = name ? `Hola ${name},` : "Hola,"
 
   await resend.emails.send({
-    from: "Javi Gil <contact@javiggil.com>",
+    from: "Javier Gil <javier.gil@javiggil.com>",
     to: [email],
-    subject: "111 Originale está dentro",
+    subject: "Tu acceso a 111 Originale",
     attachments: [
       { filename: "111-Originale.html", content: htmlContent },
       { filename: "111-Originale.pdf", content: pdfContent },
@@ -946,7 +946,7 @@ function buildOriginaleEmailHtml(greeting: string) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>111 Originale está dentro</title>
+<title>Tu acceso a 111 Originale</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -954,53 +954,39 @@ function buildOriginaleEmailHtml(greeting: string) {
 <body style="margin:0;padding:0;background:#FAF5EB;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;color:#4B0A23;line-height:1.65;">
   <div style="max-width:560px;margin:0 auto;padding:48px 28px;">
 
-    <div style="text-align:center;margin-bottom:36px;">
-      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(75,10,35,0.55);margin:0;">Ciento once piezas</p>
-      <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:36px;line-height:1.15;color:#4B0A23;margin:16px 0 0;">111 Originale<br/><span style="font-style:italic;color:#FE4629;">ya está dentro.</span></h1>
-    </div>
-
     <p style="font-size:16px;margin:0 0 18px;">${greeting}</p>
 
-    <p style="font-size:16px;margin:0 0 18px;">Gracias por confiar. Aquí tienes tu acceso a 111 Originale, el sistema completo. Llega en dos formatos adjuntos a este email:</p>
+    <p style="font-size:16px;margin:0 0 22px;">Gracias por comprar 111 Originale.</p>
 
-    <div style="border-left:2px solid #FE4629;padding:4px 0 4px 18px;margin:0 0 24px;">
-      <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:17px;color:#4B0A23;margin:0;">No es un curso. Es una arquitectura.</p>
+    <p style="font-size:16px;margin:0 0 18px;">Aquí tienes el sistema completo. Te adjunto dos archivos:</p>
+
+    <div style="background:#ffffff;border:1px solid rgba(75,10,35,0.1);border-left:3px solid #FE4629;border-radius:4px;padding:18px 22px;margin:0 0 12px;">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(75,10,35,0.55);margin:0 0 6px;">HTML navegable · adjunto</p>
+      <p style="font-size:15px;margin:0;color:#4B0A23;">Ábrelo en tu navegador. Es el sistema entero, listo para usar.</p>
     </div>
 
-    <div style="background:#F3EBD9;border:1px solid rgba(75,10,35,0.08);border-radius:4px;padding:22px 24px;margin:0 0 28px;">
-      <p style="font-family:'Playfair Display',Georgia,serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#FE4629;margin:0 0 14px;">Aviso importante</p>
-      <p style="font-size:14.5px;margin:0;"><strong style="color:#4B0A23;">Revisa la carpeta de spam si no lo ves en bandeja de entrada.</strong> Ábrelo, márcalo como "no es spam" y ya lo tendrás siempre a mano.</p>
+    <div style="background:#ffffff;border:1px solid rgba(75,10,35,0.1);border-left:3px solid #FE4629;border-radius:4px;padding:18px 22px;margin:0 0 24px;">
+      <p style="font-family:'Playfair Display',Georgia,serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(75,10,35,0.55);margin:0 0 6px;">PDF de respaldo · adjunto</p>
+      <p style="font-size:15px;margin:0;color:#4B0A23;">Mismo contenido en PDF. Para leer y copiar desde ahí si prefieres.</p>
     </div>
 
-    <h2 style="font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:22px;color:#4B0A23;margin:32px 0 18px;">Cómo abrirlo</h2>
+    <p style="font-size:16px;margin:0 0 28px;">Descárgalos. Son tuyos. Funcionan sin conexión.</p>
 
-    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 14px;">
-      <tr>
-        <td style="width:28px;vertical-align:top;padding-top:2px;"><span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#FE4629;color:#FAF5EB;font-size:13px;font-weight:700;">1</span></td>
-        <td style="padding-left:14px;"><p style="font-size:15px;margin:0;"><strong>El archivo .html</strong> es la forma principal. Descárgalo, ábrelo en tu navegador (Chrome, Safari, Firefox) y tendrás la arquitectura entera, navegable, lista para usar.</p></td>
-      </tr>
-    </table>
+    <p style="font-size:16px;margin:0 0 18px;">Lo que viene a partir de aquí es distinto.</p>
 
-    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 14px;">
-      <tr>
-        <td style="width:28px;vertical-align:top;padding-top:2px;"><span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#FE4629;color:#FAF5EB;font-size:13px;font-weight:700;">2</span></td>
-        <td style="padding-left:14px;"><p style="font-size:15px;margin:0;"><strong>En iPhone</strong>, Vista Previa funciona pero a veces falla al copiar. Si te pasa, ábrelo en un ordenador.</p></td>
-      </tr>
-    </table>
+    <p style="font-size:16px;margin:0 0 18px;">Durante las próximas 12 semanas te voy a enviar un email cada viernes. No son recordatorios del producto. No son instrucciones para usar los prompts. Son otra cosa.</p>
 
-    <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:0 0 28px;">
-      <tr>
-        <td style="width:28px;vertical-align:top;padding-top:2px;"><span style="display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#FE4629;color:#FAF5EB;font-size:13px;font-weight:700;">3</span></td>
-        <td style="padding-left:14px;"><p style="font-size:15px;margin:0;"><strong>El PDF adjunto</strong> es tu respaldo. Lee y copia desde ahí si prefieres.</p></td>
-      </tr>
-    </table>
+    <p style="font-size:16px;margin:0 0 18px;">Lo que aprendí dirigiendo IA en uno de los mayores bancos de Europa y construyendo dos startups con IA es que el 90% de lo que pasa en este espacio la gente no lo ve. Lo que ves en redes es el 10% ruidoso.</p>
 
-    <div style="border-top:1px solid rgba(75,10,35,0.12);padding-top:24px;margin:32px 0 0;">
-      <p style="font-size:14.5px;margin:0 0 12px;">Pago único. Acceso para siempre.</p>
-      <p style="font-size:14.5px;margin:0;">Si algo no llega o no abre, contesta a este email o escribe a <a href="mailto:contact@javiggil.com" style="color:#FE4629;text-decoration:none;">contact@javiggil.com</a> y lo resolvemos.</p>
-    </div>
+    <p style="font-size:16px;margin:0 0 18px;">Los 12 emails son el 90% restante. Técnicas que cambian cómo usas la IA. Herramientas que la mayoría no conoce. Formas de construir con IA que antes costaban 50.000 euros y ahora las puede hacer una persona. Y lo que está pasando en banca con la IA, que es lo que mejor conozco y casi nadie cuenta bien.</p>
 
-    <p style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:15px;color:rgba(75,10,35,0.55);margin:36px 0 0;text-align:center;">— Javi</p>
+    <p style="font-size:16px;margin:0 0 28px;">No es teoría. Es lo que yo uso y lo que veo usar desde dentro.</p>
+
+    <p style="font-size:16px;margin:0 0 18px;">Esta primera semana, una sola cosa: abre el HTML, lee la introducción, y empieza Capa 1. Son cinco pasos. Si vas rápido los haces en un día. Si vas despacio, en una semana. Ambos ritmos están bien.</p>
+
+    <p style="font-size:16px;margin:0 0 28px;">El viernes que viene hablamos del primer territorio que la mayoría no ve: cómo el sitio donde vive un prompt importa más que el prompt en sí.</p>
+
+    <p style="font-size:16px;margin:0;">Javi</p>
 
   </div>
 </body>
@@ -1012,25 +998,30 @@ function buildOriginaleEmailText(greeting: string) {
   return `
 ${greeting}
 
-Gracias por confiar. Aquí tienes tu acceso a 111 Originale, el sistema completo. Llega en dos formatos adjuntos:
+Gracias por comprar 111 Originale.
 
-No es un curso. Es una arquitectura.
+Aquí tienes el sistema completo. Te adjunto dos archivos:
 
-IMPORTANTE: Revisa la carpeta de spam si no lo ves en bandeja de entrada. Márcalo como "no es spam" para tenerlo siempre a mano.
+- HTML navegable: ábrelo en tu navegador. Es el sistema entero, listo para usar.
+- PDF de respaldo: mismo contenido en PDF, para leer y copiar desde ahí si prefieres.
 
-CÓMO ABRIRLO
+Descárgalos. Son tuyos. Funcionan sin conexión.
 
-1. El archivo .html es la forma principal. Descárgalo, ábrelo en tu navegador (Chrome, Safari, Firefox) y tendrás la arquitectura entera, navegable.
+Lo que viene a partir de aquí es distinto.
 
-2. En iPhone, Vista Previa funciona pero a veces falla al copiar. Si te pasa, ábrelo en un ordenador.
+Durante las próximas 12 semanas te voy a enviar un email cada viernes. No son recordatorios del producto. No son instrucciones para usar los prompts. Son otra cosa.
 
-3. El PDF adjunto es tu respaldo. Lee y copia desde ahí si prefieres.
+Lo que aprendí dirigiendo IA en uno de los mayores bancos de Europa y construyendo dos startups con IA es que el 90% de lo que pasa en este espacio la gente no lo ve. Lo que ves en redes es el 10% ruidoso.
 
-Pago único. Acceso para siempre.
+Los 12 emails son el 90% restante. Técnicas que cambian cómo usas la IA. Herramientas que la mayoría no conoce. Formas de construir con IA que antes costaban 50.000 euros y ahora las puede hacer una persona. Y lo que está pasando en banca con la IA, que es lo que mejor conozco y casi nadie cuenta bien.
 
-Si algo no llega o no abre, contesta a este email o escribe a contact@javiggil.com.
+No es teoría. Es lo que yo uso y lo que veo usar desde dentro.
 
-— Javi
+Esta primera semana, una sola cosa: abre el HTML, lee la introducción, y empieza Capa 1. Son cinco pasos. Si vas rápido los haces en un día. Si vas despacio, en una semana. Ambos ritmos están bien.
+
+El viernes que viene hablamos del primer territorio que la mayoría no ve: cómo el sitio donde vive un prompt importa más que el prompt en sí.
+
+Javi
   `.trim()
 }
 
