@@ -2204,6 +2204,20 @@ body {
   background: rgba(75, 10, 35, 0.28);
 }
 
+/* Spec line — qué incluye el producto, justo antes del botón.
+   Estilo de ficha técnica editorial: DM Sans tracked, dim, separadores
+   con middle-dot. Discreta — no compite con el claim italic ni el botón. */
+.precio-spec {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(11px, 0.85vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(75, 10, 35, 0.55);
+  margin: clamp(10px, 1.4vh, 16px) 0 0;
+  line-height: 1.5;
+}
+
 /* Botón — intacto, al usuario le gusta tal cual. */
 .precio-button {
   display: inline-flex;
@@ -3719,6 +3733,10 @@ body {
 
     <p class="precio-claim reveal" style="--reveal-delay: 0.55s">Un pago. Para siempre.</p>
 
+    <p class="precio-spec reveal" style="--reveal-delay: 0.62s">
+      HTML navegable · PDF editorial · 12 emails de seguimiento
+    </p>
+
     <a class="precio-button reveal" style="--reveal-delay: 0.7s"
        href="https://buy.stripe.com/cNi5kv2Sx2T616G70T9EI05?prefilled_promo_code=EARLY"
        target="_blank" rel="noopener">
@@ -3963,7 +3981,7 @@ body {
         <div class="faq-answer-wrap" id="faq-a-1" role="region">
           <div class="faq-answer">
             <div class="faq-answer-inner">
-              <p>Acceso inmediato tras el pago. El sistema vive en HTML navegable más PDF de respaldo. Funciona en móvil, ordenador y tablet. Los prompts se copian con un clic y se pegan en cualquier IA: ChatGPT, Claude, Gemini, la que uses.</p>
+              <p>Acceso inmediato tras el pago. El sistema vive en HTML navegable más versión editorial en PDF para leer en libro o eReader, y durante 12 semanas recibes un email cada viernes con material extra. Funciona en móvil, ordenador y tablet. Los prompts se copian con un clic y se pegan en cualquier IA: ChatGPT, Claude, Gemini, la que uses.</p>
             </div>
           </div>
         </div>
