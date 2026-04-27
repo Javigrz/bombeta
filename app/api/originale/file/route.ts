@@ -47,12 +47,14 @@ export async function GET(req: NextRequest) {
     return new Response("File not available", { status: 500 })
   }
 
-  return new Response(buffer, {
+  const body = new Uint8Array(buffer)
+
+  return new Response(body, {
     status: 200,
     headers: {
       "Content-Type": file.contentType,
       "Content-Disposition": `attachment; filename="${file.filename}"`,
-      "Content-Length": String(buffer.byteLength),
+      "Content-Length": String(body.byteLength),
       "Cache-Control": "private, no-store",
     },
   })
