@@ -2,15 +2,52 @@
 
 import { Resend } from 'resend'
 import { trackServerEvent } from '@/lib/analytics-db'
+import {
+  getUnsubscribeHeaders,
+  getUnsubscribeUrl,
+  SYSTEM_FONT_STACK,
+} from '@/lib/email-helpers'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 const STRIPE_URL = 'https://buy.stripe.com/7sYfZ9dxb79m3eOdph9EI02'
+const ADMIN_EMAIL = 'javiergilrodriguez@icloud.com'
 
 export interface GroupReservationData {
   name: string
   email: string
   sessionId?: string
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function adminNotificationHtml(name: string, email: string, extraRows: Array<[string, string]> = []): string {
+  const rows = [['Nombre', name], ['Email', email], ...extraRows]
+    .map(
+      ([label, value]) =>
+        `<tr><td style="padding:8px 12px;font-size:13px;color:#666;text-transform:uppercase;letter-spacing:0.5px;">${escapeHtml(label)}</td><td style="padding:8px 12px;font-size:16px;color:#1a1a1a;">${escapeHtml(value)}</td></tr>`
+    )
+    .join('')
+
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nueva pre-reserva</title>
+</head>
+<body style="margin:0;padding:24px;font-family:${SYSTEM_FONT_STACK};font-size:16px;line-height:1.6;color:#1a1a1a;background-color:#ffffff;">
+<p style="margin:0 0 16px;font-size:18px;font-weight:600;">Nueva pre-reserva — The AI Playbook</p>
+<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border:1px solid #eaeaea;border-radius:6px;">${rows}</table>
+</body>
+</html>`
 }
 
 export async function sendGroupReservationEmails(data: GroupReservationData) {
@@ -24,32 +61,13 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
       return { success: false, error: 'El email no es válido' }
     }
 
-    // 1. Notificación al admin (bloqueante - si falla, devolvemos error)
+    // 1. Notificación al admin (bloqueante)
     const adminEmail = await resend.emails.send({
       from: 'Javi Gil <curso@javiggil.com>',
-      to: ['javiergilrodriguez@icloud.com'],
-      subject: `🎯 Nueva pre-reserva: ${data.name}`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head><meta charset="utf-8"><style>
-            body { font-family: -apple-system, sans-serif; line-height: 1.6; color: #4B0A23; max-width: 600px; margin: 0 auto; padding: 20px; background: #FAF5EB; }
-            .header { background: #4B0A23; color: #FAF5EB; padding: 30px; border-radius: 10px 10px 0 0; text-align: center; }
-            .content { background: #FAF5EB; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid rgba(75,10,35,0.08); border-top: 0; }
-            .field { margin-bottom: 16px; background: #ffffff; padding: 15px; border-radius: 8px; border-left: 4px solid #FE4629; }
-            .label { font-weight: 600; color: #4B0A23; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-            .value { color: #4B0A23; font-size: 16px; }
-          </style></head>
-          <body>
-            <div class="header"><h1 style="margin:0;font-size:22px;">Nueva pre-reserva - The AI Playbook</h1></div>
-            <div class="content">
-              <div class="field"><div class="label">Nombre</div><div class="value">${data.name}</div></div>
-              <div class="field"><div class="label">Email</div><div class="value"><a href="mailto:${data.email}" style="color:#FE4629;text-decoration:none;">${data.email}</a></div></div>
-            </div>
-          </body>
-        </html>
-      `,
-      text: `Nueva pre-reserva - The AI Playbook\n\nNombre: ${data.name}\nEmail: ${data.email}`
+      to: [ADMIN_EMAIL],
+      subject: `Nueva pre-reserva: ${data.name}`,
+      html: adminNotificationHtml(data.name, data.email),
+      text: `Nueva pre-reserva — The AI Playbook\n\nNombre: ${data.name}\nEmail: ${data.email}`,
     })
 
     if (adminEmail.error) {
@@ -57,42 +75,8 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
       return { success: false, error: 'Error al enviar el email. Por favor, inténtalo de nuevo.' }
     }
 
-    // 2. Confirmación al usuario (no-bloqueante - si falla, el admin ya fue notificado)
-    const userEmail = await resend.emails.send({
-      from: 'Javi Gil <curso@javiggil.com>',
-      to: [data.email],
-      subject: 'Tu plaza para The AI Playbook está pre-reservada',
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head><meta charset="utf-8"><style>
-            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; color: #4B0A23; max-width: 600px; margin: 0 auto; padding: 0; background: #FAF5EB; }
-            .wrapper { padding: 40px 32px; }
-            p { margin: 0 0 20px; font-size: 16px; }
-            .cta-block { margin: 32px 0; }
-            .cta-btn { display: inline-block; background: #FE4629; color: #FAF5EB !important; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; }
-            .footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(75,10,35,0.12); color: rgba(75,10,35,0.55); font-size: 14px; }
-          </style></head>
-          <body>
-            <div class="wrapper">
-              <p>Hola ${data.name},</p>
-              <p><strong>Buena decisión.</strong></p>
-              <p>Tu plaza para The AI Playbook está pre-reservada. Las plazas se confirman por orden de pago, así que cuanto antes confirmes, más seguro tienes tu sitio.</p>
-              <p>Te cuento rápido qué va a pasar:</p>
-              <p>Los próximos días te voy a mandar unos emails donde te explico exactamente qué vamos a hacer en el curso, cómo funciona, y por qué creo que puede cambiar la forma en la que trabajas con IA. No es humo. Es lo que llevo haciendo los últimos años con empresas reales - las mías y las de mis clientes.</p>
-              <p>Si ya lo tienes claro y no necesitas más información:</p>
-              <div class="cta-block">
-                <a href="${STRIPE_URL}" class="cta-btn">→ Confirmar mi plaza ahora (390€)</a>
-              </div>
-              <p>Si prefieres saber más antes de decidir, no hagas nada. Mañana te cuento más.</p>
-              <p>Un saludo,<br><strong>Javi</strong></p>
-              <p style="margin-top:8px;color:rgba(75,10,35,0.7);font-size:14px;"><em>P.D.: El curso empieza próximamente. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.</em></p>
-              <div class="footer">The AI Playbook · contact@javiggil.com</div>
-            </div>
-          </body>
-        </html>
-      `,
-      text: `Hola ${data.name},
+    // 2. Confirmación al usuario (no-bloqueante)
+    const userText = `Hola ${data.name},
 
 Buena decisión.
 
@@ -100,25 +84,59 @@ Tu plaza para The AI Playbook está pre-reservada. Las plazas se confirman por o
 
 Te cuento rápido qué va a pasar:
 
-Los próximos días te voy a mandar unos emails donde te explico exactamente qué vamos a hacer en el curso, cómo funciona, y por qué creo que puede cambiar la forma en la que trabajas con IA. No es humo. Es lo que llevo haciendo los últimos años con empresas reales - las mías y las de mis clientes.
+Los próximos días te voy a mandar unos emails donde te explico exactamente qué vamos a hacer en el curso, cómo funciona, y por qué creo que puede cambiar la forma en la que trabajas con IA. No es humo. Es lo que llevo haciendo los últimos años con empresas reales — las mías y las de mis clientes.
 
 Si ya lo tienes claro y no necesitas más información:
 
-→ Confirmar mi plaza ahora (390€): ${STRIPE_URL}
+Confirmar mi plaza ahora (390€): ${STRIPE_URL}
 
 Si prefieres saber más antes de decidir, no hagas nada. Mañana te cuento más.
 
 Un saludo,
 Javi
 
-P.D.: El curso empieza próximamente. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.`
+P.D.: El curso empieza próximamente. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.
+
+---
+The AI Playbook · contact@javiggil.com
+Para darte de baja: ${getUnsubscribeUrl(data.email)}`
+
+    const userHtml = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tu plaza está pre-reservada</title>
+</head>
+<body style="margin:0;padding:24px;font-family:${SYSTEM_FONT_STACK};font-size:16px;line-height:1.7;color:#1a1a1a;background-color:#ffffff;">
+<p style="margin:0 0 16px;">Hola ${escapeHtml(data.name)},</p>
+<p style="margin:0 0 16px;"><strong>Buena decisión.</strong></p>
+<p style="margin:0 0 16px;">Tu plaza para The AI Playbook está pre-reservada. Las plazas se confirman por orden de pago, así que cuanto antes confirmes, más seguro tienes tu sitio.</p>
+<p style="margin:0 0 16px;">Te cuento rápido qué va a pasar:</p>
+<p style="margin:0 0 16px;">Los próximos días te voy a mandar unos emails donde te explico exactamente qué vamos a hacer en el curso, cómo funciona, y por qué creo que puede cambiar la forma en la que trabajas con IA. No es humo. Es lo que llevo haciendo los últimos años con empresas reales — las mías y las de mis clientes.</p>
+<p style="margin:0 0 16px;">Si ya lo tienes claro y no necesitas más información:</p>
+<p style="margin:0 0 24px;"><a href="${STRIPE_URL}" style="color:#FE4629;font-weight:600;">Confirmar mi plaza ahora (390€)</a></p>
+<p style="margin:0 0 16px;">Si prefieres saber más antes de decidir, no hagas nada. Mañana te cuento más.</p>
+<p style="margin:0 0 16px;">Un saludo,<br /><strong>Javi</strong></p>
+<p style="margin:24px 0 0;font-size:14px;color:#666;"><em>P.D.: El curso empieza próximamente. 8 sesiones en directo por videollamada, 4 semanas. Plazas limitadas porque es en directo y quiero que haya interacción real.</em></p>
+<hr style="border:none;border-top:1px solid #eaeaea;margin:32px 0 16px;" />
+<p style="margin:0;font-size:13px;color:#888;">The AI Playbook · contact@javiggil.com<br /><a href="${getUnsubscribeUrl(data.email)}" style="color:#888;">Darme de baja</a></p>
+</body>
+</html>`
+
+    const userEmail = await resend.emails.send({
+      from: 'Javi Gil <curso@javiggil.com>',
+      to: [data.email],
+      subject: 'Tu plaza para The AI Playbook está pre-reservada',
+      html: userHtml,
+      text: userText,
+      headers: getUnsubscribeHeaders(data.email),
     })
 
     if (userEmail.error) {
       console.error('Error sending user confirmation (non-fatal):', userEmail.error)
     }
 
-    // Track form submission in analytics
     await trackServerEvent(data.sessionId ?? null, 'form_submit', '/', {
       name: data.name,
       email: data.email,
@@ -142,153 +160,42 @@ export interface FormData {
 
 export async function sendFormEmail(formData: FormData) {
   try {
-    // Validate form data
     if (!formData.name || !formData.email || !formData.position) {
-      return {
-        success: false,
-        error: 'Todos los campos son obligatorios'
-      }
+      return { success: false, error: 'Todos los campos son obligatorios' }
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
-      return {
-        success: false,
-        error: 'El email no es válido'
-      }
+      return { success: false, error: 'El email no es válido' }
     }
 
-    // Send email using Resend
+    const language = formData.language === 'en' ? 'English' : 'Español'
+
     const { data, error } = await resend.emails.send({
       from: 'Javi Gil <curso@javiggil.com>',
-      to: ['javiergilrodriguez@icloud.com'],
-      subject: '🎯 Nueva solicitud de plaza - THE AI PLAYBOOK',
-      html: `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <style>
-              body {
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                line-height: 1.6;
-                color: #4B0A23;
-                max-width: 600px;
-                margin: 0 auto;
-                padding: 20px;
-                background: #FAF5EB;
-              }
-              .header {
-                background: #4B0A23;
-                color: #FAF5EB;
-                padding: 30px;
-                border-radius: 10px 10px 0 0;
-                text-align: center;
-              }
-              .header h1 {
-                margin: 0;
-                font-size: 24px;
-              }
-              .content {
-                background: #FAF5EB;
-                padding: 30px;
-                border-radius: 0 0 10px 10px;
-                border: 1px solid rgba(75,10,35,0.08);
-                border-top: 0;
-              }
-              .field {
-                margin-bottom: 20px;
-                background: #ffffff;
-                padding: 15px;
-                border-radius: 8px;
-                border-left: 4px solid #FE4629;
-              }
-              .label {
-                font-weight: 600;
-                color: #4B0A23;
-                font-size: 12px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                margin-bottom: 5px;
-              }
-              .value {
-                color: #4B0A23;
-                font-size: 16px;
-              }
-              .footer {
-                text-align: center;
-                margin-top: 20px;
-                color: rgba(75,10,35,0.55);
-                font-size: 14px;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1>Nueva solicitud de plaza</h1>
-            </div>
-            <div class="content">
-              <div class="field">
-                <div class="label">Nombre</div>
-                <div class="value">${formData.name}</div>
-              </div>
-              <div class="field">
-                <div class="label">Email</div>
-                <div class="value"><a href="mailto:${formData.email}" style="color: #FE4629; text-decoration: none;">${formData.email}</a></div>
-              </div>
-              <div class="field">
-                <div class="label">Cargo / Empresa</div>
-                <div class="value">${formData.position}</div>
-              </div>
-              <div class="field">
-                <div class="label">Idioma preferido</div>
-                <div class="value">${formData.language === 'en' ? 'English' : 'Español'}</div>
-              </div>
-            </div>
-            <div class="footer">
-              <p>Enviado desde bombetacourse.com</p>
-            </div>
-          </body>
-        </html>
-      `,
-      text: `
-Nueva solicitud de plaza
-
-Nombre: ${formData.name}
-Email: ${formData.email}
-Cargo/Empresa: ${formData.position}
-Idioma: ${formData.language === 'en' ? 'English' : 'Español'}
-
----
-Enviado desde bombetacourse.com
-      `.trim()
+      to: [ADMIN_EMAIL],
+      subject: 'Nueva solicitud de plaza — THE AI PLAYBOOK',
+      html: adminNotificationHtml(formData.name, formData.email, [
+        ['Cargo / Empresa', formData.position],
+        ['Idioma', language],
+      ]),
+      text: `Nueva solicitud de plaza\n\nNombre: ${formData.name}\nEmail: ${formData.email}\nCargo/Empresa: ${formData.position}\nIdioma: ${language}\n\n---\nEnviado desde bombetacourse.com`,
     })
 
     if (error) {
       console.error('Error sending email:', error)
-      return {
-        success: false,
-        error: 'Error al enviar el email. Por favor, inténtalo de nuevo.'
-      }
+      return { success: false, error: 'Error al enviar el email. Por favor, inténtalo de nuevo.' }
     }
 
-    // Track form submission in analytics
     await trackServerEvent(formData.sessionId ?? null, 'form_submit', '/', {
       name: formData.name,
       email: formData.email,
       form: 'main_form',
     })
 
-    return {
-      success: true,
-      data
-    }
+    return { success: true, data }
   } catch (error) {
     console.error('Unexpected error:', error)
-    return {
-      success: false,
-      error: 'Error inesperado. Por favor, inténtalo de nuevo.'
-    }
+    return { success: false, error: 'Error inesperado. Por favor, inténtalo de nuevo.' }
   }
 }
