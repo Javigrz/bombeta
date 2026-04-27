@@ -7,6 +7,7 @@ import { trackServerEvent } from "@/lib/analytics-db"
 import {
   getUnsubscribeHeaders,
   getUnsubscribeUrl,
+  resubscribe,
   SYSTEM_FONT_STACK,
 } from "@/lib/email-helpers"
 
@@ -42,6 +43,9 @@ export async function POST(req: Request) {
     if (!email) {
       return new Response("No email found", { status: 200 })
     }
+
+    // Re-opt-in: una nueva compra reactiva la suscripción a marketing.
+    await resubscribe(email)
 
     const analyticsSessionId =
       session.metadata?.analytics_session_id ??

@@ -53,5 +53,16 @@ export async function markUnsubscribed(email: string, reason?: string): Promise<
   `
 }
 
+// Re-opt-in: borra la baja al haber acción afirmativa del usuario (formulario
+// o compra). Best-effort — los errores se loguean y se ignoran para no romper
+// el flujo principal.
+export async function resubscribe(email: string): Promise<void> {
+  try {
+    await sql`DELETE FROM unsubscribed_emails WHERE email = ${normalize(email)}`
+  } catch (err) {
+    console.error('[unsubscribe] resubscribe error:', err)
+  }
+}
+
 export const SYSTEM_FONT_STACK =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"

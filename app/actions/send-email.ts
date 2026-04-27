@@ -5,6 +5,7 @@ import { trackServerEvent } from '@/lib/analytics-db'
 import {
   getUnsubscribeHeaders,
   getUnsubscribeUrl,
+  resubscribe,
   SYSTEM_FONT_STACK,
 } from '@/lib/email-helpers'
 
@@ -60,6 +61,9 @@ export async function sendGroupReservationEmails(data: GroupReservationData) {
     if (!emailRegex.test(data.email)) {
       return { success: false, error: 'El email no es válido' }
     }
+
+    // Re-opt-in: rellenar el formulario es alta afirmativa.
+    await resubscribe(data.email)
 
     // 1. Notificación al admin (bloqueante)
     const adminEmail = await resend.emails.send({
@@ -168,6 +172,8 @@ export async function sendFormEmail(formData: FormData) {
     if (!emailRegex.test(formData.email)) {
       return { success: false, error: 'El email no es válido' }
     }
+
+    await resubscribe(formData.email)
 
     const language = formData.language === 'en' ? 'English' : 'Español'
 
