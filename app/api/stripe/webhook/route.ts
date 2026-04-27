@@ -10,9 +10,13 @@ import {
   resubscribe,
   SYSTEM_FONT_STACK,
 } from "@/lib/email-helpers"
+import { signOriginaleToken } from "@/lib/originale-token"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 const resend = new Resend(process.env.RESEND_API_KEY)
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://javiggil.com"
 
 export async function POST(req: Request) {
   const body = await req.text()
@@ -152,12 +156,10 @@ Mientras tanto, si tienes alguna pregunta no dudes en escribirnos a contact@javi
 // ─── 111 Prompts (legacy) ───────────────────────────────────────────────────
 
 async function sendPromptsEmail(email: string, name: string) {
-  const htmlFilePath = path.join(process.cwd(), "public/prompts/111_originale.html")
-  const pdfFilePath = path.join(process.cwd(), "public/prompts/111Originale-JaviGil.pdf")
-
-  const htmlContent = fs.readFileSync(htmlFilePath)
+  const pdfFilePath = path.join(process.cwd(), "private/prompts/111Originale-JaviGil.pdf")
   const pdfContent = fs.readFileSync(pdfFilePath)
 
+  const htmlUrl = `${SITE_URL}/prompts/111_originale.html`
   const greeting = name ? `Hola ${name},` : "Hola,"
 
   await resend.emails.send({
@@ -165,56 +167,55 @@ async function sendPromptsEmail(email: string, name: string) {
     to: [email],
     subject: "Tus 111 Originale ya están aquí",
     attachments: [
-      { filename: "111-Originale-Prompts.html", content: htmlContent },
       { filename: "111-Originale-Prompts.pdf", content: pdfContent },
     ],
-    html: buildPromptsHtml(greeting, email),
-    text: buildPromptsText(greeting, email),
+    html: buildPromptsHtml(greeting, htmlUrl, email),
+    text: buildPromptsText(greeting, htmlUrl, email),
     headers: getUnsubscribeHeaders(email),
   })
 }
 
-function buildPromptsHtml(greeting: string, email: string): string {
+function buildPromptsHtml(greeting: string, htmlUrl: string, email: string): string {
   const inner = `<p style="margin:0 0 16px;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#FE4629;">111 Originale — Javi Gil</p>
 <p style="margin:0 0 16px;font-size:20px;font-weight:600;">${escapeHtml(greeting)}<br />Aquí tienes tus prompts.</p>
-<p style="margin:0 0 16px;">Encontrarás <strong>dos archivos adjuntos</strong> en este email: el <strong>111-Originale-Prompts.html</strong> (la versión interactiva con índice y navegación) y el <strong>111-Originale-Prompts.pdf</strong> (versión de apoyo para leer o copiar desde ahí).</p>
-<p style="margin:0 0 16px;">Ambos tienen exactamente el mismo contenido. Son tuyos para siempre.</p>
-<p style="margin:24px 0 12px;font-weight:600;">Cómo abrirlos</p>
-<p style="margin:0 0 12px;"><strong>1. Mejor opción: el archivo .html en un navegador</strong> (Chrome, Safari, Firefox). Descárgalo y arrástralo al navegador, o haz doble clic en él. Navegación lateral, copia y pega — todo funciona perfecto.</p>
-<p style="margin:0 0 12px;"><strong>2. iPhone:</strong> puedes abrir el .html con Vista Previa, pero dependiendo de la versión puede haber problemas al copiar y pegar. Si tienes ordenador cerca, úsalo.</p>
-<p style="margin:0 0 16px;"><strong>3. El PDF</strong> es perfecto si quieres hojear los prompts o copiar alguno sin abrir el HTML. Funciona en cualquier dispositivo.</p>
+<p style="margin:0 0 16px;">Tienes dos formas de acceder al sistema. Ambas con exactamente el mismo contenido. Son tuyas para siempre.</p>
+<p style="margin:24px 0 12px;font-weight:600;">Versión interactiva (recomendada)</p>
+<p style="margin:0 0 12px;">Es la mejor experiencia: índice lateral, navegación entre categorías y un botón para copiar cada prompt con un clic.</p>
+<p style="margin:0 0 16px;"><a href="${htmlUrl}" style="color:#FE4629;font-weight:600;">Abrir los 111 prompts</a> · Funciona en Chrome, Safari y Firefox. Guarda el enlace o añádelo a marcadores.</p>
+<p style="margin:24px 0 12px;font-weight:600;">PDF (adjunto)</p>
+<p style="margin:0 0 16px;">Adjunto al email para que lo tengas también offline. Útil para hojear los prompts o copiar alguno sin abrir el navegador.</p>
 <p style="margin:0 0 16px;">Hay 111 prompts organizados por categorías. Tómate el tiempo que necesites para explorarlos. Todas las formas de usarlos son correctas.</p>
 <p style="margin:24px 0 16px;">Un saludo,<br /><strong>Javi</strong></p>
-<p style="margin:0 0 0;font-size:14px;color:#666;">¿Tienes alguna duda o no has recibido los archivos? Escríbenos a <a href="mailto:contact@javiggil.com" style="color:#FE4629;">contact@javiggil.com</a> y te lo solucionamos.</p>
+<p style="margin:0 0 0;font-size:14px;color:#666;">¿Tienes alguna duda o no puedes acceder? Escríbenos a <a href="mailto:contact@javiggil.com" style="color:#FE4629;">contact@javiggil.com</a> y te lo solucionamos.</p>
 ${emailFooter(email, "111 Originale · contact@javiggil.com")}`
   return htmlShell("Tus 111 Originale ya están aquí", inner)
 }
 
-function buildPromptsText(greeting: string, email: string): string {
+function buildPromptsText(greeting: string, htmlUrl: string, email: string): string {
   return `${greeting}
 
 Aquí tienes tus prompts.
 
-Encontrarás dos archivos adjuntos en este email:
-- 111-Originale-Prompts.html (versión interactiva con índice y navegación)
-- 111-Originale-Prompts.pdf (versión de apoyo para leer o copiar desde ahí)
+Tienes dos formas de acceder al sistema. Ambas con exactamente el mismo contenido. Son tuyas para siempre.
 
-Ambos tienen exactamente el mismo contenido. Son tuyos para siempre.
+VERSIÓN INTERACTIVA (recomendada)
 
-CÓMO ABRIRLOS
+Es la mejor experiencia: índice lateral, navegación entre categorías y un botón para copiar cada prompt con un clic.
 
-1. Mejor opción: abre el archivo .html en un navegador (Chrome, Safari, Firefox). Descárgalo y arrástralo al navegador, o haz doble clic. Navegación, copia y pega — todo funciona perfecto.
+Abrir los 111 prompts: ${htmlUrl}
 
-2. iPhone: puedes abrir el .html con Vista Previa, pero dependiendo de la versión puede haber problemas al copiar y pegar. Si tienes ordenador, úsalo.
+Funciona en Chrome, Safari y Firefox. Guarda el enlace o añádelo a marcadores.
 
-3. El PDF es perfecto si quieres hojear los prompts o copiar alguno sin abrir el HTML. Funciona en cualquier dispositivo.
+PDF (adjunto)
 
-Hay 111 prompts organizados por categorías. No hay ninguna forma correcta de usarlos.
+Adjunto al email para que lo tengas también offline. Útil para hojear los prompts o copiar alguno sin abrir el navegador.
+
+Hay 111 prompts organizados por categorías. Tómate el tiempo que necesites para explorarlos. Todas las formas de usarlos son correctas.
 
 Un saludo,
 Javi
 
-¿Dudas? Escríbenos a contact@javiggil.com${emailFooterText(email, "111 Originale · contact@javiggil.com")}`
+¿Dudas o no puedes acceder? Escríbenos a contact@javiggil.com${emailFooterText(email, "111 Originale · contact@javiggil.com")}`
 }
 
 // ─── Tripwire (1:1 upsell tras 111) ─────────────────────────────────────────
@@ -334,63 +335,49 @@ Javi${emailFooterText(email, "Sesión 1:1 · contact@javiggil.com")}`
 // ─── 111 Originale (producto rediseñado) ────────────────────────────────────
 
 async function sendOriginaleEmail(email: string, name: string) {
-  const newHtmlPath = path.join(process.cwd(), "public/prompts2/product/111-Originale.html")
-  const newPdfPath = path.join(process.cwd(), "public/prompts2/product/111-Originale.pdf")
-  const legacyHtmlPath = path.join(process.cwd(), "public/prompts/111_originale.html")
-  const legacyPdfPath = path.join(process.cwd(), "public/prompts/111Originale-JaviGil.pdf")
-
-  const htmlFilePath = fs.existsSync(newHtmlPath) ? newHtmlPath : legacyHtmlPath
-  const pdfFilePath = fs.existsSync(newPdfPath) ? newPdfPath : legacyPdfPath
-
-  const htmlContent = fs.readFileSync(htmlFilePath)
-  const pdfContent = fs.readFileSync(pdfFilePath)
-
+  const token = await signOriginaleToken(email)
+  const accessUrl = `${SITE_URL}/originale?t=${encodeURIComponent(token)}`
   const greeting = name ? `Hola ${name},` : "Hola,"
 
   await resend.emails.send({
     from: "Javier Gil <javier.gil@javiggil.com>",
     to: [email],
     subject: "Tu acceso a 111 Originale",
-    attachments: [
-      { filename: "111-Originale.html", content: htmlContent },
-      { filename: "111-Originale.pdf", content: pdfContent },
-    ],
-    html: buildOriginaleHtml(greeting, email),
-    text: buildOriginaleText(greeting, email),
+    html: buildOriginaleHtml(greeting, accessUrl, email),
+    text: buildOriginaleText(greeting, accessUrl, email),
     headers: getUnsubscribeHeaders(email),
   })
 }
 
-function buildOriginaleHtml(greeting: string, email: string): string {
+function buildOriginaleHtml(greeting: string, accessUrl: string, email: string): string {
   const inner = `<p style="margin:0 0 16px;">${escapeHtml(greeting)}</p>
 <p style="margin:0 0 16px;">Gracias por comprar 111 Originale.</p>
-<p style="margin:0 0 16px;">Aquí tienes el sistema completo. Te adjunto dos archivos:</p>
-<p style="margin:0 0 8px;"><strong>HTML navegable</strong> — ábrelo en tu navegador. Es el sistema entero, listo para usar.</p>
-<p style="margin:0 0 16px;"><strong>PDF de respaldo</strong> — mismo contenido en PDF, para leer y copiar desde ahí si prefieres.</p>
-<p style="margin:0 0 16px;">Descárgalos. Son tuyos. Funcionan sin conexión.</p>
+<p style="margin:0 0 16px;">Tu acceso está aquí:</p>
+<p style="margin:0 0 16px;"><a href="${accessUrl}" style="color:#FE4629;font-weight:600;">Abrir 111 Originale</a></p>
+<p style="margin:0 0 16px;">En esa página encuentras el sistema en dos formatos: la versión navegable (HTML interactivo con índice y botón para copiar cada prompt) y la edición editorial en PDF, pensada para leer en e-reader, en el iPad o imprimir y subrayar. Mismo contenido, distinta forma de habitarlo.</p>
+<p style="margin:0 0 16px;">Guarda el enlace en marcadores. El acceso es tuyo, para siempre.</p>
 <p style="margin:0 0 16px;">Lo que viene a partir de aquí es distinto.</p>
 <p style="margin:0 0 16px;">Durante las próximas 12 semanas te voy a enviar un email cada viernes. No son recordatorios del producto. No son instrucciones para usar los prompts. Son otra cosa.</p>
 <p style="margin:0 0 16px;">Lo que aprendí dirigiendo IA en uno de los mayores bancos de Europa y construyendo dos startups con IA es que el 90% de lo que pasa en este espacio la gente no lo ve. Lo que ves en redes es el 10% ruidoso.</p>
 <p style="margin:0 0 16px;">Los 12 emails son el 90% restante. Técnicas que cambian cómo usas la IA. Herramientas que la mayoría no conoce. Formas de construir con IA que antes costaban 50.000 euros y ahora las puede hacer una persona. Y lo que está pasando en banca con la IA, que es lo que mejor conozco y casi nadie cuenta bien.</p>
 <p style="margin:0 0 16px;">No es teoría. Es lo que yo uso y lo que veo usar desde dentro.</p>
-<p style="margin:0 0 16px;">Esta primera semana, una sola cosa: abre el HTML, lee la introducción, y empieza Capa 1. Son cinco pasos. Si vas rápido los haces en un día. Si vas despacio, en una semana. Ambos ritmos están bien.</p>
+<p style="margin:0 0 16px;">Esta primera semana, una sola cosa: entra al sistema, lee la introducción, y empieza Capa 1. Son cinco pasos. Si vas rápido los haces en un día. Si vas despacio, en una semana. Ambos ritmos están bien.</p>
 <p style="margin:0 0 16px;">El viernes que viene hablamos del primer territorio que la mayoría no ve: cómo el sitio donde vive un prompt importa más que el prompt en sí.</p>
 <p style="margin:0 0 0;">Javi</p>
 ${emailFooter(email, "111 Originale · javier.gil@javiggil.com")}`
   return htmlShell("Tu acceso a 111 Originale", inner)
 }
 
-function buildOriginaleText(greeting: string, email: string): string {
+function buildOriginaleText(greeting: string, accessUrl: string, email: string): string {
   return `${greeting}
 
 Gracias por comprar 111 Originale.
 
-Aquí tienes el sistema completo. Te adjunto dos archivos:
+Tu acceso está aquí: ${accessUrl}
 
-- HTML navegable: ábrelo en tu navegador. Es el sistema entero, listo para usar.
-- PDF de respaldo: mismo contenido en PDF, para leer y copiar desde ahí si prefieres.
+En esa página encuentras el sistema en dos formatos: la versión navegable (HTML interactivo con índice y botón para copiar cada prompt) y la edición editorial en PDF, pensada para leer en e-reader, en el iPad o imprimir y subrayar. Mismo contenido, distinta forma de habitarlo.
 
-Descárgalos. Son tuyos. Funcionan sin conexión.
+Guarda el enlace en marcadores. El acceso es tuyo, para siempre.
 
 Lo que viene a partir de aquí es distinto.
 
@@ -402,7 +389,7 @@ Los 12 emails son el 90% restante. Técnicas que cambian cómo usas la IA. Herra
 
 No es teoría. Es lo que yo uso y lo que veo usar desde dentro.
 
-Esta primera semana, una sola cosa: abre el HTML, lee la introducción, y empieza Capa 1. Son cinco pasos. Si vas rápido los haces en un día. Si vas despacio, en una semana. Ambos ritmos están bien.
+Esta primera semana, una sola cosa: entra al sistema, lee la introducción, y empieza Capa 1. Son cinco pasos. Si vas rápido los haces en un día. Si vas despacio, en una semana. Ambos ritmos están bien.
 
 El viernes que viene hablamos del primer territorio que la mayoría no ve: cómo el sitio donde vive un prompt importa más que el prompt en sí.
 

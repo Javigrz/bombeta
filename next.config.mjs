@@ -35,6 +35,11 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  // Bundle private/prompts into routes that read those files at runtime on Vercel
+  outputFileTracingIncludes: {
+    '/api/originale/file': ['./private/prompts/**/*'],
+    '/api/stripe/webhook': ['./private/prompts/**/*'],
+  },
 }
 
 export default nextConfig
