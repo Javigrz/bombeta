@@ -14,6 +14,10 @@ const nextConfig = {
           source: '/prompts2',
           destination: '/prompts2/index.html',
         },
+        {
+          source: '/advisory',
+          destination: '/advisory/index.html',
+        },
       ],
       afterFiles: [],
       fallback: [],
